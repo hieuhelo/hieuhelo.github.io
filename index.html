@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Đếm Ngược 3D</title>
+    <title>Đếm Ngược Sự Kiện Việt Nam</title>
     <style>
         * {
             margin: 0;
@@ -13,9 +13,9 @@
         }
         
         body {
-            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
             color: white;
-            min-height: 100vh;
+            height: 100vh;
             overflow-x: hidden;
             perspective: 1000px;
         }
@@ -35,7 +35,7 @@
         .btn {
             padding: 10px 15px;
             border: none;
-            border-radius: 50px;
+            border-radius: 20px;
             font-weight: bold;
             cursor: pointer;
             transition: all 0.3s;
@@ -47,75 +47,88 @@
             color: white;
         }
         
-        .btn-auth {
-            background-color: #f39c12;
+        .btn-login {
+            background-color: #2196F3;
             color: white;
         }
         
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
-        }
-        
         .countdown-container {
-            background: rgba(255, 255, 255, 0.1);
+            background-color: rgba(255, 255, 255, 0.2);
             backdrop-filter: blur(10px);
-            border-radius: 20px;
+            border-radius: 15px;
             padding: 20px;
+            text-align: center;
             margin-bottom: 30px;
             transform-style: preserve-3d;
             transition: transform 0.5s;
             box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
         }
         
-        .countdown-title {
+        .countdown-container:hover {
+            transform: rotateY(10deg) rotateX(5deg);
+        }
+        
+        .event-title {
             font-size: 24px;
             margin-bottom: 15px;
-            text-align: center;
-            color: #f39c12;
         }
         
         .countdown {
             display: flex;
-            justify-content: space-around;
-            text-align: center;
+            justify-content: center;
+            gap: 10px;
         }
         
         .countdown-item {
-            background: rgba(0, 0, 0, 0.3);
+            background-color: rgba(0, 0, 0, 0.3);
             border-radius: 10px;
             padding: 10px;
-            width: 22%;
-            transform-style: preserve-3d;
-            transition: transform 0.3s;
-        }
-        
-        .countdown-item:hover {
-            transform: translateZ(20px);
+            min-width: 70px;
         }
         
         .countdown-number {
-            font-size: 30px;
+            font-size: 28px;
             font-weight: bold;
-            color: #4CAF50;
         }
         
         .countdown-label {
             font-size: 12px;
-            color: #ddd;
+            opacity: 0.8;
+        }
+        
+        .event-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .event-card {
+            background-color: rgba(255, 255, 255, 0.15);
+            border-radius: 10px;
+            padding: 15px;
+            transform-style: preserve-3d;
+            transition: transform 0.3s;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .event-card:hover {
+            transform: translateZ(10px) rotateY(5deg);
         }
         
         .event-name {
-            font-size: 20px;
-            text-align: center;
-            margin: 20px 0;
-            color: #fff;
+            font-size: 18px;
+            margin-bottom: 5px;
         }
         
         .event-date {
-            text-align: center;
-            color: #ccc;
-            margin-bottom: 20px;
+            font-size: 14px;
+            opacity: 0.8;
+            margin-bottom: 10px;
+        }
+        
+        .event-countdown {
+            font-size: 14px;
+            color: #FFEB3B;
         }
         
         .modal {
@@ -125,37 +138,26 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.8);
+            background-color: rgba(0, 0, 0, 0.7);
             z-index: 100;
             justify-content: center;
             align-items: center;
         }
         
         .modal-content {
-            background: #16213e;
+            background-color: #333;
             padding: 20px;
-            border-radius: 15px;
+            border-radius: 10px;
             width: 90%;
             max-width: 400px;
             transform-style: preserve-3d;
-            animation: modalEnter 0.5s forwards;
+            transform: translateZ(50px);
         }
         
-        @keyframes modalEnter {
-            from {
-                transform: translateZ(-100px) rotateX(90deg);
-                opacity: 0;
-            }
-            to {
-                transform: translateZ(0) rotateX(0);
-                opacity: 1;
-            }
-        }
-        
-        .modal-title {
-            margin-bottom: 20px;
-            text-align: center;
-            color: #f39c12;
+        .close-btn {
+            float: right;
+            font-size: 24px;
+            cursor: pointer;
         }
         
         .form-group {
@@ -165,7 +167,6 @@
         .form-group label {
             display: block;
             margin-bottom: 5px;
-            color: #ddd;
         }
         
         .form-group input {
@@ -173,58 +174,26 @@
             padding: 10px;
             border-radius: 5px;
             border: none;
-            background: rgba(255, 255, 255, 0.1);
-            color: white;
         }
         
-        .modal-buttons {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 20px;
-        }
-        
-        .btn-cancel {
-            background-color: #e74c3c;
-            color: white;
-        }
-        
-        .btn-submit {
+        .submit-btn {
             background-color: #4CAF50;
             color: white;
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
         }
         
-        .events-list {
-            margin-top: 30px;
-        }
-        
-        .event-card {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 15px;
-            padding: 15px;
-            margin-bottom: 15px;
-            transform-style: preserve-3d;
-            transition: all 0.3s;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-        }
-        
-        .event-card:hover {
-            transform: translateZ(10px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
-        }
-        
-        .event-card h3 {
-            color: #f39c12;
-            margin-bottom: 10px;
-        }
-        
-        .event-card p {
-            color: #ccc;
-            margin-bottom: 10px;
-        }
-        
-        .event-card .time-left {
-            color: #4CAF50;
-            font-weight: bold;
+        @media (max-width: 480px) {
+            .countdown {
+                flex-wrap: wrap;
+            }
+            
+            .countdown-item {
+                min-width: 60px;
+            }
         }
     </style>
 </head>
@@ -232,279 +201,278 @@
     <div class="container">
         <div class="header">
             <button class="btn btn-add" id="addEventBtn">+ Thêm sự kiện</button>
-            <button class="btn btn-auth" id="authBtn">Đăng nhập/Đăng ký</button>
+            <button class="btn btn-login" id="loginBtn">Đăng nhập / Đăng ký</button>
         </div>
         
-        <div class="countdown-container" id="countdown3d">
-            <h2 class="countdown-title">ĐẾM NGƯỢC SỰ KIỆN</h2>
-            <div class="event-name" id="currentEventName">Năm Mới 2025</div>
-            <div class="event-date" id="currentEventDate">1/1/2025</div>
-            <div class="countdown">
+        <div class="countdown-container">
+            <h2 class="event-title" id="mainEventTitle">Tết Nguyên Đán 2025</h2>
+            <div class="countdown" id="mainCountdown">
                 <div class="countdown-item">
                     <div class="countdown-number" id="days">00</div>
-                    <div class="countdown-label">NGÀY</div>
+                    <div class="countdown-label">Ngày</div>
                 </div>
                 <div class="countdown-item">
                     <div class="countdown-number" id="hours">00</div>
-                    <div class="countdown-label">GIỜ</div>
+                    <div class="countdown-label">Giờ</div>
                 </div>
                 <div class="countdown-item">
                     <div class="countdown-number" id="minutes">00</div>
-                    <div class="countdown-label">PHÚT</div>
+                    <div class="countdown-label">Phút</div>
                 </div>
                 <div class="countdown-item">
                     <div class="countdown-number" id="seconds">00</div>
-                    <div class="countdown-label">GIÂY</div>
+                    <div class="countdown-label">Giây</div>
                 </div>
             </div>
         </div>
         
-        <div class="events-list" id="eventsList">
+        <div class="event-list" id="eventList">
             <!-- Các sự kiện sẽ được thêm vào đây -->
         </div>
     </div>
     
     <!-- Modal thêm sự kiện -->
-    <div class="modal" id="addEventModal">
+    <div class="modal" id="eventModal">
         <div class="modal-content">
-            <h2 class="modal-title">Thêm Sự Kiện Mới</h2>
-            <div class="form-group">
-                <label for="eventName">Tên sự kiện</label>
-                <input type="text" id="eventName" placeholder="Ví dụ: Sinh nhật tôi">
-            </div>
-            <div class="form-group">
-                <label for="eventDate">Ngày diễn ra</label>
-                <input type="datetime-local" id="eventDate">
-            </div>
-            <div class="modal-buttons">
-                <button class="btn btn-cancel" id="cancelAddEvent">Hủy</button>
-                <button class="btn btn-submit" id="submitEvent">Thêm</button>
-            </div>
+            <span class="close-btn" id="closeModal">&times;</span>
+            <h2>Thêm sự kiện mới</h2>
+            <form id="eventForm">
+                <div class="form-group">
+                    <label for="eventName">Tên sự kiện:</label>
+                    <input type="text" id="eventName" required>
+                </div>
+                <div class="form-group">
+                    <label for="eventDate">Ngày diễn ra:</label>
+                    <input type="datetime-local" id="eventDate" required>
+                </div>
+                <button type="submit" class="submit-btn">Lưu sự kiện</button>
+            </form>
         </div>
     </div>
     
-    <!-- Modal đăng nhập/đăng ký -->
-    <div class="modal" id="authModal">
+    <!-- Modal đăng nhập -->
+    <div class="modal" id="loginModal">
         <div class="modal-content">
-            <h2 class="modal-title" id="authModalTitle">Đăng Nhập</h2>
-            <div class="form-group">
-                <label for="authEmail">Email</label>
-                <input type="email" id="authEmail" placeholder="Nhập email của bạn">
-            </div>
-            <div class="form-group">
-                <label for="authPassword">Mật khẩu</label>
-                <input type="password" id="authPassword" placeholder="Nhập mật khẩu">
-            </div>
-            <div class="modal-buttons">
-                <button class="btn btn-cancel" id="cancelAuth">Hủy</button>
-                <button class="btn btn-submit" id="submitAuth">Đăng Nhập</button>
-            </div>
-            <p style="text-align: center; margin-top: 15px; color: #ddd;">
-                <span id="switchAuthText">Chưa có tài khoản? Đăng ký ngay</span>
-            </p>
+            <span class="close-btn" id="closeLoginModal">&times;</span>
+            <h2>Đăng nhập / Đăng ký</h2>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="username">Tên đăng nhập:</label>
+                    <input type="text" id="username" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Mật khẩu:</label>
+                    <input type="password" id="password" required>
+                </div>
+                <button type="submit" class="submit-btn">Đăng nhập</button>
+                <button type="button" class="submit-btn" style="background-color: #FF5722; margin-top: 10px;">Đăng ký tài khoản</button>
+            </form>
         </div>
     </div>
     
     <script>
-        // Dữ liệu sự kiện mẫu
-        let events = [
-            { name: "Năm Mới 2025", date: "2025-01-01T00:00:00" },
-            { name: "Tết Nguyên Đán", date: "2025-01-29T00:00:00" },
-            { name: "Giỗ Tổ Hùng Vương", date: "2025-04-07T00:00:00" },
-            { name: "Ngày Giải Phóng 30/4", date: "2025-04-30T00:00:00" }
+        // Sự kiện mặc định
+        const defaultEvents = [
+            {
+                name: "Tết Nguyên Đán 2025",
+                date: "2025-01-29T00:00:00+07:00"
+            },
+            {
+                name: "Quốc Khánh 2/9",
+                date: "2025-09-02T00:00:00+07:00"
+            },
+            {
+                name: "Giỗ Tổ Hùng Vương",
+                date: "2025-04-07T00:00:00+07:00"
+            }
         ];
         
-        // Hiển thị sự kiện đầu tiên khi tải trang
-        let currentEventIndex = 0;
-        
-        // DOM Elements
+        // Lấy các phần tử DOM
         const addEventBtn = document.getElementById('addEventBtn');
-        const authBtn = document.getElementById('authBtn');
-        const addEventModal = document.getElementById('addEventModal');
-        const authModal = document.getElementById('authModal');
-        const cancelAddEvent = document.getElementById('cancelAddEvent');
-        const cancelAuth = document.getElementById('cancelAuth');
-        const submitEvent = document.getElementById('submitEvent');
-        const submitAuth = document.getElementById('submitAuth');
-        const switchAuthText = document.getElementById('switchAuthText');
-        const authModalTitle = document.getElementById('authModalTitle');
-        const eventsList = document.getElementById('eventsList');
+        const loginBtn = document.getElementById('loginBtn');
+        const eventModal = document.getElementById('eventModal');
+        const loginModal = document.getElementById('loginModal');
+        const closeModal = document.getElementById('closeModal');
+        const closeLoginModal = document.getElementById('closeLoginModal');
+        const eventForm = document.getElementById('eventForm');
+        const loginForm = document.getElementById('loginForm');
+        const eventList = document.getElementById('eventList');
+        const mainEventTitle = document.getElementById('mainEventTitle');
+        const daysEl = document.getElementById('days');
+        const hoursEl = document.getElementById('hours');
+        const minutesEl = document.getElementById('minutes');
+        const secondsEl = document.getElementById('seconds');
         
-        // Hiệu ứng 3D cho countdown container
-        const countdown3d = document.getElementById('countdown3d');
+        // Lấy sự kiện từ localStorage hoặc sử dụng mặc định
+        let events = JSON.parse(localStorage.getItem('events')) || defaultEvents;
         
-        document.addEventListener('mousemove', (e) => {
-            if (window.innerWidth > 768) { // Chỉ áp dụng trên màn hình lớn
-                const xAxis = (window.innerWidth / 2 - e.pageX) / 25;
-                const yAxis = (window.innerHeight / 2 - e.pageY) / 25;
-                countdown3d.style.transform = `rotateY(${xAxis}deg) rotateX(${yAxis}deg)`;
-            }
-        });
-        
-        // Reset vị trí khi không di chuột
-        document.addEventListener('mouseleave', () => {
-            countdown3d.style.transform = 'rotateY(0deg) rotateX(0deg)';
-        });
-        
-        // Mở modal thêm sự kiện
-        addEventBtn.addEventListener('click', () => {
-            addEventModal.style.display = 'flex';
-        });
-        
-        // Mở modal đăng nhập/đăng ký
-        authBtn.addEventListener('click', () => {
-            authModal.style.display = 'flex';
-        });
-        
-        // Đóng modal
-        cancelAddEvent.addEventListener('click', () => {
-            addEventModal.style.display = 'none';
-        });
-        
-        cancelAuth.addEventListener('click', () => {
-            authModal.style.display = 'none';
-        });
-        
-        // Chuyển đổi giữa đăng nhập và đăng ký
-        let isLoginMode = true;
-        
-        switchAuthText.addEventListener('click', () => {
-            isLoginMode = !isLoginMode;
+        // Hiển thị các sự kiện
+        function displayEvents() {
+            eventList.innerHTML = '';
             
-            if (isLoginMode) {
-                authModalTitle.textContent = 'Đăng Nhập';
-                submitAuth.textContent = 'Đăng Nhập';
-                switchAuthText.textContent = 'Chưa có tài khoản? Đăng ký ngay';
-            } else {
-                authModalTitle.textContent = 'Đăng Ký';
-                submitAuth.textContent = 'Đăng Ký';
-                switchAuthText.textContent = 'Đã có tài khoản? Đăng nhập ngay';
-            }
-        });
-        
-        // Thêm sự kiện mới
-        submitEvent.addEventListener('click', () => {
-            const eventName = document.getElementById('eventName').value;
-            const eventDate = document.getElementById('eventDate').value;
+            // Sắp xếp sự kiện theo thời gian gần nhất
+            events.sort((a, b) => new Date(a.date) - new Date(b.date));
             
-            if (eventName && eventDate) {
-                events.push({ name: eventName, date: eventDate });
-                renderEventsList();
-                addEventModal.style.display = 'none';
+            // Cập nhật sự kiện chính (sắp diễn ra nhất)
+            if (events.length > 0) {
+                mainEventTitle.textContent = events[0].name;
+                updateMainCountdown();
                 
-                // Reset form
-                document.getElementById('eventName').value = '';
-                document.getElementById('eventDate').value = '';
-            } else {
-                alert('Vui lòng điền đầy đủ thông tin sự kiện');
-            }
-        });
-        
-        // Xử lý đăng nhập/đăng ký (mẫu)
-        submitAuth.addEventListener('click', () => {
-            const email = document.getElementById('authEmail').value;
-            const password = document.getElementById('authPassword').value;
-            
-            if (email && password) {
-                if (isLoginMode) {
-                    alert(`Đăng nhập thành công với email: ${email}`);
-                } else {
-                    alert(`Đăng ký thành công với email: ${email}`);
+                // Hiển thị các sự kiện khác
+                for (let i = 1; i < events.length; i++) {
+                    const event = events[i];
+                    const eventCard = document.createElement('div');
+                    eventCard.className = 'event-card';
+                    
+                    const now = new Date();
+                    const eventDate = new Date(event.date);
+                    const timeLeft = eventDate - now;
+                    
+                    if (timeLeft < 0) {
+                        eventCard.innerHTML = `
+                            <h3 class="event-name">${event.name}</h3>
+                            <p class="event-date">${formatDate(eventDate)}</p>
+                            <p class="event-countdown">Đã diễn ra</p>
+                        `;
+                    } else {
+                        const {days, hours, minutes, seconds} = getTimeRemaining(eventDate);
+                        eventCard.innerHTML = `
+                            <h3 class="event-name">${event.name}</h3>
+                            <p class="event-date">${formatDate(eventDate)}</p>
+                            <p class="event-countdown">Còn lại: ${days} ngày ${hours} giờ ${minutes} phút</p>
+                        `;
+                    }
+                    
+                    eventList.appendChild(eventCard);
                 }
-                authModal.style.display = 'none';
-                
-                // Reset form
-                document.getElementById('authEmail').value = '';
-                document.getElementById('authPassword').value = '';
-            } else {
-                alert('Vui lòng điền đầy đủ thông tin');
             }
-        });
+        }
         
-        // Hiển thị danh sách sự kiện
-        function renderEventsList() {
-            eventsList.innerHTML = '';
+        // Cập nhật đếm ngược chính
+        function updateMainCountdown() {
+            if (events.length === 0) return;
             
-            events.forEach((event, index) => {
-                const eventElement = document.createElement('div');
-                eventElement.className = 'event-card';
-                eventElement.innerHTML = `
-                    <h3>${event.name}</h3>
-                    <p>Ngày: ${formatDate(new Date(event.date))}</p>
-                    <p class="time-left">Còn lại: ${calculateTimeLeft(new Date(event.date))}</p>
-                `;
-                
-                eventElement.addEventListener('click', () => {
-                    currentEventIndex = index;
-                    updateCountdown();
-                });
-                
-                eventsList.appendChild(eventElement);
-            });
+            const eventDate = new Date(events[0].date);
+            const now = new Date();
+            const timeLeft = eventDate - now;
+            
+            if (timeLeft < 0) {
+                mainEventTitle.textContent = `${events[0].name} đã diễn ra`;
+                daysEl.textContent = '00';
+                hoursEl.textContent = '00';
+                minutesEl.textContent = '00';
+                secondsEl.textContent = '00';
+                return;
+            }
+            
+            const {days, hours, minutes, seconds} = getTimeRemaining(eventDate);
+            
+            daysEl.textContent = formatTime(days);
+            hoursEl.textContent = formatTime(hours);
+            minutesEl.textContent = formatTime(minutes);
+            secondsEl.textContent = formatTime(seconds);
+            
+            setTimeout(updateMainCountdown, 1000);
+        }
+        
+        // Tính thời gian còn lại
+        function getTimeRemaining(endtime) {
+            const total = Date.parse(endtime) - Date.parse(new Date());
+            const seconds = Math.floor((total / 1000) % 60);
+            const minutes = Math.floor((total / 1000 / 60) % 60);
+            const hours = Math.floor((total / (1000 * 60 * 60)) % 24);
+            const days = Math.floor(total / (1000 * 60 * 60 * 24));
+            
+            return {
+                total,
+                days,
+                hours,
+                minutes,
+                seconds
+            };
+        }
+        
+        // Định dạng thời gian (thêm số 0 nếu cần)
+        function formatTime(time) {
+            return time < 10 ? `0${time}` : time;
         }
         
         // Định dạng ngày tháng
         function formatDate(date) {
-            const day = date.getDate();
-            const month = date.getMonth() + 1;
-            const year = date.getFullYear();
-            const hours = date.getHours();
-            const minutes = date.getMinutes();
-            
-            return `${day}/${month}/${year} ${hours}:${minutes < 10 ? '0' + minutes : minutes}`;
+            const options = { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                timeZone: 'Asia/Ho_Chi_Minh'
+            };
+            return new Date(date).toLocaleDateString('vi-VN', options);
         }
         
-        // Tính thời gian còn lại
-        function calculateTimeLeft(targetDate) {
-            const now = new Date();
-            const diff = targetDate - now;
-            
-            if (diff <= 0) return "Đã diễn ra";
-            
-            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-            
-            return `${days} ngày ${hours} giờ ${minutes} phút`;
-        }
+        // Sự kiện click nút thêm sự kiện
+        addEventBtn.addEventListener('click', () => {
+            eventModal.style.display = 'flex';
+        });
         
-        // Cập nhật đồng hồ đếm ngược
-        function updateCountdown() {
-            const currentEvent = events[currentEventIndex];
-            const targetDate = new Date(currentEvent.date);
-            const now = new Date();
-            const diff = targetDate - now;
-            
-            document.getElementById('currentEventName').textContent = currentEvent.name;
-            document.getElementById('currentEventDate').textContent = formatDate(targetDate);
-            
-            if (diff <= 0) {
-                document.getElementById('days').textContent = '00';
-                document.getElementById('hours').textContent = '00';
-                document.getElementById('minutes').textContent = '00';
-                document.getElementById('seconds').textContent = '00';
-                return;
+        // Sự kiện click nút đăng nhập
+        loginBtn.addEventListener('click', () => {
+            loginModal.style.display = 'flex';
+        });
+        
+        // Đóng modal
+        closeModal.addEventListener('click', () => {
+            eventModal.style.display = 'none';
+        });
+        
+        closeLoginModal.addEventListener('click', () => {
+            loginModal.style.display = 'none';
+        });
+        
+        // Đóng modal khi click bên ngoài
+        window.addEventListener('click', (e) => {
+            if (e.target === eventModal) {
+                eventModal.style.display = 'none';
             }
-            
-            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-            
-            document.getElementById('days').textContent = days < 10 ? '0' + days : days;
-            document.getElementById('hours').textContent = hours < 10 ? '0' + hours : hours;
-            document.getElementById('minutes').textContent = minutes < 10 ? '0' + minutes : minutes;
-            document.getElementById('seconds').textContent = seconds < 10 ? '0' + seconds : seconds;
-        }
+            if (e.target === loginModal) {
+                loginModal.style.display = 'none';
+            }
+        });
         
-        // Khởi tạo
-        function init() {
-            renderEventsList();
-            updateCountdown();
-            setInterval(updateCountdown, 1000);
-        }
+        // Thêm sự kiện mới
+        eventForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const eventName = document.getElementById('eventName').value;
+            const eventDate = document.getElementById('eventDate').value;
+            
+            // Chuyển đổi thành định dạng phù hợp với múi giờ Việt Nam (GMT+7)
+            const dateObj = new Date(eventDate);
+            const vietnamDate = new Date(dateObj.getTime() - (dateObj.getTimezoneOffset() * 60000));
+            
+            const newEvent = {
+                name: eventName,
+                date: vietnamDate.toISOString()
+            };
+            
+            events.push(newEvent);
+            localStorage.setItem('events', JSON.stringify(events));
+            
+            eventForm.reset();
+            eventModal.style.display = 'none';
+            displayEvents();
+        });
         
-        init();
+        // Xử lý đăng nhập (demo)
+        loginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            alert('Chức năng đăng nhập đang được phát triển');
+            loginModal.style.display = 'none';
+        });
+        
+        // Khởi động ứng dụng
+        displayEvents();
     </script>
 </body>
 </html>
