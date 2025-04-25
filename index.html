@@ -613,14 +613,14 @@
             document.getElementById('event-date').valueAsDate = tomorrow;
         });
     </script>
-    <audio id="myAudio" src="https://hieuhelo.github.io/helo.mp3" type="audio/mp3" controls></audio>
-    <script>
-        window.onload = function() {
-            var audio = document.getElementById('myAudio');
-            audio.play().catch(function(error) {
-                console.log('Không thể phát âm thanh:', error);
-            });
-        };
-    </script>
+<audio id="myAudio" src="https://hieuhelo.github.io/helo.mp3" type="audio/mp3" autoplay></audio>
+<script>
+    window.onload = function() {
+        var audio = document.getElementById('myAudio');
+        audio.play().catch(function(error) {
+            console.log('Không thể phát âm thanh:', error);
+        });
+    };
+</script>
 </body>
 </html>
