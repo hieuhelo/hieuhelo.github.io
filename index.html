@@ -1,188 +1,407 @@
 <!DOCTYPE html>
-<html lang='en' >
+<html lang="vi">
 <head>
-  <meta charset='UTF-8'>
-  <title>Face Button</title>
-  <link rel='stylesheet' href='./style.css'>
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lịch Âm Dương Việt Nam 3D</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .calendar-container {
+            perspective: 1000px;
+        }
+        .calendar-3d {
+            transform-style: preserve-3d;
+            transition: transform 0.5s ease;
+        }
+        .calendar-face {
+            backface-visibility: hidden;
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+        .front {
+            transform: rotateY(0deg);
+        }
+        .back {
+            transform: rotateY(180deg);
+        }
+        .date-cell {
+            transition: all 0.3s ease;
+        }
+        .date-cell:hover {
+            transform: scale(1.05);
+            z-index: 10;
+        }
+        .holiday {
+            background-color: #fef3c7;
+            border: 1px solid #f59e0b;
+        }
+        .lunar-date {
+            font-size: 0.7rem;
+            color: #6b7280;
+        }
+        .modal {
+            transition: all 0.3s ease;
+        }
+        .modal-enter {
+            opacity: 0;
+            transform: scale(0.9);
+        }
+        .modal-enter-active {
+            opacity: 1;
+            transform: scale(1);
+        }
+        .modal-exit {
+            opacity: 1;
+        }
+        .modal-exit-active {
+            opacity: 0;
+            transform: scale(0.9);
+        }
+        @media (max-width: 640px) {
+            .date-cell {
+                padding: 0.25rem;
+                min-height: 3rem;
+            }
+            .solar-date {
+                font-size: 0.9rem;
+            }
+            .lunar-date {
+                font-size: 0.6rem;
+            }
+        }
+    </style>
 </head>
-<body>
-<!-- partial:index.partial.html -->
-<div id='container'>
-  <button class='face-button'>
-    <span class='face-container'>
-      <span class='eye left'></span>
-      <span class='eye right'></span>
-      <span class='mouth'></span>
-    </span>
-  </button>
-</div>
-<!-- partial -->
-  <script src='https://cdnjs.cloudflare.com/ajax/libs/gsap/2.1.2/TweenMax.min.js'></script><script  src='./script.js'></script>
+<body class="bg-gray-100 min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+        <div class="text-center mb-8">
+            <h1 class="text-3xl md:text-4xl font-bold text-indigo-800 mb-2">LỊCH ÂM DƯƠNG VIỆT NAM</h1>
+            <p class="text-gray-600">Xem ngày tốt, ngày xấu và các sự kiện quan trọng</p>
+        </div>
 
+        <div class="flex justify-between items-center mb-6">
+            <button id="prev-month" class="bg-indigo-600 text-white p-2 rounded-full hover:bg-indigo-700 transition">
+                <i class="fas fa-chevron-left"></i>
+            </button>
+            
+            <div class="text-center">
+                <h2 id="current-month" class="text-2xl font-bold text-gray-800"></h2>
+                <p id="current-lunar-month" class="text-gray-600"></p>
+            </div>
+            
+            <button id="next-month" class="bg-indigo-600 text-white p-2 rounded-full hover:bg-indigo-700 transition">
+                <i class="fas fa-chevron-right"></i>
+            </button>
+        </div>
+
+        <div class="flex justify-center mb-6">
+            <button id="toggle-view" class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition">
+                <i class="fas fa-sync-alt mr-2"></i>Xem lịch âm
+            </button>
+        </div>
+
+        <div class="calendar-container mx-auto max-w-4xl">
+            <div id="calendar-3d" class="calendar-3d relative w-full" style="height: 500px;">
+                <!-- Solar Calendar (Front Face) -->
+                <div id="solar-calendar" class="calendar-face front bg-white p-4">
+                    <div class="grid grid-cols-7 gap-1 mb-2">
+                        <div class="text-center font-bold text-red-500">CN</div>
+                        <div class="text-center font-bold">T2</div>
+                        <div class="text-center font-bold">T3</div>
+                        <div class="text-center font-bold">T4</div>
+                        <div class="text-center font-bold">T5</div>
+                        <div class="text-center font-bold">T6</div>
+                        <div class="text-center font-bold">T7</div>
+                    </div>
+                    <div id="solar-dates" class="grid grid-cols-7 gap-1"></div>
+                </div>
+                
+                <!-- Lunar Calendar (Back Face) -->
+                <div id="lunar-calendar" class="calendar-face back bg-white p-4">
+                    <div class="grid grid-cols-7 gap-1 mb-2">
+                        <div class="text-center font-bold text-red-500">CN</div>
+                        <div class="text-center font-bold">T2</div>
+                        <div class="text-center font-bold">T3</div>
+                        <div class="text-center font-bold">T4</div>
+                        <div class="text-center font-bold">T5</div>
+                        <div class="text-center font-bold">T6</div>
+                        <div class="text-center font-bold">T7</div>
+                    </div>
+                    <div id="lunar-dates" class="grid grid-cols-7 gap-1"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Date Detail Modal -->
+        <div id="date-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+            <div class="bg-white rounded-lg p-6 max-w-md w-full mx-4 max-h-[80vh] overflow-y-auto">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 id="modal-date" class="text-xl font-bold"></h3>
+                    <button id="close-modal" class="text-gray-500 hover:text-gray-700">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div id="modal-lunar-date" class="text-gray-600 mb-4"></div>
+                <div id="modal-events" class="space-y-2">
+                    <div class="p-2 bg-yellow-50 rounded">
+                        <p class="font-semibold">Tết Nguyên Đán</p>
+                        <p class="text-sm text-gray-600">Ngày lễ lớn nhất trong năm</p>
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <h4 class="font-bold mb-2">Ngày tốt/xấu:</h4>
+                    <div id="date-fortune" class="p-2 bg-blue-50 rounded">
+                        <p>Ngày tốt, thích hợp cho cưới hỏi, khai trương</p>
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <h4 class="font-bold mb-2">Giờ hoàng đạo:</h4>
+                    <p id="lucky-hours" class="text-sm">Tý (23h-1h), Sửu (1h-3h), Mão (5h-7h), Ngọ (11h-13h)</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Current date
+            let currentDate = new Date();
+            let currentMonth = currentDate.getMonth();
+            let currentYear = currentDate.getFullYear();
+            
+            // Vietnamese holidays and events (sample data)
+            const holidays = {
+                '1/1': { title: 'Tết Dương Lịch', description: 'Năm mới theo lịch dương' },
+                '10/3': { title: 'Giỗ Tổ Hùng Vương', description: 'Ngày giỗ các vua Hùng' },
+                '30/4': { title: 'Ngày Giải phóng', description: 'Thống nhất đất nước' },
+                '1/5': { title: 'Ngày Quốc tế Lao động', description: 'Ngày của giai cấp công nhân' },
+                '2/9': { title: 'Quốc khánh', description: 'Ngày thành lập nước CHXHCN Việt Nam' },
+                // Lunar holidays (month/day format)
+                '1/1-lunar': { title: 'Tết Nguyên Đán', description: 'Năm mới theo âm lịch' },
+                '15/1-lunar': { title: 'Rằm tháng Giêng', description: 'Tết Nguyên Tiêu' },
+                '10/3-lunar': { title: 'Giỗ Tổ Hùng Vương', description: 'Ngày giỗ các vua Hùng' },
+                '5/5-lunar': { title: 'Tết Đoan Ngọ', description: 'Tết diệt sâu bọ' },
+                '15/7-lunar': { title: 'Rằm tháng Bảy', description: 'Lễ Vu Lan' },
+                '15/8-lunar': { title: 'Tết Trung Thu', description: 'Tết thiếu nhi' },
+                '23/12-lunar': { title: 'Ông Táo chầu trời', description: 'Tiễn ông Công ông Táo' }
+            };
+            
+            // Vietnamese month names
+            const monthNames = ["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6",
+                              "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"];
+            
+            const lunarMonthNames = [
+                "Tháng Giêng", "Tháng Hai", "Tháng Ba", "Tháng Tư", "Tháng Năm", "Tháng Sáu",
+                "Tháng Bảy", "Tháng Tám", "Tháng Chín", "Tháng Mười", "Tháng Một", "Tháng Chạp"
+            ];
+            
+            // Initialize calendar
+            renderCalendar(currentMonth, currentYear);
+            
+            // Previous month button
+            document.getElementById('prev-month').addEventListener('click', function() {
+                currentMonth--;
+                if (currentMonth < 0) {
+                    currentMonth = 11;
+                    currentYear--;
+                }
+                renderCalendar(currentMonth, currentYear);
+            });
+            
+            // Next month button
+            document.getElementById('next-month').addEventListener('click', function() {
+                currentMonth++;
+                if (currentMonth > 11) {
+                    currentMonth = 0;
+                    currentYear++;
+                }
+                renderCalendar(currentMonth, currentYear);
+            });
+            
+            // Toggle between solar and lunar calendar
+            let isSolarView = true;
+            document.getElementById('toggle-view').addEventListener('click', function() {
+                const calendar3d = document.getElementById('calendar-3d');
+                
+                if (isSolarView) {
+                    calendar3d.style.transform = 'rotateY(180deg)';
+                    document.getElementById('toggle-view').innerHTML = '<i class="fas fa-sync-alt mr-2"></i>Xem lịch dương';
+                } else {
+                    calendar3d.style.transform = 'rotateY(0deg)';
+                    document.getElementById('toggle-view').innerHTML = '<i class="fas fa-sync-alt mr-2"></i>Xem lịch âm';
+                }
+                
+                isSolarView = !isSolarView;
+            });
+            
+            // Close modal
+            document.getElementById('close-modal').addEventListener('click', function() {
+                document.getElementById('date-modal').classList.add('hidden');
+            });
+            
+            // Render calendar function
+            function renderCalendar(month, year) {
+                // Set current month/year display
+                document.getElementById('current-month').textContent = `${monthNames[month]} ${year}`;
+                
+                // Calculate lunar month (simplified - in a real app you'd use a proper lunar calendar library)
+                const lunarMonth = (month + 1) % 12;
+                document.getElementById('current-lunar-month').textContent = `${lunarMonthNames[lunarMonth]} (Âm lịch)`;
+                
+                // Get first day and number of days in month
+                const firstDay = new Date(year, month, 1).getDay();
+                const daysInMonth = new Date(year, month + 1, 0).getDate();
+                
+                // Get days from previous month
+                const prevMonthDays = new Date(year, month, 0).getDate();
+                
+                // Clear previous dates
+                document.getElementById('solar-dates').innerHTML = '';
+                document.getElementById('lunar-dates').innerHTML = '';
+                
+                // Add empty cells for days before first day
+                for (let i = 0; i < firstDay; i++) {
+                    const prevDate = prevMonthDays - firstDay + i + 1;
+                    
+                    // Solar calendar
+                    const solarCell = document.createElement('div');
+                    solarCell.className = 'date-cell bg-gray-100 text-gray-400 p-2 min-h-[4rem] rounded';
+                    solarCell.innerHTML = `<div class="solar-date">${prevDate}</div>`;
+                    document.getElementById('solar-dates').appendChild(solarCell);
+                    
+                    // Lunar calendar (simplified)
+                    const lunarCell = document.createElement('div');
+                    lunarCell.className = 'date-cell bg-gray-100 text-gray-400 p-2 min-h-[4rem] rounded';
+                    lunarCell.innerHTML = `<div class="solar-date">${prevDate}</div><div class="lunar-date">${Math.max(1, prevDate - 2)}/${month}</div>`;
+                    document.getElementById('lunar-dates').appendChild(lunarCell);
+                }
+                
+                // Add days for current month
+                for (let i = 1; i <= daysInMonth; i++) {
+                    const dayOfWeek = new Date(year, month, i).getDay();
+                    const isSunday = dayOfWeek === 0;
+                    const isHoliday = checkHoliday(i, month + 1);
+                    const isToday = i === currentDate.getDate() && month === currentDate.getMonth() && year === currentDate.getFullYear();
+                    
+                    // Solar calendar cell
+                    const solarCell = document.createElement('div');
+                    solarCell.className = `date-cell p-2 min-h-[4rem] rounded border ${isSunday ? 'text-red-500' : ''} ${isToday ? 'bg-blue-100 border-blue-300' : ''} ${isHoliday ? 'holiday' : ''}`;
+                    solarCell.innerHTML = `<div class="solar-date font-bold">${i}</div>`;
+                    
+                    // Add lunar date (simplified - in real app use proper conversion)
+                    const lunarDay = (i + 15) % 30 || 30; // Fake lunar date for demo
+                    const lunarMonthForDay = month + 1;
+                    
+                    solarCell.innerHTML += `<div class="lunar-date">${lunarDay}/${lunarMonthForDay}</div>`;
+                    
+                    // Add holiday indicator
+                    if (isHoliday) {
+                        solarCell.innerHTML += `<div class="absolute top-1 right-1 w-2 h-2 rounded-full bg-red-500"></div>`;
+                    }
+                    
+                    // Add click event
+                    solarCell.addEventListener('click', function() {
+                        showDateDetails(i, month + 1, year, lunarDay, lunarMonthForDay);
+                    });
+                    
+                    document.getElementById('solar-dates').appendChild(solarCell);
+                    
+                    // Lunar calendar cell
+                    const lunarCell = document.createElement('div');
+                    lunarCell.className = `date-cell p-2 min-h-[4rem] rounded border ${isSunday ? 'text-red-500' : ''} ${isToday ? 'bg-blue-100 border-blue-300' : ''} ${isHoliday ? 'holiday' : ''}`;
+                    lunarCell.innerHTML = `<div class="solar-date">${i}</div><div class="lunar-date font-bold">${lunarDay}/${lunarMonthForDay}</div>`;
+                    
+                    // Add holiday indicator
+                    if (isHoliday) {
+                        lunarCell.innerHTML += `<div class="absolute top-1 right-1 w-2 h-2 rounded-full bg-red-500"></div>`;
+                    }
+                    
+                    // Add click event
+                    lunarCell.addEventListener('click', function() {
+                        showDateDetails(i, month + 1, year, lunarDay, lunarMonthForDay);
+                    });
+                    
+                    document.getElementById('lunar-dates').appendChild(lunarCell);
+                }
+                
+                // Calculate how many cells we've added so far
+                const totalCells = firstDay + daysInMonth;
+                const remainingCells = 7 - (totalCells % 7);
+                
+                // Add days from next month if needed
+                if (remainingCells < 7) {
+                    for (let i = 1; i <= remainingCells; i++) {
+                        // Solar calendar
+                        const solarCell = document.createElement('div');
+                        solarCell.className = 'date-cell bg-gray-100 text-gray-400 p-2 min-h-[4rem] rounded';
+                        solarCell.innerHTML = `<div class="solar-date">${i}</div>`;
+                        document.getElementById('solar-dates').appendChild(solarCell);
+                        
+                        // Lunar calendar
+                        const lunarCell = document.createElement('div');
+                        lunarCell.className = 'date-cell bg-gray-100 text-gray-400 p-2 min-h-[4rem] rounded';
+                        lunarCell.innerHTML = `<div class="solar-date">${i}</div><div class="lunar-date">${i}/${month + 2 > 12 ? 1 : month + 2}</div>`;
+                        document.getElementById('lunar-dates').appendChild(lunarCell);
+                    }
+                }
+            }
+            
+            // Check if date is a holiday
+            function checkHoliday(day, month) {
+                const key = `${day}/${month}`;
+                const lunarKey = `${day}/${month}-lunar`;
+                return holidays[key] || holidays[lunarKey];
+            }
+            
+            // Show date details modal
+            function showDateDetails(day, month, year, lunarDay, lunarMonth) {
+                const date = new Date(year, month - 1, day);
+                const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+                const formattedDate = date.toLocaleDateString('vi-VN', options);
+                
+                document.getElementById('modal-date').textContent = formattedDate;
+                document.getElementById('modal-lunar-date').textContent = `Ngày ${lunarDay} tháng ${lunarMonth} (Âm lịch)`;
+                
+                // Check for holidays/events
+                const eventsContainer = document.getElementById('modal-events');
+                eventsContainer.innerHTML = '';
+                
+                // Check solar holidays
+                const solarKey = `${day}/${month}`;
+                if (holidays[solarKey]) {
+                    const eventDiv = document.createElement('div');
+                    eventDiv.className = 'p-2 bg-yellow-50 rounded mb-2';
+                    eventDiv.innerHTML = `
+                        <p class="font-semibold">${holidays[solarKey].title}</p>
+                        <p class="text-sm text-gray-600">${holidays[solarKey].description}</p>
+                    `;
+                    eventsContainer.appendChild(eventDiv);
+                }
+                
+                // Check lunar holidays
+                const lunarKey = `${lunarDay}/${lunarMonth}-lunar`;
+                if (holidays[lunarKey]) {
+                    const eventDiv = document.createElement('div');
+                    eventDiv.className = 'p-2 bg-green-50 rounded mb-2';
+                    eventDiv.innerHTML = `
+                        <p class="font-semibold">${holidays[lunarKey].title}</p>
+                        <p class="text-sm text-gray-600">${holidays[lunarKey].description}</p>
+                    `;
+                    eventsContainer.appendChild(eventDiv);
+                }
+                
+                // If no events, show message
+                if (eventsContainer.children.length === 0) {
+                    eventsContainer.innerHTML = '<p class="text-gray-500">Không có sự kiện đặc biệt</p>';
+                }
+                
+                // Show modal
+                document.getElementById('date-modal').classList.remove('hidden');
+            }
+        });
+    </script>
 </body>
 </html>
-
-<style>
-* {
-  box-sizing: border-box;
-}
-*::before, *::after {
-  box-sizing: border-box;
-}
-
-body {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0;
-  min-height: 100vh;
-  background: #fbf6e6;
-}
-
-#container {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 6.25rem;
-  height: 6.25rem;
-}
-
-button {
-  position: relative;
-  display: inline-block;
-  cursor: pointer;
-  outline: none;
-  border: 0;
-  vertical-align: middle;
-}
-button.face-button {
-  width: 6.25rem;
-  height: 6.25rem;
-  border-radius: 50%;
-  background: #fdda5f;
-  box-shadow: inset 2px -4px 18px #fd9744;
-}
-
-.face-container {
-  position: relative;
-  display: block;
-  width: 40px;
-  height: 20px;
-  margin: auto;
-}
-
-.eye {
-  position: absolute;
-  height: 0.5rem;
-  width: 0.5rem;
-  background: #2a2927;
-  border-radius: 50%;
-  -webkit-animation: eyeBlink 3200ms linear infinite;
-          animation: eyeBlink 3200ms linear infinite;
-}
-.eye.left {
-  left: 0;
-}
-.eye.right {
-  left: 2rem;
-}
-
-.mouth {
-  position: absolute;
-  top: 1.125rem;
-  left: 0.8rem;
-  width: 1rem;
-  height: 0.125rem;
-  background: #2a2927;
-  border-radius: 0;
-}
-
-.eye, .mouth {
-  box-shadow: inset 1px 2px 4px #121110;
-}
-
-.face-button:hover .mouth,
-.face-button:active .mouth {
-  left: 1rem;
-  width: 0.5rem;
-  height: 0.4rem;
-  border-radius: 1rem 1rem 0.125rem 0.125rem;
-}
-
-.face-button:hover .eye,
-.face-button:active .eye {
-  height: 0.375rem;
-  width: 0.375rem;
-  box-shadow: 0 0 0 0.25rem #fff;
-}
-
-@-webkit-keyframes eyeBlink {
-  0%, 30%, 36%, 100% {
-    transform: scale(1);
-  }
-  32%, 34% {
-    transform: scale(1, 0);
-  }
-}
-
-@keyframes eyeBlink {
-  0%, 30%, 36%, 100% {
-    transform: scale(1);
-  }
-  32%, 34% {
-    transform: scale(1, 0);
-  }
-}
-</style>
-<script>
-const faceButton = document.querySelector('.face-button');
-const faceContainer = document.querySelector('.face-container');
-const containerCoords = document.querySelector('#container');
-const mouseCoords = containerCoords.getBoundingClientRect();
-
-faceButton.addEventListener('mousemove', function(e) {
-  const mouseX = e.pageX - containerCoords.offsetLeft;
-  const mouseY = e.pageY - containerCoords.offsetTop;
-  
-  TweenMax.to(faceButton, 0.3, {
-     x: (mouseX - mouseCoords.width / 2) / mouseCoords.width * 50,
-     y: (mouseY - mouseCoords.height / 2) / mouseCoords.width * 50,
-     ease: Power4.easeOut
-   })
-});
-faceButton.addEventListener('mousemove', function(e) {
-  const mouseX = e.pageX - containerCoords.offsetLeft;
-  const mouseY = e.pageY - containerCoords.offsetTop;
-  
-  TweenMax.to(faceContainer, 0.3, {
-     x: (mouseX - mouseCoords.width / 2) / mouseCoords.width * 25,
-     y: (mouseY - mouseCoords.height / 2) / mouseCoords.width * 25,
-     ease: Power4.easeOut
-   })
-});
-
-faceButton.addEventListener('mouseenter', function(e) {
-  TweenMax.to(faceButton, 0.3, {
-    scale: 0.975
-  })
-});
-
-faceButton.addEventListener('mouseleave', function(e) {
-  TweenMax.to(faceButton, 0.3, {
-    x: 0,
-    y: 0,
-    scale: 1
-  })
-  
-  TweenMax.to(faceContainer, 0.3, {
-    x: 0,
-    y: 0,
-    scale: 1
-  })
-});
-</script>
-<body>
-    <h1>Chào mừng đến với trang chính</h1>
-    <p><a href="index2.html">Đi đến trang 2</a></p>
-</body>
