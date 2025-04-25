@@ -3,378 +3,508 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lịch Âm Dương Song Song</title>
+    <title>Đếm Ngược 3D</title>
     <style>
         * {
+            margin: 0;
+            padding: 0;
             box-sizing: border-box;
             font-family: 'Arial', sans-serif;
         }
         
         body {
-            margin: 0;
-            padding: 0;
-            background-color: #f5f5f5;
-            color: #333;
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            color: white;
+            min-height: 100vh;
+            overflow-x: hidden;
+            perspective: 1000px;
         }
         
         .container {
-            max-width: 100%;
-            padding: 10px;
-        }
-        
-        .header {
-            text-align: center;
-            padding: 15px 0;
-            background-color: #4a6fa5;
-            color: white;
-            border-radius: 8px 8px 0 0;
-            margin-bottom: 5px;
-        }
-        
-        .calendar-container {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-        
-        .calendar {
-            background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            padding: 10px;
-        }
-        
-        .calendar-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px 5px;
-            border-bottom: 1px solid #eee;
-        }
-        
-        .calendar-title {
-            font-weight: bold;
-            color: #4a6fa5;
-        }
-        
-        .calendar-type {
-            font-size: 0.9em;
-            color: #666;
-            font-style: italic;
-        }
-        
-        .weekdays {
-            display: flex;
-            margin: 10px 0;
-        }
-        
-        .weekday {
-            flex: 1;
-            text-align: center;
-            font-weight: bold;
-            font-size: 0.8em;
-            color: #4a6fa5;
-        }
-        
-        .days {
-            display: flex;
-            flex-wrap: wrap;
-        }
-        
-        .day {
-            width: 14.28%;
-            text-align: center;
-            padding: 8px 0;
-            font-size: 0.9em;
+            width: 100%;
+            padding: 20px;
             position: relative;
         }
         
-        .solar-day {
-            color: #333;
-        }
-        
-        .lunar-day {
-            color: #d9534f;
-            font-size: 0.7em;
-            display: block;
-            margin-top: 2px;
-        }
-        
-        .today {
-            background-color: #4a6fa5;
-            color: white !important;
-            border-radius: 50%;
-            width: 25px;
-            height: 25px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .today .lunar-day {
-            color: white !important;
-        }
-        
-        .other-month {
-            color: #ccc !important;
-        }
-        
-        .holiday {
-            color: #d9534f !important;
-        }
-        
-        .navigation {
+        .header {
             display: flex;
             justify-content: space-between;
-            margin-top: 15px;
+            margin-bottom: 30px;
         }
         
-        button {
-            background-color: #4a6fa5;
-            color: white;
+        .btn {
+            padding: 10px 15px;
             border: none;
-            padding: 8px 15px;
-            border-radius: 5px;
+            border-radius: 50px;
+            font-weight: bold;
             cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
         
-        button:disabled {
-            background-color: #ccc;
-            cursor: not-allowed;
+        .btn-add {
+            background-color: #4CAF50;
+            color: white;
         }
         
-        @media (min-width: 480px) {
-            .calendar-container {
-                flex-direction: row;
+        .btn-auth {
+            background-color: #f39c12;
+            color: white;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+        }
+        
+        .countdown-container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 30px;
+            transform-style: preserve-3d;
+            transition: transform 0.5s;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        .countdown-title {
+            font-size: 24px;
+            margin-bottom: 15px;
+            text-align: center;
+            color: #f39c12;
+        }
+        
+        .countdown {
+            display: flex;
+            justify-content: space-around;
+            text-align: center;
+        }
+        
+        .countdown-item {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            padding: 10px;
+            width: 22%;
+            transform-style: preserve-3d;
+            transition: transform 0.3s;
+        }
+        
+        .countdown-item:hover {
+            transform: translateZ(20px);
+        }
+        
+        .countdown-number {
+            font-size: 30px;
+            font-weight: bold;
+            color: #4CAF50;
+        }
+        
+        .countdown-label {
+            font-size: 12px;
+            color: #ddd;
+        }
+        
+        .event-name {
+            font-size: 20px;
+            text-align: center;
+            margin: 20px 0;
+            color: #fff;
+        }
+        
+        .event-date {
+            text-align: center;
+            color: #ccc;
+            margin-bottom: 20px;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 100;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-content {
+            background: #16213e;
+            padding: 20px;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 400px;
+            transform-style: preserve-3d;
+            animation: modalEnter 0.5s forwards;
+        }
+        
+        @keyframes modalEnter {
+            from {
+                transform: translateZ(-100px) rotateX(90deg);
+                opacity: 0;
             }
-            
-            .calendar {
-                width: 48%;
+            to {
+                transform: translateZ(0) rotateX(0);
+                opacity: 1;
             }
+        }
+        
+        .modal-title {
+            margin-bottom: 20px;
+            text-align: center;
+            color: #f39c12;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #ddd;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border-radius: 5px;
+            border: none;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+        
+        .modal-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        
+        .btn-cancel {
+            background-color: #e74c3c;
+            color: white;
+        }
+        
+        .btn-submit {
+            background-color: #4CAF50;
+            color: white;
+        }
+        
+        .events-list {
+            margin-top: 30px;
+        }
+        
+        .event-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 15px;
+            margin-bottom: 15px;
+            transform-style: preserve-3d;
+            transition: all 0.3s;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .event-card:hover {
+            transform: translateZ(10px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        .event-card h3 {
+            color: #f39c12;
+            margin-bottom: 10px;
+        }
+        
+        .event-card p {
+            color: #ccc;
+            margin-bottom: 10px;
+        }
+        
+        .event-card .time-left {
+            color: #4CAF50;
+            font-weight: bold;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1>Lịch Âm Dương</h1>
-            <div id="current-date"></div>
+            <button class="btn btn-add" id="addEventBtn">+ Thêm sự kiện</button>
+            <button class="btn btn-auth" id="authBtn">Đăng nhập/Đăng ký</button>
         </div>
         
-        <div class="calendar-container">
-            <div class="calendar">
-                <div class="calendar-header">
-                    <div class="calendar-title" id="solar-month-year"></div>
-                    <div class="calendar-type">Dương lịch</div>
+        <div class="countdown-container" id="countdown3d">
+            <h2 class="countdown-title">ĐẾM NGƯỢC SỰ KIỆN</h2>
+            <div class="event-name" id="currentEventName">Năm Mới 2025</div>
+            <div class="event-date" id="currentEventDate">1/1/2025</div>
+            <div class="countdown">
+                <div class="countdown-item">
+                    <div class="countdown-number" id="days">00</div>
+                    <div class="countdown-label">NGÀY</div>
                 </div>
-                <div class="weekdays">
-                    <div class="weekday">CN</div>
-                    <div class="weekday">T2</div>
-                    <div class="weekday">T3</div>
-                    <div class="weekday">T4</div>
-                    <div class="weekday">T5</div>
-                    <div class="weekday">T6</div>
-                    <div class="weekday">T7</div>
+                <div class="countdown-item">
+                    <div class="countdown-number" id="hours">00</div>
+                    <div class="countdown-label">GIỜ</div>
                 </div>
-                <div class="days" id="solar-days"></div>
-            </div>
-            
-            <div class="calendar">
-                <div class="calendar-header">
-                    <div class="calendar-title" id="lunar-month-year"></div>
-                    <div class="calendar-type">Âm lịch</div>
+                <div class="countdown-item">
+                    <div class="countdown-number" id="minutes">00</div>
+                    <div class="countdown-label">PHÚT</div>
                 </div>
-                <div class="weekdays">
-                    <div class="weekday">CN</div>
-                    <div class="weekday">T2</div>
-                    <div class="weekday">T3</div>
-                    <div class="weekday">T4</div>
-                    <div class="weekday">T5</div>
-                    <div class="weekday">T6</div>
-                    <div class="weekday">T7</div>
+                <div class="countdown-item">
+                    <div class="countdown-number" id="seconds">00</div>
+                    <div class="countdown-label">GIÂY</div>
                 </div>
-                <div class="days" id="lunar-days"></div>
             </div>
         </div>
         
-        <div class="navigation">
-            <button id="prev-month">Tháng trước</button>
-            <button id="today">Hôm nay</button>
-            <button id="next-month">Tháng sau</button>
+        <div class="events-list" id="eventsList">
+            <!-- Các sự kiện sẽ được thêm vào đây -->
         </div>
     </div>
-
+    
+    <!-- Modal thêm sự kiện -->
+    <div class="modal" id="addEventModal">
+        <div class="modal-content">
+            <h2 class="modal-title">Thêm Sự Kiện Mới</h2>
+            <div class="form-group">
+                <label for="eventName">Tên sự kiện</label>
+                <input type="text" id="eventName" placeholder="Ví dụ: Sinh nhật tôi">
+            </div>
+            <div class="form-group">
+                <label for="eventDate">Ngày diễn ra</label>
+                <input type="datetime-local" id="eventDate">
+            </div>
+            <div class="modal-buttons">
+                <button class="btn btn-cancel" id="cancelAddEvent">Hủy</button>
+                <button class="btn btn-submit" id="submitEvent">Thêm</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal đăng nhập/đăng ký -->
+    <div class="modal" id="authModal">
+        <div class="modal-content">
+            <h2 class="modal-title" id="authModalTitle">Đăng Nhập</h2>
+            <div class="form-group">
+                <label for="authEmail">Email</label>
+                <input type="email" id="authEmail" placeholder="Nhập email của bạn">
+            </div>
+            <div class="form-group">
+                <label for="authPassword">Mật khẩu</label>
+                <input type="password" id="authPassword" placeholder="Nhập mật khẩu">
+            </div>
+            <div class="modal-buttons">
+                <button class="btn btn-cancel" id="cancelAuth">Hủy</button>
+                <button class="btn btn-submit" id="submitAuth">Đăng Nhập</button>
+            </div>
+            <p style="text-align: center; margin-top: 15px; color: #ddd;">
+                <span id="switchAuthText">Chưa có tài khoản? Đăng ký ngay</span>
+            </p>
+        </div>
+    </div>
+    
     <script>
-        // Dữ liệu lịch âm (giả lập)
-        const lunarData = {
-            // Đây chỉ là dữ liệu mẫu, trong thực tế cần dùng API hoặc thư viện chuyển đổi
-            '2023-10': {
-                lunarDays: [
-                    {solarDate: 1, lunarDay: '15/8', isHoliday: true, holidayName: 'Tết Trung Thu'},
-                    {solarDate: 2, lunarDay: '16/8', isHoliday: false},
-                    // ... thêm các ngày khác
-                ]
+        // Dữ liệu sự kiện mẫu
+        let events = [
+            { name: "Năm Mới 2025", date: "2025-01-01T00:00:00" },
+            { name: "Tết Nguyên Đán", date: "2025-01-29T00:00:00" },
+            { name: "Giỗ Tổ Hùng Vương", date: "2025-04-07T00:00:00" },
+            { name: "Ngày Giải Phóng 30/4", date: "2025-04-30T00:00:00" }
+        ];
+        
+        // Hiển thị sự kiện đầu tiên khi tải trang
+        let currentEventIndex = 0;
+        
+        // DOM Elements
+        const addEventBtn = document.getElementById('addEventBtn');
+        const authBtn = document.getElementById('authBtn');
+        const addEventModal = document.getElementById('addEventModal');
+        const authModal = document.getElementById('authModal');
+        const cancelAddEvent = document.getElementById('cancelAddEvent');
+        const cancelAuth = document.getElementById('cancelAuth');
+        const submitEvent = document.getElementById('submitEvent');
+        const submitAuth = document.getElementById('submitAuth');
+        const switchAuthText = document.getElementById('switchAuthText');
+        const authModalTitle = document.getElementById('authModalTitle');
+        const eventsList = document.getElementById('eventsList');
+        
+        // Hiệu ứng 3D cho countdown container
+        const countdown3d = document.getElementById('countdown3d');
+        
+        document.addEventListener('mousemove', (e) => {
+            if (window.innerWidth > 768) { // Chỉ áp dụng trên màn hình lớn
+                const xAxis = (window.innerWidth / 2 - e.pageX) / 25;
+                const yAxis = (window.innerHeight / 2 - e.pageY) / 25;
+                countdown3d.style.transform = `rotateY(${xAxis}deg) rotateX(${yAxis}deg)`;
             }
-        };
-
-        let currentDate = new Date();
-        let currentMonth = currentDate.getMonth();
-        let currentYear = currentDate.getFullYear();
-
-        // Các ngày lễ dương lịch (thêm vào theo nhu cầu)
-        const solarHolidays = {
-            '1-1': 'Tết Dương lịch',
-            '30-4': 'Giải phóng miền Nam',
-            '1-5': 'Quốc tế Lao động',
-            '2-9': 'Quốc khánh'
-        };
-
-        // Hàm chuyển đổi ngày dương sang âm (giả lập)
-        function convertToLunar(solarDate) {
-            // Trong thực tế, cần dùng thư viện hoặc API chuyển đổi
-            // Ở đây chỉ trả về dữ liệu mẫu
-            const day = solarDate.getDate();
-            const month = solarDate.getMonth() + 1;
-            const year = solarDate.getFullYear();
+        });
+        
+        // Reset vị trí khi không di chuột
+        document.addEventListener('mouseleave', () => {
+            countdown3d.style.transform = 'rotateY(0deg) rotateX(0deg)';
+        });
+        
+        // Mở modal thêm sự kiện
+        addEventBtn.addEventListener('click', () => {
+            addEventModal.style.display = 'flex';
+        });
+        
+        // Mở modal đăng nhập/đăng ký
+        authBtn.addEventListener('click', () => {
+            authModal.style.display = 'flex';
+        });
+        
+        // Đóng modal
+        cancelAddEvent.addEventListener('click', () => {
+            addEventModal.style.display = 'none';
+        });
+        
+        cancelAuth.addEventListener('click', () => {
+            authModal.style.display = 'none';
+        });
+        
+        // Chuyển đổi giữa đăng nhập và đăng ký
+        let isLoginMode = true;
+        
+        switchAuthText.addEventListener('click', () => {
+            isLoginMode = !isLoginMode;
             
-            // Giả lập: ngày âm = ngày dương + 10 (chỉ để demo)
-            let lunarDay = (day + 10) % 30;
-            if (lunarDay === 0) lunarDay = 30;
-            
-            return {
-                day: lunarDay,
-                month: month,
-                year: year,
-                isHoliday: false
-            };
-        }
-
-        // Hiển thị ngày hiện tại
-        function updateCurrentDate() {
-            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-            document.getElementById('current-date').textContent = currentDate.toLocaleDateString('vi-VN', options);
-        }
-
-        // Hiển thị lịch
-        function renderCalendar() {
-            // Hiển thị tháng năm
-            document.getElementById('solar-month-year').textContent = 
-                `Tháng ${currentMonth + 1} năm ${currentYear}`;
-            
-            // Tạo ngày đầu tháng và cuối tháng
-            const firstDay = new Date(currentYear, currentMonth, 1);
-            const lastDay = new Date(currentYear, currentMonth + 1, 0);
-            
-            // Tính ngày bắt đầu và số ngày cần hiển thị
-            const startDay = firstDay.getDay();
-            const totalDays = lastDay.getDate();
-            
-            // Hiển thị lịch dương
-            const solarDaysElement = document.getElementById('solar-days');
-            solarDaysElement.innerHTML = '';
-            
-            // Hiển thị các ô trống trước ngày đầu tháng
-            for (let i = 0; i < startDay; i++) {
-                const emptyDay = document.createElement('div');
-                emptyDay.className = 'day other-month';
-                solarDaysElement.appendChild(emptyDay);
+            if (isLoginMode) {
+                authModalTitle.textContent = 'Đăng Nhập';
+                submitAuth.textContent = 'Đăng Nhập';
+                switchAuthText.textContent = 'Chưa có tài khoản? Đăng ký ngay';
+            } else {
+                authModalTitle.textContent = 'Đăng Ký';
+                submitAuth.textContent = 'Đăng Ký';
+                switchAuthText.textContent = 'Đã có tài khoản? Đăng nhập ngay';
             }
+        });
+        
+        // Thêm sự kiện mới
+        submitEvent.addEventListener('click', () => {
+            const eventName = document.getElementById('eventName').value;
+            const eventDate = document.getElementById('eventDate').value;
             
-            // Hiển thị các ngày trong tháng
-            for (let i = 1; i <= totalDays; i++) {
-                const dayElement = document.createElement('div');
-                dayElement.className = 'day solar-day';
+            if (eventName && eventDate) {
+                events.push({ name: eventName, date: eventDate });
+                renderEventsList();
+                addEventModal.style.display = 'none';
                 
-                const date = new Date(currentYear, currentMonth, i);
-                const isToday = date.toDateString() === currentDate.toDateString();
-                const dayOfWeek = date.getDay();
-                
-                // Kiểm tra ngày lễ
-                const holidayKey = `${i}-${currentMonth + 1}`;
-                const isHoliday = solarHolidays[holidayKey] || dayOfWeek === 0;
-                
-                if (isHoliday) {
-                    dayElement.classList.add('holiday');
-                }
-                
-                if (isToday) {
-                    dayElement.classList.add('today');
-                }
-                
-                dayElement.innerHTML = `${i}`;
-                solarDaysElement.appendChild(dayElement);
+                // Reset form
+                document.getElementById('eventName').value = '';
+                document.getElementById('eventDate').value = '';
+            } else {
+                alert('Vui lòng điền đầy đủ thông tin sự kiện');
             }
+        });
+        
+        // Xử lý đăng nhập/đăng ký (mẫu)
+        submitAuth.addEventListener('click', () => {
+            const email = document.getElementById('authEmail').value;
+            const password = document.getElementById('authPassword').value;
             
-            // Hiển thị lịch âm
-            const lunarDaysElement = document.getElementById('lunar-days');
-            lunarDaysElement.innerHTML = '';
-            
-            // Hiển thị các ô trống trước ngày đầu tháng
-            for (let i = 0; i < startDay; i++) {
-                const emptyDay = document.createElement('div');
-                emptyDay.className = 'day other-month';
-                lunarDaysElement.appendChild(emptyDay);
+            if (email && password) {
+                if (isLoginMode) {
+                    alert(`Đăng nhập thành công với email: ${email}`);
+                } else {
+                    alert(`Đăng ký thành công với email: ${email}`);
+                }
+                authModal.style.display = 'none';
+                
+                // Reset form
+                document.getElementById('authEmail').value = '';
+                document.getElementById('authPassword').value = '';
+            } else {
+                alert('Vui lòng điền đầy đủ thông tin');
             }
+        });
+        
+        // Hiển thị danh sách sự kiện
+        function renderEventsList() {
+            eventsList.innerHTML = '';
             
-            // Hiển thị các ngày trong tháng (âm lịch)
-            for (let i = 1; i <= totalDays; i++) {
-                const dayElement = document.createElement('div');
-                dayElement.className = 'day';
-                
-                const date = new Date(currentYear, currentMonth, i);
-                const isToday = date.toDateString() === currentDate.toDateString();
-                const lunarDate = convertToLunar(date);
-                
-                if (isToday) {
-                    dayElement.classList.add('today');
-                }
-                
-                if (lunarDate.isHoliday) {
-                    dayElement.classList.add('holiday');
-                }
-                
-                dayElement.innerHTML = `
-                    <span class="solar-day">${i}</span>
-                    <span class="lunar-day">${lunarDate.day}/${lunarDate.month}</span>
+            events.forEach((event, index) => {
+                const eventElement = document.createElement('div');
+                eventElement.className = 'event-card';
+                eventElement.innerHTML = `
+                    <h3>${event.name}</h3>
+                    <p>Ngày: ${formatDate(new Date(event.date))}</p>
+                    <p class="time-left">Còn lại: ${calculateTimeLeft(new Date(event.date))}</p>
                 `;
-                lunarDaysElement.appendChild(dayElement);
+                
+                eventElement.addEventListener('click', () => {
+                    currentEventIndex = index;
+                    updateCountdown();
+                });
+                
+                eventsList.appendChild(eventElement);
+            });
+        }
+        
+        // Định dạng ngày tháng
+        function formatDate(date) {
+            const day = date.getDate();
+            const month = date.getMonth() + 1;
+            const year = date.getFullYear();
+            const hours = date.getHours();
+            const minutes = date.getMinutes();
+            
+            return `${day}/${month}/${year} ${hours}:${minutes < 10 ? '0' + minutes : minutes}`;
+        }
+        
+        // Tính thời gian còn lại
+        function calculateTimeLeft(targetDate) {
+            const now = new Date();
+            const diff = targetDate - now;
+            
+            if (diff <= 0) return "Đã diễn ra";
+            
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            
+            return `${days} ngày ${hours} giờ ${minutes} phút`;
+        }
+        
+        // Cập nhật đồng hồ đếm ngược
+        function updateCountdown() {
+            const currentEvent = events[currentEventIndex];
+            const targetDate = new Date(currentEvent.date);
+            const now = new Date();
+            const diff = targetDate - now;
+            
+            document.getElementById('currentEventName').textContent = currentEvent.name;
+            document.getElementById('currentEventDate').textContent = formatDate(targetDate);
+            
+            if (diff <= 0) {
+                document.getElementById('days').textContent = '00';
+                document.getElementById('hours').textContent = '00';
+                document.getElementById('minutes').textContent = '00';
+                document.getElementById('seconds').textContent = '00';
+                return;
             }
             
-            // Hiển thị tháng năm âm lịch
-            document.getElementById('lunar-month-year').textContent = 
-                `Tháng ${lunarDate.month} năm ${lunarDate.year}`;
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+            
+            document.getElementById('days').textContent = days < 10 ? '0' + days : days;
+            document.getElementById('hours').textContent = hours < 10 ? '0' + hours : hours;
+            document.getElementById('minutes').textContent = minutes < 10 ? '0' + minutes : minutes;
+            document.getElementById('seconds').textContent = seconds < 10 ? '0' + seconds : seconds;
         }
-
-        // Xử lý sự kiện nút
-        document.getElementById('prev-month').addEventListener('click', function() {
-            currentMonth--;
-            if (currentMonth < 0) {
-                currentMonth = 11;
-                currentYear--;
-            }
-            renderCalendar();
-        });
         
-        document.getElementById('next-month').addEventListener('click', function() {
-            currentMonth++;
-            if (currentMonth > 11) {
-                currentMonth = 0;
-                currentYear++;
-            }
-            renderCalendar();
-        });
-        
-        document.getElementById('today').addEventListener('click', function() {
-            currentDate = new Date();
-            currentMonth = currentDate.getMonth();
-            currentYear = currentDate.getFullYear();
-            updateCurrentDate();
-            renderCalendar();
-        });
-
         // Khởi tạo
-        updateCurrentDate();
-        renderCalendar();
+        function init() {
+            renderEventsList();
+            updateCountdown();
+            setInterval(updateCountdown, 1000);
+        }
+        
+        init();
     </script>
 </body>
 </html>
