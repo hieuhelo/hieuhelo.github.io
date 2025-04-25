@@ -1,625 +1,188 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang='en' >
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Countdown 3D - Hiếu Đẹp Trai</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        .flip-card {
-            perspective: 1000px;
-        }
-        .flip-card-inner {
-            position: relative;
-            width: 100%;
-            height: 100%;
-            text-align: center;
-            transition: transform 0.6s;
-            transform-style: preserve-3d;
-        }
-        .flip-card-front, .flip-card-back {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            -webkit-backface-visibility: hidden;
-            backface-visibility: hidden;
-            border-radius: 0.5rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-        }
-        .flip-card-back {
-            transform: rotateX(180deg);
-        }
-        .flipping .flip-card-inner {
-            transform: rotateX(180deg);
-        }
-        .glow {
-            text-shadow: 0 0 10px rgba(255, 255, 255, 0.8), 
-                         0 0 20px rgba(255, 215, 0, 0.6);
-        }
-        .neon-border {
-            box-shadow: 0 0 10px rgba(0, 255, 255, 0.8),
-                        inset 0 0 10px rgba(0, 255, 255, 0.8),
-                        0 0 20px rgba(0, 255, 255, 0.6),
-                        inset 0 0 20px rgba(0, 255, 255, 0.6),
-                        0 0 40px rgba(0, 255, 255, 0.4),
-                        inset 0 0 40px rgba(0, 255, 255, 0.4);
-        }
-        .bg-space {
-            background: linear-gradient(to bottom, #000428, #004e92);
-        }
-        .star {
-            position: absolute;
-            background-color: white;
-            border-radius: 50%;
-            animation: twinkle var(--duration) infinite ease-in-out;
-        }
-        @keyframes twinkle {
-            0%, 100% { opacity: 0.2; }
-            50% { opacity: 1; }
-        }
-        .sidebar {
-            transition: all 0.3s ease;
-        }
-        .sidebar-right {
-            transform: translateX(100%);
-        }
-        .sidebar-left {
-            transform: translateX(-100%);
-        }
-        .sidebar.active {
-            transform: translateX(0);
-        }
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 50;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0,0,0,0.7);
-        }
-        .modal-content {
-            background-color: #1a202c;
-            margin: 10% auto;
-            padding: 20px;
-            border: 1px solid #2d3748;
-            width: 80%;
-            max-width: 500px;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
-        }
-        .top-nav-button {
-            position: fixed;
-            top: 20px;
-            z-index: 40;
-            background-color: rgba(30, 41, 59, 0.8);
-            border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-        .top-nav-button:hover {
-            transform: scale(1.1);
-            background-color: rgba(51, 65, 85, 0.9);
-        }
-        .top-nav-button i {
-            font-size: 1.5rem;
-            color: white;
-        }
-        @media (max-width: 768px) {
-            .sidebar {
-                width: 85%;
-            }
-            .top-nav-button {
-                width: 45px;
-                height: 45px;
-                top: 15px;
-            }
-            .flip-card {
-                width: 70px !important;
-                height: 70px !important;
-            }
-            .flip-card-front span:first-child, 
-            .flip-card-back span:first-child {
-                font-size: 2rem !important;
-            }
-            .flip-card-front span:last-child, 
-            .flip-card-back span:last-child {
-                font-size: 0.65rem !important;
-            }
-            .personal-info {
-                padding: 1rem !important;
-                margin-bottom: 1.5rem !important;
-            }
-            .countdown-title {
-                font-size: 1.5rem !important;
-                margin-bottom: 1.5rem !important;
-            }
-            .target-date {
-                padding: 0.75rem !important;
-                font-size: 0.9rem !important;
-            }
-        }
-    </style>
+  <meta charset='UTF-8'>
+  <title>Face Button</title>
+  <link rel='stylesheet' href='./style.css'>
+
 </head>
-<body class="bg-space text-white min-h-screen flex flex-col items-center justify-center p-4 overflow-hidden">
-    <!-- Stars background -->
-    <div id="stars-container" class="fixed inset-0 overflow-hidden"></div>
-    
-    <!-- Top Navigation Buttons -->
-    <div class="top-nav-button left-4 md:left-8" onclick="toggleLeftSidebar()">
-        <i class="fas fa-user"></i>
-    </div>
-    
-    <div class="top-nav-button right-4 md:right-8" onclick="toggleRightSidebar()">
-        <i class="fas fa-plus"></i>
-    </div>
+<body>
+<!-- partial:index.partial.html -->
+<div id='container'>
+  <button class='face-button'>
+    <span class='face-container'>
+      <span class='eye left'></span>
+      <span class='eye right'></span>
+      <span class='mouth'></span>
+    </span>
+  </button>
+</div>
+<!-- partial -->
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/gsap/2.1.2/TweenMax.min.js'></script><script  src='./script.js'></script>
 
-    <!-- Main Content Container -->
-    <div class="z-10 w-full max-w-4xl flex flex-col items-center">
-        <!-- Header Title -->
-        <div class="text-center mt-16 md:mt-4 mb-6">
-            <h1 class="text-3xl md:text-5xl font-bold mb-2 glow">Đồng hồ đếm ngược các ngày trong năm</h1>
-        </div>
-        
-        <!-- Personal Info Section -->
-        <div class="personal-info w-full mb-6 md:mb-8 text-center neon-border p-4 md:p-6 rounded-lg bg-black bg-opacity-50 backdrop-blur-sm">
-            <h1 class="text-2xl md:text-4xl font-bold mb-2 glow">Xin chào!</h1>
-            <p class="text-lg md:text-2xl mb-3">Mình là <span class="font-bold text-yellow-300">Hiếu</span></p>
-            <p class="text-base md:text-lg mb-3">Nếu thấy hữu ích hãy Donate cho Mình ly cafe nhé</p>
-            <div class="bg-blue-900 bg-opacity-50 p-2 md:p-3 rounded-lg inline-block">
-                <p class="font-mono text-sm md:text-lg"><i class="fas fa-university mr-2"></i>Ngân hàng VCB: STK <span class="font-bold">123456789</span></p>
-                <p class="text-yellow-300 mt-1 text-sm md:text-base">Hiếu Đẹp Trai</p>
-            </div>
-        </div>
-
-        <!-- Countdown Section -->
-        <div class="w-full text-center mb-6">
-            <h2 class="countdown-title text-xl md:text-3xl font-bold mb-4 md:mb-6 glow" id="countdown-title">Countdown đến ngày 30/04/2025</h2>
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-6 justify-items-center">
-                <!-- Days -->
-                <div class="flip-card w-20 h-20 md:w-28 md:h-28" id="days-card">
-                    <div class="flip-card-inner">
-                        <div class="flip-card-front bg-blue-800 flex flex-col items-center justify-center">
-                            <span class="text-3xl md:text-6xl font-bold" id="days">00</span>
-                            <span class="text-xs md:text-sm mt-1">NGÀY</span>
-                        </div>
-                        <div class="flip-card-back bg-blue-600 flex flex-col items-center justify-center">
-                            <span class="text-3xl md:text-6xl font-bold">00</span>
-                            <span class="text-xs md:text-sm mt-1">NGÀY</span>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Hours -->
-                <div class="flip-card w-20 h-20 md:w-28 md:h-28" id="hours-card">
-                    <div class="flip-card-inner">
-                        <div class="flip-card-front bg-green-800 flex flex-col items-center justify-center">
-                            <span class="text-3xl md:text-6xl font-bold" id="hours">00</span>
-                            <span class="text-xs md:text-sm mt-1">GIỜ</span>
-                        </div>
-                        <div class="flip-card-back bg-green-600 flex flex-col items-center justify-center">
-                            <span class="text-3xl md:text-6xl font-bold">00</span>
-                            <span class="text-xs md:text-sm mt-1">GIỜ</span>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Minutes -->
-                <div class="flip-card w-20 h-20 md:w-28 md:h-28" id="minutes-card">
-                    <div class="flip-card-inner">
-                        <div class="flip-card-front bg-purple-800 flex flex-col items-center justify-center">
-                            <span class="text-3xl md:text-6xl font-bold" id="minutes">00</span>
-                            <span class="text-xs md:text-sm mt-1">PHÚT</span>
-                        </div>
-                        <div class="flip-card-back bg-purple-600 flex flex-col items-center justify-center">
-                            <span class="text-3xl md:text-6xl font-bold">00</span>
-                            <span class="text-xs md:text-sm mt-1">PHÚT</span>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Seconds -->
-                <div class="flip-card w-20 h-20 md:w-28 md:h-28" id="seconds-card">
-                    <div class="flip-card-inner">
-                        <div class="flip-card-front bg-red-800 flex flex-col items-center justify-center">
-                            <span class="text-3xl md:text-6xl font-bold" id="seconds">00</span>
-                            <span class="text-xs md:text-sm mt-1">GIÂY</span>
-                        </div>
-                        <div class="flip-card-back bg-red-600 flex flex-col items-center justify-center">
-                            <span class="text-3xl md:text-6xl font-bold">00</span>
-                            <span class="text-xs md:text-sm mt-1">GIÂY</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Target Date -->
-        <div class="target-date w-full text-center mt-4 bg-black bg-opacity-50 p-3 md:p-4 rounded-lg">
-            <p class="text-sm md:text-xl">Đếm ngược đến: <span class="font-bold text-yellow-300" id="target-date-display">30/04/2025 00:00:00</span></p>
-        </div>
-    </div>
-
-    <!-- Left Sidebar - Login/Register -->
-    <div class="fixed left-0 top-0 h-full w-64 bg-gray-900 bg-opacity-95 text-white p-4 sidebar sidebar-left z-30">
-        <div class="flex justify-between items-center mb-6">
-            <h3 class="text-xl font-bold">Đăng nhập</h3>
-            <button onclick="toggleLeftSidebar()" class="text-white hover:text-yellow-300">
-                <i class="fas fa-times"></i>
-            </button>
-        </div>
-        
-        <div class="mb-4">
-            <label class="block mb-2">Email</label>
-            <input type="email" id="login-email" class="w-full p-2 rounded bg-gray-800 border border-gray-700">
-        </div>
-        
-        <div class="mb-4">
-            <label class="block mb-2">Mật khẩu</label>
-            <input type="password" id="login-password" class="w-full p-2 rounded bg-gray-800 border border-gray-700">
-        </div>
-        
-        <button onclick="login()" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded mb-4">
-            Đăng nhập
-        </button>
-        
-        <div class="text-center mb-4">Hoặc</div>
-        
-        <div class="mb-4">
-            <label class="block mb-2">Tên người dùng</label>
-            <input type="text" id="register-username" class="w-full p-2 rounded bg-gray-800 border border-gray-700">
-        </div>
-        
-        <div class="mb-4">
-            <label class="block mb-2">Email</label>
-            <input type="email" id="register-email" class="w-full p-2 rounded bg-gray-800 border border-gray-700">
-        </div>
-        
-        <div class="mb-4">
-            <label class="block mb-2">Mật khẩu</label>
-            <input type="password" id="register-password" class="w-full p-2 rounded bg-gray-800 border border-gray-700">
-        </div>
-        
-        <button onclick="register()" class="w-full bg-green-600 hover:bg-green-700 text-white py-2 rounded">
-            Đăng ký
-        </button>
-    </div>
-
-    <!-- Right Sidebar - Custom Countdown -->
-    <div class="fixed right-0 top-0 h-full w-64 bg-gray-900 bg-opacity-95 text-white p-4 sidebar sidebar-right z-30">
-        <div class="flex justify-between items-center mb-6">
-            <h3 class="text-xl font-bold">Tạo Countdown</h3>
-            <button onclick="toggleRightSidebar()" class="text-white hover:text-yellow-300">
-                <i class="fas fa-times"></i>
-            </button>
-        </div>
-        
-        <div class="mb-4">
-            <label class="block mb-2">Tên sự kiện</label>
-            <input type="text" id="event-name" class="w-full p-2 rounded bg-gray-800 border border-gray-700">
-        </div>
-        
-        <div class="mb-4">
-            <label class="block mb-2">Ngày sự kiện</label>
-            <input type="date" id="event-date" class="w-full p-2 rounded bg-gray-800 border border-gray-700">
-        </div>
-        
-        <div class="mb-4">
-            <label class="block mb-2">Giờ sự kiện</label>
-            <input type="time" id="event-time" class="w-full p-2 rounded bg-gray-800 border border-gray-700">
-        </div>
-        
-        <button onclick="createCustomCountdown()" class="w-full bg-purple-600 hover:bg-purple-700 text-white py-2 rounded">
-            Tạo Countdown
-        </button>
-        
-        <div class="mt-8">
-            <h4 class="text-lg font-bold mb-2">Countdown đã lưu</h4>
-            <div id="saved-countdowns" class="space-y-2">
-                <!-- Saved countdowns will appear here -->
-            </div>
-        </div>
-    </div>
-
-    <!-- Login Success Modal -->
-    <div id="login-modal" class="modal">
-        <div class="modal-content">
-            <div class="flex justify-between items-center mb-4">
-                <h3 class="text-xl font-bold" id="modal-title">Thông báo</h3>
-                <span onclick="closeModal('login-modal')" class="cursor-pointer text-xl">&times;</span>
-            </div>
-            <p id="modal-message">Đăng nhập thành công!</p>
-            <div class="mt-4 flex justify-end">
-                <button onclick="closeModal('login-modal')" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">
-                    OK
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        // Global variables
-        let targetDate = new Date('2025-04-30T00:00:00');
-        let countdownTimer;
-        let savedCountdowns = [];
-        let currentUser = null;
-
-        // Create stars
-        function createStars() {
-            const container = document.getElementById('stars-container');
-            const starCount = 100;
-            
-            for (let i = 0; i < starCount; i++) {
-                const star = document.createElement('div');
-                star.classList.add('star');
-                
-                // Random properties
-                const size = Math.random() * 3;
-                const posX = Math.random() * 100;
-                const posY = Math.random() * 100;
-                const duration = 2 + Math.random() * 3 + 's';
-                const delay = Math.random() * 5 + 's';
-                
-                star.style.width = `${size}px`;
-                star.style.height = `${size}px`;
-                star.style.left = `${posX}%`;
-                star.style.top = `${posY}%`;
-                star.style.setProperty('--duration', duration);
-                star.style.animationDelay = delay;
-                
-                container.appendChild(star);
-            }
-        }
-        
-        // Initialize countdown
-        function updateCountdown() {
-            const now = new Date().getTime();
-            const distance = targetDate - now;
-            
-            // Time calculations
-            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-            
-            // Update display
-            updateFlipCard('days', days);
-            updateFlipCard('hours', hours);
-            updateFlipCard('minutes', minutes);
-            updateFlipCard('seconds', seconds);
-            
-            // If countdown is finished
-            if (distance < 0) {
-                clearInterval(countdownTimer);
-                document.getElementById('days').innerHTML = "00";
-                document.getElementById('hours').innerHTML = "00";
-                document.getElementById('minutes').innerHTML = "00";
-                document.getElementById('seconds').innerHTML = "00";
-            }
-        }
-        
-        // Update flip card with animation
-        function updateFlipCard(unit, value) {
-            const card = document.getElementById(`${unit}-card`);
-            const display = document.getElementById(unit);
-            const formattedValue = value.toString().padStart(2, '0');
-            
-            if (display.textContent !== formattedValue) {
-                // Add flipping class
-                card.classList.add('flipping');
-                
-                // Update value after animation starts
-                setTimeout(() => {
-                    display.textContent = formattedValue;
-                }, 300);
-                
-                // Remove flipping class after animation completes
-                setTimeout(() => {
-                    card.classList.remove('flipping');
-                }, 600);
-            }
-        }
-        
-        // Toggle sidebars
-        function toggleLeftSidebar() {
-            document.querySelector('.sidebar-left').classList.toggle('active');
-        }
-        
-        function toggleRightSidebar() {
-            document.querySelector('.sidebar-right').classList.toggle('active');
-        }
-        
-        // Login function
-        function login() {
-            const email = document.getElementById('login-email').value;
-            const password = document.getElementById('login-password').value;
-            
-            // Simple validation
-            if (!email || !password) {
-                showModal('Lỗi', 'Vui lòng nhập email và mật khẩu');
-                return;
-            }
-            
-            // In a real app, you would call your backend API here
-            currentUser = {
-                email: email,
-                username: email.split('@')[0]
-            };
-            
-            showModal('Thành công', 'Đăng nhập thành công!');
-            toggleLeftSidebar();
-            
-            // Load user's saved countdowns
-            loadSavedCountdowns();
-        }
-        
-        // Register function
-        function register() {
-            const username = document.getElementById('register-username').value;
-            const email = document.getElementById('register-email').value;
-            const password = document.getElementById('register-password').value;
-            
-            // Simple validation
-            if (!username || !email || !password) {
-                showModal('Lỗi', 'Vui lòng điền đầy đủ thông tin');
-                return;
-            }
-            
-            // In a real app, you would call your backend API here
-            currentUser = {
-                email: email,
-                username: username
-            };
-            
-            showModal('Thành công', 'Đăng ký thành công! Bạn đã được đăng nhập tự động.');
-            toggleLeftSidebar();
-            
-            // Clear registration form
-            document.getElementById('register-username').value = '';
-            document.getElementById('register-email').value = '';
-            document.getElementById('register-password').value = '';
-        }
-        
-        // Create custom countdown
-        function createCustomCountdown() {
-            const eventName = document.getElementById('event-name').value;
-            const eventDate = document.getElementById('event-date').value;
-            const eventTime = document.getElementById('event-time').value;
-            
-            if (!eventName || !eventDate) {
-                showModal('Lỗi', 'Vui lòng nhập tên sự kiện và ngày');
-                return;
-            }
-            
-            // Combine date and time
-            const dateTimeString = `${eventDate}T${eventTime || '00:00'}:00`;
-            const newTargetDate = new Date(dateTimeString);
-            
-            if (isNaN(newTargetDate.getTime())) {
-                showModal('Lỗi', 'Ngày không hợp lệ');
-                return;
-            }
-            
-            // Save the countdown
-            const countdown = {
-                id: Date.now(),
-                name: eventName,
-                date: dateTimeString,
-                createdBy: currentUser ? currentUser.email : 'guest'
-            };
-            
-            savedCountdowns.push(countdown);
-            saveCountdownsToLocalStorage();
-            
-            // Update UI
-            updateCountdownList();
-            
-            // Set as active countdown
-            setActiveCountdown(countdown);
-            
-            showModal('Thành công', `Đã tạo countdown cho "${eventName}"`);
-            toggleRightSidebar();
-        }
-        
-        // Set active countdown
-        function setActiveCountdown(countdown) {
-            targetDate = new Date(countdown.date);
-            document.getElementById('countdown-title').textContent = `Countdown đến ${countdown.name}`;
-            document.getElementById('target-date-display').textContent = formatDate(targetDate);
-            
-            // Restart countdown
-            clearInterval(countdownTimer);
-            updateCountdown();
-            countdownTimer = setInterval(updateCountdown, 1000);
-        }
-        
-        // Save countdowns to localStorage
-        function saveCountdownsToLocalStorage() {
-            localStorage.setItem('savedCountdowns', JSON.stringify(savedCountdowns));
-        }
-        
-        // Load saved countdowns from localStorage
-        function loadSavedCountdowns() {
-            const saved = localStorage.getItem('savedCountdowns');
-            if (saved) {
-                savedCountdowns = JSON.parse(saved);
-                updateCountdownList();
-            }
-        }
-        
-        // Update countdown list in UI
-        function updateCountdownList() {
-            const container = document.getElementById('saved-countdowns');
-            container.innerHTML = '';
-            
-            if (savedCountdowns.length === 0) {
-                container.innerHTML = '<p class="text-gray-400">Chưa có countdown nào</p>';
-                return;
-            }
-            
-            savedCountdowns.forEach(countdown => {
-                const div = document.createElement('div');
-                div.className = 'bg-gray-800 p-2 rounded cursor-pointer hover:bg-gray-700';
-                div.innerHTML = `
-                    <div class="font-bold">${countdown.name}</div>
-                    <div class="text-sm text-gray-300">${formatDate(new Date(countdown.date))}</div>
-                `;
-                div.onclick = () => setActiveCountdown(countdown);
-                container.appendChild(div);
-            });
-        }
-        
-        // Format date for display
-        function formatDate(date) {
-            const day = date.getDate().toString().padStart(2, '0');
-            const month = (date.getMonth() + 1).toString().padStart(2, '0');
-            const year = date.getFullYear();
-            const hours = date.getHours().toString().padStart(2, '0');
-            const minutes = date.getMinutes().toString().padStart(2, '0');
-            
-            return `${day}/${month}/${year} ${hours}:${minutes}`;
-        }
-        
-        // Show modal
-        function showModal(title, message) {
-            document.getElementById('modal-title').textContent = title;
-            document.getElementById('modal-message').textContent = message;
-            document.getElementById('login-modal').style.display = 'block';
-        }
-        
-        // Close modal
-        function closeModal(modalId) {
-            document.getElementById(modalId).style.display = 'none';
-        }
-        
-        // Initialize
-        document.addEventListener('DOMContentLoaded', () => {
-            createStars();
-            updateCountdown();
-            countdownTimer = setInterval(updateCountdown, 1000);
-            loadSavedCountdowns();
-            
-            // Set default date to tomorrow
-            const tomorrow = new Date();
-            tomorrow.setDate(tomorrow.getDate() + 1);
-            document.getElementById('event-date').valueAsDate = tomorrow;
-        });
-    </script>
-        <!-- Liên kết đến index2.html và index3.html -->
-        <div class="mb-6">
-            <p><a href="index2.html" class="text-blue-400 hover:underline">Đi đến trang 2</a></p>
-            <p><a href="index3.html" class="text-blue-400 hover:underline">Đi đến trang 3</a></p>
-        </div>
 </body>
 </html>
+
+<style>
+* {
+  box-sizing: border-box;
+}
+*::before, *::after {
+  box-sizing: border-box;
+}
+
+body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  min-height: 100vh;
+  background: #fbf6e6;
+}
+
+#container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 6.25rem;
+  height: 6.25rem;
+}
+
+button {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+  outline: none;
+  border: 0;
+  vertical-align: middle;
+}
+button.face-button {
+  width: 6.25rem;
+  height: 6.25rem;
+  border-radius: 50%;
+  background: #fdda5f;
+  box-shadow: inset 2px -4px 18px #fd9744;
+}
+
+.face-container {
+  position: relative;
+  display: block;
+  width: 40px;
+  height: 20px;
+  margin: auto;
+}
+
+.eye {
+  position: absolute;
+  height: 0.5rem;
+  width: 0.5rem;
+  background: #2a2927;
+  border-radius: 50%;
+  -webkit-animation: eyeBlink 3200ms linear infinite;
+          animation: eyeBlink 3200ms linear infinite;
+}
+.eye.left {
+  left: 0;
+}
+.eye.right {
+  left: 2rem;
+}
+
+.mouth {
+  position: absolute;
+  top: 1.125rem;
+  left: 0.8rem;
+  width: 1rem;
+  height: 0.125rem;
+  background: #2a2927;
+  border-radius: 0;
+}
+
+.eye, .mouth {
+  box-shadow: inset 1px 2px 4px #121110;
+}
+
+.face-button:hover .mouth,
+.face-button:active .mouth {
+  left: 1rem;
+  width: 0.5rem;
+  height: 0.4rem;
+  border-radius: 1rem 1rem 0.125rem 0.125rem;
+}
+
+.face-button:hover .eye,
+.face-button:active .eye {
+  height: 0.375rem;
+  width: 0.375rem;
+  box-shadow: 0 0 0 0.25rem #fff;
+}
+
+@-webkit-keyframes eyeBlink {
+  0%, 30%, 36%, 100% {
+    transform: scale(1);
+  }
+  32%, 34% {
+    transform: scale(1, 0);
+  }
+}
+
+@keyframes eyeBlink {
+  0%, 30%, 36%, 100% {
+    transform: scale(1);
+  }
+  32%, 34% {
+    transform: scale(1, 0);
+  }
+}
+</style>
+<script>
+const faceButton = document.querySelector('.face-button');
+const faceContainer = document.querySelector('.face-container');
+const containerCoords = document.querySelector('#container');
+const mouseCoords = containerCoords.getBoundingClientRect();
+
+faceButton.addEventListener('mousemove', function(e) {
+  const mouseX = e.pageX - containerCoords.offsetLeft;
+  const mouseY = e.pageY - containerCoords.offsetTop;
+  
+  TweenMax.to(faceButton, 0.3, {
+     x: (mouseX - mouseCoords.width / 2) / mouseCoords.width * 50,
+     y: (mouseY - mouseCoords.height / 2) / mouseCoords.width * 50,
+     ease: Power4.easeOut
+   })
+});
+faceButton.addEventListener('mousemove', function(e) {
+  const mouseX = e.pageX - containerCoords.offsetLeft;
+  const mouseY = e.pageY - containerCoords.offsetTop;
+  
+  TweenMax.to(faceContainer, 0.3, {
+     x: (mouseX - mouseCoords.width / 2) / mouseCoords.width * 25,
+     y: (mouseY - mouseCoords.height / 2) / mouseCoords.width * 25,
+     ease: Power4.easeOut
+   })
+});
+
+faceButton.addEventListener('mouseenter', function(e) {
+  TweenMax.to(faceButton, 0.3, {
+    scale: 0.975
+  })
+});
+
+faceButton.addEventListener('mouseleave', function(e) {
+  TweenMax.to(faceButton, 0.3, {
+    x: 0,
+    y: 0,
+    scale: 1
+  })
+  
+  TweenMax.to(faceContainer, 0.3, {
+    x: 0,
+    y: 0,
+    scale: 1
+  })
+});
+</script>
+<body>
+    <h1>Chào mừng đến với trang chính</h1>
+    <p><a href="index2.html">Đi đến trang 2</a></p>
+</body>
