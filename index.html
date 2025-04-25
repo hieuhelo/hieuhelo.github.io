@@ -3,599 +3,627 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Đếm Ngược Sự Kiện Việt Nam</title>
+    <title>Countdown 3D - Hiếu Đẹp Trai</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Arial', sans-serif;
-        }
-        
-        body {
-            background: linear-gradient(135deg, #1a1a2e, #16213e);
-            color: white;
-            min-height: 100vh;
-            overflow-x: hidden;
+        .flip-card {
             perspective: 1000px;
         }
-        
-        .container {
-            width: 100%;
-            padding: 20px;
+        .flip-card-inner {
             position: relative;
-        }
-        
-        .header {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 30px;
-        }
-        
-        .btn {
-            padding: 10px 15px;
-            border: none;
-            border-radius: 50px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-        
-        .btn-add {
-            background-color: #4CAF50;
-            color: white;
-        }
-        
-        .btn-auth {
-            background-color: #f39c12;
-            color: white;
-        }
-        
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
-        }
-        
-        .countdown-container {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            padding: 20px;
-            margin-bottom: 30px;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.6s;
             transform-style: preserve-3d;
-            transition: transform 0.5s;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
         }
-        
-        .countdown-title {
-            font-size: 24px;
-            margin-bottom: 15px;
-            text-align: center;
-            color: #f39c12;
-        }
-        
-        .countdown {
+        .flip-card-front, .flip-card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            border-radius: 0.5rem;
             display: flex;
-            justify-content: space-around;
-            text-align: center;
-        }
-        
-        .countdown-item {
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 10px;
-            padding: 10px;
-            width: 22%;
-            transform-style: preserve-3d;
-            transition: transform 0.3s;
-        }
-        
-        .countdown-item:hover {
-            transform: translateZ(20px);
-        }
-        
-        .countdown-number {
-            font-size: 30px;
+            align-items: center;
+            justify-content: center;
             font-weight: bold;
-            color: #4CAF50;
         }
-        
-        .countdown-label {
-            font-size: 12px;
-            color: #ddd;
+        .flip-card-back {
+            transform: rotateX(180deg);
         }
-        
-        .event-name {
-            font-size: 20px;
-            text-align: center;
-            margin: 20px 0;
-            color: #fff;
+        .flipping .flip-card-inner {
+            transform: rotateX(180deg);
         }
-        
-        .event-date {
-            text-align: center;
-            color: #ccc;
-            margin-bottom: 20px;
+        .glow {
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.8), 
+                         0 0 20px rgba(255, 215, 0, 0.6);
         }
-        
-        .event-status {
-            text-align: center;
-            padding: 5px 10px;
-            border-radius: 20px;
-            font-weight: bold;
-            margin: 10px auto;
-            width: fit-content;
+        .neon-border {
+            box-shadow: 0 0 10px rgba(0, 255, 255, 0.8),
+                        inset 0 0 10px rgba(0, 255, 255, 0.8),
+                        0 0 20px rgba(0, 255, 255, 0.6),
+                        inset 0 0 20px rgba(0, 255, 255, 0.6),
+                        0 0 40px rgba(0, 255, 255, 0.4),
+                        inset 0 0 40px rgba(0, 255, 255, 0.4);
         }
-        
-        .status-upcoming {
-            background-color: rgba(46, 204, 113, 0.2);
-            color: #2ecc71;
+        .bg-space {
+            background: linear-gradient(to bottom, #000428, #004e92);
         }
-        
-        .status-ongoing {
-            background-color: rgba(241, 196, 15, 0.2);
-            color: #f1c40f;
-            animation: pulse 2s infinite;
+        .star {
+            position: absolute;
+            background-color: white;
+            border-radius: 50%;
+            animation: twinkle var(--duration) infinite ease-in-out;
         }
-        
-        .status-ended {
-            background-color: rgba(231, 76, 60, 0.2);
-            color: #e74c3c;
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.2; }
+            50% { opacity: 1; }
         }
-        
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
+        .sidebar {
+            transition: all 0.3s ease;
         }
-        
+        .sidebar-right {
+            transform: translateX(100%);
+        }
+        .sidebar-left {
+            transform: translateX(-100%);
+        }
+        .sidebar.active {
+            transform: translateX(0);
+        }
         .modal {
             display: none;
             position: fixed;
-            top: 0;
+            z-index: 50;
             left: 0;
+            top: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            z-index: 100;
-            justify-content: center;
-            align-items: center;
+            background-color: rgba(0,0,0,0.7);
         }
-        
         .modal-content {
-            background: #16213e;
+            background-color: #1a202c;
+            margin: 10% auto;
             padding: 20px;
-            border-radius: 15px;
-            width: 90%;
-            max-width: 400px;
-            transform-style: preserve-3d;
-            animation: modalEnter 0.5s forwards;
-        }
-        
-        @keyframes modalEnter {
-            from {
-                transform: translateZ(-100px) rotateX(90deg);
-                opacity: 0;
-            }
-            to {
-                transform: translateZ(0) rotateX(0);
-                opacity: 1;
-            }
-        }
-        
-        .modal-title {
-            margin-bottom: 20px;
-            text-align: center;
-            color: #f39c12;
-        }
-        
-        .form-group {
-            margin-bottom: 15px;
-        }
-        
-        .form-group label {
-            display: block;
-            margin-bottom: 5px;
-            color: #ddd;
-        }
-        
-        .form-group input, .form-group select {
-            width: 100%;
-            padding: 10px;
-            border-radius: 5px;
-            border: none;
-            background: rgba(255, 255, 255, 0.1);
-            color: white;
-        }
-        
-        .modal-buttons {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 20px;
-        }
-        
-        .btn-cancel {
-            background-color: #e74c3c;
-            color: white;
-        }
-        
-        .btn-submit {
-            background-color: #4CAF50;
-            color: white;
-        }
-        
-        .events-list {
-            margin-top: 30px;
-        }
-        
-        .event-card {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 15px;
-            padding: 15px;
-            margin-bottom: 15px;
-            transform-style: preserve-3d;
-            transition: all 0.3s;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-            position: relative;
-        }
-        
-        .event-card:hover {
-            transform: translateZ(10px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
-        }
-        
-        .event-card h3 {
-            color: #f39c12;
-            margin-bottom: 10px;
-        }
-        
-        .event-card p {
-            color: #ccc;
-            margin-bottom: 10px;
-        }
-        
-        .event-card .time-left {
-            color: #4CAF50;
-            font-weight: bold;
-        }
-        
-        .event-card .event-type {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            background: rgba(52, 152, 219, 0.2);
-            color: #3498db;
-            padding: 3px 8px;
+            border: 1px solid #2d3748;
+            width: 80%;
+            max-width: 500px;
             border-radius: 10px;
-            font-size: 12px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
         }
-        
-        .holiday {
-            border-left: 5px solid #e74c3c;
+        .top-nav-button {
+            position: fixed;
+            top: 20px;
+            z-index: 40;
+            background-color: rgba(30, 41, 59, 0.8);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
-        
-        .festival {
-            border-left: 5px solid #f39c12;
+        .top-nav-button:hover {
+            transform: scale(1.1);
+            background-color: rgba(51, 65, 85, 0.9);
         }
-        
-        .cultural {
-            border-left: 5px solid #2ecc71;
+        .top-nav-button i {
+            font-size: 1.5rem;
+            color: white;
         }
-        
-        .other {
-            border-left: 5px solid #9b59b6;
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 85%;
+            }
+            .top-nav-button {
+                width: 45px;
+                height: 45px;
+                top: 15px;
+            }
+            .flip-card {
+                width: 70px !important;
+                height: 70px !important;
+            }
+            .flip-card-front span:first-child, 
+            .flip-card-back span:first-child {
+                font-size: 2rem !important;
+            }
+            .flip-card-front span:last-child, 
+            .flip-card-back span:last-child {
+                font-size: 0.65rem !important;
+            }
+            .personal-info {
+                padding: 1rem !important;
+                margin-bottom: 1.5rem !important;
+            }
+            .countdown-title {
+                font-size: 1.5rem !important;
+                margin-bottom: 1.5rem !important;
+            }
+            .target-date {
+                padding: 0.75rem !important;
+                font-size: 0.9rem !important;
+            }
         }
     </style>
 </head>
-<body>
-    <div class="container">
-        <div class="header">
-            <button class="btn btn-add" id="addEventBtn">+ Thêm sự kiện</button>
-            <button class="btn btn-auth" id="authBtn">Đăng nhập/Đăng ký</button>
+<body class="bg-space text-white min-h-screen flex flex-col items-center justify-center p-4 overflow-hidden">
+    <!-- Stars background -->
+    <div id="stars-container" class="fixed inset-0 overflow-hidden"></div>
+    
+    <!-- Top Navigation Buttons -->
+    <div class="top-nav-button left-4 md:left-8" onclick="toggleLeftSidebar()">
+        <i class="fas fa-user"></i>
+    </div>
+    
+    <div class="top-nav-button right-4 md:right-8" onclick="toggleRightSidebar()">
+        <i class="fas fa-plus"></i>
+    </div>
+
+    <!-- Main Content Container -->
+    <div class="z-10 w-full max-w-4xl flex flex-col items-center">
+        <!-- Header Title -->
+        <div class="text-center mt-16 md:mt-4 mb-6">
+            <h1 class="text-3xl md:text-5xl font-bold mb-2 glow">Đồng hồ đếm ngược các ngày trong năm</h1>
         </div>
         
-        <div class="countdown-container" id="countdown3d">
-            <h2 class="countdown-title">ĐẾM NGƯỢC SỰ KIỆN VIỆT NAM</h2>
-            <div class="event-name" id="currentEventName">Tết Nguyên Đán 2025</div>
-            <div class="event-date" id="currentEventDate">29/1/2025</div>
-            <div class="event-status status-upcoming" id="eventStatus">SẮP DIỄN RA</div>
-            <div class="countdown">
-                <div class="countdown-item">
-                    <div class="countdown-number" id="days">00</div>
-                    <div class="countdown-label">NGÀY</div>
+        <!-- Personal Info Section -->
+        <div class="personal-info w-full mb-6 md:mb-8 text-center neon-border p-4 md:p-6 rounded-lg bg-black bg-opacity-50 backdrop-blur-sm">
+            <h1 class="text-2xl md:text-4xl font-bold mb-2 glow">Xin chào!</h1>
+            <p class="text-lg md:text-2xl mb-3">Mình là <span class="font-bold text-yellow-300">Hiếu</span></p>
+            <p class="text-base md:text-lg mb-3">Nếu thấy hữu ích hãy Donate cho Mình ly cafe nhé</p>
+            <div class="bg-blue-900 bg-opacity-50 p-2 md:p-3 rounded-lg inline-block">
+                <p class="font-mono text-sm md:text-lg"><i class="fas fa-university mr-2"></i>Ngân hàng VCB: STK <span class="font-bold">123456789</span></p>
+                <p class="text-yellow-300 mt-1 text-sm md:text-base">Hiếu Đẹp Trai</p>
+            </div>
+        </div>
+
+        <!-- Countdown Section -->
+        <div class="w-full text-center mb-6">
+            <h2 class="countdown-title text-xl md:text-3xl font-bold mb-4 md:mb-6 glow" id="countdown-title">Countdown đến ngày 30/04/2025</h2>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-6 justify-items-center">
+                <!-- Days -->
+                <div class="flip-card w-20 h-20 md:w-28 md:h-28" id="days-card">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front bg-blue-800 flex flex-col items-center justify-center">
+                            <span class="text-3xl md:text-6xl font-bold" id="days">00</span>
+                            <span class="text-xs md:text-sm mt-1">NGÀY</span>
+                        </div>
+                        <div class="flip-card-back bg-blue-600 flex flex-col items-center justify-center">
+                            <span class="text-3xl md:text-6xl font-bold">00</span>
+                            <span class="text-xs md:text-sm mt-1">NGÀY</span>
+                        </div>
+                    </div>
                 </div>
-                <div class="countdown-item">
-                    <div class="countdown-number" id="hours">00</div>
-                    <div class="countdown-label">GIỜ</div>
+                
+                <!-- Hours -->
+                <div class="flip-card w-20 h-20 md:w-28 md:h-28" id="hours-card">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front bg-green-800 flex flex-col items-center justify-center">
+                            <span class="text-3xl md:text-6xl font-bold" id="hours">00</span>
+                            <span class="text-xs md:text-sm mt-1">GIỜ</span>
+                        </div>
+                        <div class="flip-card-back bg-green-600 flex flex-col items-center justify-center">
+                            <span class="text-3xl md:text-6xl font-bold">00</span>
+                            <span class="text-xs md:text-sm mt-1">GIỜ</span>
+                        </div>
+                    </div>
                 </div>
-                <div class="countdown-item">
-                    <div class="countdown-number" id="minutes">00</div>
-                    <div class="countdown-label">PHÚT</div>
+                
+                <!-- Minutes -->
+                <div class="flip-card w-20 h-20 md:w-28 md:h-28" id="minutes-card">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front bg-purple-800 flex flex-col items-center justify-center">
+                            <span class="text-3xl md:text-6xl font-bold" id="minutes">00</span>
+                            <span class="text-xs md:text-sm mt-1">PHÚT</span>
+                        </div>
+                        <div class="flip-card-back bg-purple-600 flex flex-col items-center justify-center">
+                            <span class="text-3xl md:text-6xl font-bold">00</span>
+                            <span class="text-xs md:text-sm mt-1">PHÚT</span>
+                        </div>
+                    </div>
                 </div>
-                <div class="countdown-item">
-                    <div class="countdown-number" id="seconds">00</div>
-                    <div class="countdown-label">GIÂY</div>
+                
+                <!-- Seconds -->
+                <div class="flip-card w-20 h-20 md:w-28 md:h-28" id="seconds-card">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front bg-red-800 flex flex-col items-center justify-center">
+                            <span class="text-3xl md:text-6xl font-bold" id="seconds">00</span>
+                            <span class="text-xs md:text-sm mt-1">GIÂY</span>
+                        </div>
+                        <div class="flip-card-back bg-red-600 flex flex-col items-center justify-center">
+                            <span class="text-3xl md:text-6xl font-bold">00</span>
+                            <span class="text-xs md:text-sm mt-1">GIÂY</span>
+                        </div>
+                    </div>
                 </div>
             </div>
+        </div>
+
+        <!-- Target Date -->
+        <div class="target-date w-full text-center mt-4 bg-black bg-opacity-50 p-3 md:p-4 rounded-lg">
+            <p class="text-sm md:text-xl">Đếm ngược đến: <span class="font-bold text-yellow-300" id="target-date-display">30/04/2025 00:00:00</span></p>
+        </div>
+    </div>
+
+    <!-- Left Sidebar - Login/Register -->
+    <div class="fixed left-0 top-0 h-full w-64 bg-gray-900 bg-opacity-95 text-white p-4 sidebar sidebar-left z-30">
+        <div class="flex justify-between items-center mb-6">
+            <h3 class="text-xl font-bold">Đăng nhập</h3>
+            <button onclick="toggleLeftSidebar()" class="text-white hover:text-yellow-300">
+                <i class="fas fa-times"></i>
+            </button>
         </div>
         
-        <div class="events-list" id="eventsList">
-            <!-- Các sự kiện sẽ được thêm vào đây -->
+        <div class="mb-4">
+            <label class="block mb-2">Email</label>
+            <input type="email" id="login-email" class="w-full p-2 rounded bg-gray-800 border border-gray-700">
+        </div>
+        
+        <div class="mb-4">
+            <label class="block mb-2">Mật khẩu</label>
+            <input type="password" id="login-password" class="w-full p-2 rounded bg-gray-800 border border-gray-700">
+        </div>
+        
+        <button onclick="login()" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded mb-4">
+            Đăng nhập
+        </button>
+        
+        <div class="text-center mb-4">Hoặc</div>
+        
+        <div class="mb-4">
+            <label class="block mb-2">Tên người dùng</label>
+            <input type="text" id="register-username" class="w-full p-2 rounded bg-gray-800 border border-gray-700">
+        </div>
+        
+        <div class="mb-4">
+            <label class="block mb-2">Email</label>
+            <input type="email" id="register-email" class="w-full p-2 rounded bg-gray-800 border border-gray-700">
+        </div>
+        
+        <div class="mb-4">
+            <label class="block mb-2">Mật khẩu</label>
+            <input type="password" id="register-password" class="w-full p-2 rounded bg-gray-800 border border-gray-700">
+        </div>
+        
+        <button onclick="register()" class="w-full bg-green-600 hover:bg-green-700 text-white py-2 rounded">
+            Đăng ký
+        </button>
+    </div>
+
+    <!-- Right Sidebar - Custom Countdown -->
+    <div class="fixed right-0 top-0 h-full w-64 bg-gray-900 bg-opacity-95 text-white p-4 sidebar sidebar-right z-30">
+        <div class="flex justify-between items-center mb-6">
+            <h3 class="text-xl font-bold">Tạo Countdown</h3>
+            <button onclick="toggleRightSidebar()" class="text-white hover:text-yellow-300">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        
+        <div class="mb-4">
+            <label class="block mb-2">Tên sự kiện</label>
+            <input type="text" id="event-name" class="w-full p-2 rounded bg-gray-800 border border-gray-700">
+        </div>
+        
+        <div class="mb-4">
+            <label class="block mb-2">Ngày sự kiện</label>
+            <input type="date" id="event-date" class="w-full p-2 rounded bg-gray-800 border border-gray-700">
+        </div>
+        
+        <div class="mb-4">
+            <label class="block mb-2">Giờ sự kiện</label>
+            <input type="time" id="event-time" class="w-full p-2 rounded bg-gray-800 border border-gray-700">
+        </div>
+        
+        <button onclick="createCustomCountdown()" class="w-full bg-purple-600 hover:bg-purple-700 text-white py-2 rounded">
+            Tạo Countdown
+        </button>
+        
+        <div class="mt-8">
+            <h4 class="text-lg font-bold mb-2">Countdown đã lưu</h4>
+            <div id="saved-countdowns" class="space-y-2">
+                <!-- Saved countdowns will appear here -->
+            </div>
         </div>
     </div>
-    
-    <!-- Modal thêm sự kiện -->
-    <div class="modal" id="addEventModal">
+
+    <!-- Login Success Modal -->
+    <div id="login-modal" class="modal">
         <div class="modal-content">
-            <h2 class="modal-title">Thêm Sự Kiện Mới</h2>
-            <div class="form-group">
-                <label for="eventName">Tên sự kiện</label>
-                <input type="text" id="eventName" placeholder="Ví dụ: Tết Nguyên Đán">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-xl font-bold" id="modal-title">Thông báo</h3>
+                <span onclick="closeModal('login-modal')" class="cursor-pointer text-xl">&times;</span>
             </div>
-            <div class="form-group">
-                <label for="eventType">Loại sự kiện</label>
-                <select id="eventType">
-                    <option value="holiday">Ngày lễ</option>
-                    <option value="festival">Lễ hội</option>
-                    <option value="cultural">Văn hóa</option>
-                    <option value="other">Khác</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="eventDate">Ngày diễn ra</label>
-                <input type="datetime-local" id="eventDate">
-            </div>
-            <div class="form-group">
-                <label for="eventDuration">Thời lượng (ngày)</label>
-                <input type="number" id="eventDuration" min="1" value="1" placeholder="Số ngày diễn ra">
-            </div>
-            <div class="modal-buttons">
-                <button class="btn btn-cancel" id="cancelAddEvent">Hủy</button>
-                <button class="btn btn-submit" id="submitEvent">Thêm</button>
+            <p id="modal-message">Đăng nhập thành công!</p>
+            <div class="mt-4 flex justify-end">
+                <button onclick="closeModal('login-modal')" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">
+                    OK
+                </button>
             </div>
         </div>
     </div>
-    
-    <!-- Modal đăng nhập/đăng ký -->
-    <div class="modal" id="authModal">
-        <div class="modal-content">
-            <h2 class="modal-title" id="authModalTitle">Đăng Nhập</h2>
-            <div class="form-group">
-                <label for="authEmail">Email</label>
-                <input type="email" id="authEmail" placeholder="Nhập email của bạn">
-            </div>
-            <div class="form-group">
-                <label for="authPassword">Mật khẩu</label>
-                <input type="password" id="authPassword" placeholder="Nhập mật khẩu">
-            </div>
-            <div class="modal-buttons">
-                <button class="btn btn-cancel" id="cancelAuth">Hủy</button>
-                <button class="btn btn-submit" id="submitAuth">Đăng Nhập</button>
-            </div>
-            <p style="text-align: center; margin-top: 15px; color: #ddd;">
-                <span id="switchAuthText">Chưa có tài khoản? Đăng ký ngay</span>
-            </p>
-        </div>
-    </div>
-    
+
     <script>
-        // Dữ liệu sự kiện mẫu tại Việt Nam
-        let events = [
-            { 
-                name: "Tết Nguyên Đán 2025", 
-                date: "2025-01-29T00:00:00",
-                type: "holiday",
-                duration: 7,
-                description: "Tết cổ truyền của dân tộc Việt Nam"
-            },
-            { 
-                name: "Giỗ Tổ Hùng Vương", 
-                date: "2025-04-07T00:00:00",
-                type: "holiday",
-                duration: 1,
-                description: "Lễ hội đền Hùng - Phú Thọ"
-            },
-            { 
-                name: "Ngày Giải Phóng 30/4", 
-                date: "2025-04-30T00:00:00",
-                type: "holiday",
-                duration: 1,
-                description: "Ngày thống nhất đất nước"
-            },
-            { 
-                name: "Quốc Khánh 2/9", 
-                date: "2025-09-02T00:00:00",
-                type: "holiday",
-                duration: 1,
-                description: "Ngày thành lập nước Việt Nam Dân chủ Cộng hòa"
-            },
-            { 
-                name: "Lễ hội chùa Hương", 
-                date: "2025-02-15T00:00:00",
-                type: "festival",
-                duration: 3,
-                description: "Lễ hội tại chùa Hương, Hà Nội"
-            },
-            { 
-                name: "Lễ hội đèn lồng Hội An", 
-                date: "2025-02-10T00:00:00",
-                type: "festival",
-                duration: 5,
-                description: "Lễ hội thả đèn lồng hàng tháng tại Hội An"
+        // Global variables
+        let targetDate = new Date('2025-04-30T00:00:00');
+        let countdownTimer;
+        let savedCountdowns = [];
+        let currentUser = null;
+
+        // Create stars
+        function createStars() {
+            const container = document.getElementById('stars-container');
+            const starCount = 100;
+            
+            for (let i = 0; i < starCount; i++) {
+                const star = document.createElement('div');
+                star.classList.add('star');
+                
+                // Random properties
+                const size = Math.random() * 3;
+                const posX = Math.random() * 100;
+                const posY = Math.random() * 100;
+                const duration = 2 + Math.random() * 3 + 's';
+                const delay = Math.random() * 5 + 's';
+                
+                star.style.width = `${size}px`;
+                star.style.height = `${size}px`;
+                star.style.left = `${posX}%`;
+                star.style.top = `${posY}%`;
+                star.style.setProperty('--duration', duration);
+                star.style.animationDelay = delay;
+                
+                container.appendChild(star);
             }
-        ];
-        
-        // Tìm sự kiện sắp diễn ra hoặc đang diễn ra
-        let currentEventIndex = 0;
-        
-        function findNearestEvent() {
-            const now = new Date();
-            let nearestEventIndex = 0;
-            let smallestDiff = Infinity;
-            
-            events.forEach((event, index) => {
-                const startDate = new Date(event.date);
-                const endDate = new Date(startDate);
-                endDate.setDate(endDate.getDate() + event.duration);
-                
-                // Nếu sự kiện đang diễn ra
-                if (now >= startDate && now <= endDate) {
-                    nearestEventIndex = index;
-                    smallestDiff = 0;
-                    return;
-                }
-                
-                // Nếu sự kiện sắp diễn ra
-                const diff = startDate - now;
-                if (diff > 0 && diff < smallestDiff) {
-                    smallestDiff = diff;
-                    nearestEventIndex = index;
-                }
-            });
-            
-            return nearestEventIndex;
         }
         
-        // DOM Elements
-        const addEventBtn = document.getElementById('addEventBtn');
-        const authBtn = document.getElementById('authBtn');
-        const addEventModal = document.getElementById('addEventModal');
-        const authModal = document.getElementById('authModal');
-        const cancelAddEvent = document.getElementById('cancelAddEvent');
-        const cancelAuth = document.getElementById('cancelAuth');
-        const submitEvent = document.getElementById('submitEvent');
-        const submitAuth = document.getElementById('submitAuth');
-        const switchAuthText = document.getElementById('switchAuthText');
-        const authModalTitle = document.getElementById('authModalTitle');
-        const eventsList = document.getElementById('eventsList');
-        const eventStatus = document.getElementById('eventStatus');
-        
-        // Hiệu ứng 3D cho countdown container
-        const countdown3d = document.getElementById('countdown3d');
-        
-        document.addEventListener('mousemove', (e) => {
-            if (window.innerWidth > 768) { // Chỉ áp dụng trên màn hình lớn
-                const xAxis = (window.innerWidth / 2 - e.pageX) / 25;
-                const yAxis = (window.innerHeight / 2 - e.pageY) / 25;
-                countdown3d.style.transform = `rotateY(${xAxis}deg) rotateX(${yAxis}deg)`;
+        // Initialize countdown
+        function updateCountdown() {
+            const now = new Date().getTime();
+            const distance = targetDate - now;
+            
+            // Time calculations
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+            
+            // Update display
+            updateFlipCard('days', days);
+            updateFlipCard('hours', hours);
+            updateFlipCard('minutes', minutes);
+            updateFlipCard('seconds', seconds);
+            
+            // If countdown is finished
+            if (distance < 0) {
+                clearInterval(countdownTimer);
+                document.getElementById('days').innerHTML = "00";
+                document.getElementById('hours').innerHTML = "00";
+                document.getElementById('minutes').innerHTML = "00";
+                document.getElementById('seconds').innerHTML = "00";
             }
-        });
+        }
         
-        // Reset vị trí khi không di chuột
-        document.addEventListener('mouseleave', () => {
-            countdown3d.style.transform = 'rotateY(0deg) rotateX(0deg)';
-        });
-        
-        // Mở modal thêm sự kiện
-        addEventBtn.addEventListener('click', () => {
-            addEventModal.style.display = 'flex';
-        });
-        
-        // Mở modal đăng nhập/đăng ký
-        authBtn.addEventListener('click', () => {
-            authModal.style.display = 'flex';
-        });
-        
-        // Đóng modal
-        cancelAddEvent.addEventListener('click', () => {
-            addEventModal.style.display = 'none';
-        });
-        
-        cancelAuth.addEventListener('click', () => {
-            authModal.style.display = 'none';
-        });
-        
-        // Chuyển đổi giữa đăng nhập và đăng ký
-        let isLoginMode = true;
-        
-        switchAuthText.addEventListener('click', () => {
-            isLoginMode = !isLoginMode;
+        // Update flip card with animation
+        function updateFlipCard(unit, value) {
+            const card = document.getElementById(`${unit}-card`);
+            const display = document.getElementById(unit);
+            const formattedValue = value.toString().padStart(2, '0');
             
-            if (isLoginMode) {
-                authModalTitle.textContent = 'Đăng Nhập';
-                submitAuth.textContent = 'Đăng Nhập';
-                switchAuthText.textContent = 'Chưa có tài khoản? Đăng ký ngay';
-            } else {
-                authModalTitle.textContent = 'Đăng Ký';
-                submitAuth.textContent = 'Đăng Ký';
-                switchAuthText.textContent = 'Đã có tài khoản? Đăng nhập ngay';
+            if (display.textContent !== formattedValue) {
+                // Add flipping class
+                card.classList.add('flipping');
+                
+                // Update value after animation starts
+                setTimeout(() => {
+                    display.textContent = formattedValue;
+                }, 300);
+                
+                // Remove flipping class after animation completes
+                setTimeout(() => {
+                    card.classList.remove('flipping');
+                }, 600);
             }
-        });
+        }
         
-        // Thêm sự kiện mới
-        submitEvent.addEventListener('click', () => {
-            const eventName = document.getElementById('eventName').value;
-            const eventDate = document.getElementById('eventDate').value;
-            const eventType = document.getElementById('eventType').value;
-            const eventDuration = parseInt(document.getElementById('eventDuration').value) || 1;
+        // Toggle sidebars
+        function toggleLeftSidebar() {
+            document.querySelector('.sidebar-left').classList.toggle('active');
+        }
+        
+        function toggleRightSidebar() {
+            document.querySelector('.sidebar-right').classList.toggle('active');
+        }
+        
+        // Login function
+        function login() {
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
             
-            if (eventName && eventDate) {
-                events.push({ 
-                    name: eventName, 
-                    date: eventDate,
-                    type: eventType,
-                    duration: eventDuration,
-                    description: "Sự kiện do bạn thêm vào"
-                });
-                
-                // Cập nhật sự kiện gần nhất
-                currentEventIndex = findNearestEvent();
-                
-                renderEventsList();
-                updateCountdown();
-                addEventModal.style.display = 'none';
-                
-                // Reset form
-                document.getElementById('eventName').value = '';
-                document.getElementById('eventDate').value = '';
-                document.getElementById('eventDuration').value = '1';
-            } else {
-                alert('Vui lòng điền đầy đủ thông tin sự kiện');
+            // Simple validation
+            if (!email || !password) {
+                showModal('Lỗi', 'Vui lòng nhập email và mật khẩu');
+                return;
             }
-        });
-        
-        // Xử lý đăng nhập/đăng ký (mẫu)
-        submitAuth.addEventListener('click', () => {
-            const email = document.getElementById('authEmail').value;
-            const password = document.getElementById('authPassword').value;
             
-            if (email && password) {
-                if (isLoginMode) {
-                    alert(`Đăng nhập thành công với email: ${email}`);
-                } else {
-                    alert(`Đăng ký thành công với email: ${email}`);
-                }
-                authModal.style.display = 'none';
-                
-                // Reset form
-                document.getElementById('authEmail').value = '';
-                document.getElementById('authPassword').value = '';
-            } else {
-                alert('Vui lòng điền đầy đủ thông tin');
+            // In a real app, you would call your backend API here
+            currentUser = {
+                email: email,
+                username: email.split('@')[0]
+            };
+            
+            showModal('Thành công', 'Đăng nhập thành công!');
+            toggleLeftSidebar();
+            
+            // Load user's saved countdowns
+            loadSavedCountdowns();
+        }
+        
+        // Register function
+        function register() {
+            const username = document.getElementById('register-username').value;
+            const email = document.getElementById('register-email').value;
+            const password = document.getElementById('register-password').value;
+            
+            // Simple validation
+            if (!username || !email || !password) {
+                showModal('Lỗi', 'Vui lòng điền đầy đủ thông tin');
+                return;
             }
-        });
+            
+            // In a real app, you would call your backend API here
+            currentUser = {
+                email: email,
+                username: username
+            };
+            
+            showModal('Thành công', 'Đăng ký thành công! Bạn đã được đăng nhập tự động.');
+            toggleLeftSidebar();
+            
+            // Clear registration form
+            document.getElementById('register-username').value = '';
+            document.getElementById('register-email').value = '';
+            document.getElementById('register-password').value = '';
+        }
         
-        // Hiển thị danh sách sự kiện
-        function renderEventsList() {
-            eventsList.innerHTML = '';
+        // Create custom countdown
+        function createCustomCountdown() {
+            const eventName = document.getElementById('event-name').value;
+            const eventDate = document.getElementById('event-date').value;
+            const eventTime = document.getElementById('event-time').value;
             
-            // Sắp xếp sự kiện theo thời gian
-            events.sort((a, b) => new Date(a.date) - new Date(b.date));
+            if (!eventName || !eventDate) {
+                showModal('Lỗi', 'Vui lòng nhập tên sự kiện và ngày');
+                return;
+            }
             
-            events.forEach((event, index) => {
-                const eventElement = document.createElement('div');
-                eventElement.className = `event-card ${event.type}`;
-                
-                const eventDate = new Date(event.date);
-                const endDate = new Date(eventDate);
-                endDate.setDate(endDate.getDate() + event.duration);
-                
-                let status = '';
-                let timeLeft = '';
-                const now = new Date();
-                
-                if (now < eventDate) {
-                    status = 'SẮP DIỄN RA';
-                    timeLeft = `Bắt đầu sau: ${calculateTimeLeft(eventDate)}`;
-                } else if (now <= endDate) {
-                    status 
+            // Combine date and time
+            const dateTimeString = `${eventDate}T${eventTime || '00:00'}:00`;
+            const newTargetDate = new Date(dateTimeString);
+            
+            if (isNaN(newTargetDate.getTime())) {
+                showModal('Lỗi', 'Ngày không hợp lệ');
+                return;
+            }
+            
+            // Save the countdown
+            const countdown = {
+                id: Date.now(),
+                name: eventName,
+                date: dateTimeString,
+                createdBy: currentUser ? currentUser.email : 'guest'
+            };
+            
+            savedCountdowns.push(countdown);
+            saveCountdownsToLocalStorage();
+            
+            // Update UI
+            updateCountdownList();
+            
+            // Set as active countdown
+            setActiveCountdown(countdown);
+            
+            showModal('Thành công', `Đã tạo countdown cho "${eventName}"`);
+            toggleRightSidebar();
+        }
+        
+        // Set active countdown
+        function setActiveCountdown(countdown) {
+            targetDate = new Date(countdown.date);
+            document.getElementById('countdown-title').textContent = `Countdown đến ${countdown.name}`;
+            document.getElementById('target-date-display').textContent = formatDate(targetDate);
+            
+            // Restart countdown
+            clearInterval(countdownTimer);
+            updateCountdown();
+            countdownTimer = setInterval(updateCountdown, 1000);
+        }
+        
+        // Save countdowns to localStorage
+        function saveCountdownsToLocalStorage() {
+            localStorage.setItem('savedCountdowns', JSON.stringify(savedCountdowns));
+        }
+        
+        // Load saved countdowns from localStorage
+        function loadSavedCountdowns() {
+            const saved = localStorage.getItem('savedCountdowns');
+            if (saved) {
+                savedCountdowns = JSON.parse(saved);
+                updateCountdownList();
+            }
+        }
+        
+        // Update countdown list in UI
+        function updateCountdownList() {
+            const container = document.getElementById('saved-countdowns');
+            container.innerHTML = '';
+            
+            if (savedCountdowns.length === 0) {
+                container.innerHTML = '<p class="text-gray-400">Chưa có countdown nào</p>';
+                return;
+            }
+            
+            savedCountdowns.forEach(countdown => {
+                const div = document.createElement('div');
+                div.className = 'bg-gray-800 p-2 rounded cursor-pointer hover:bg-gray-700';
+                div.innerHTML = `
+                    <div class="font-bold">${countdown.name}</div>
+                    <div class="text-sm text-gray-300">${formatDate(new Date(countdown.date))}</div>
+                `;
+                div.onclick = () => setActiveCountdown(countdown);
+                container.appendChild(div);
+            });
+        }
+        
+        // Format date for display
+        function formatDate(date) {
+            const day = date.getDate().toString().padStart(2, '0');
+            const month = (date.getMonth() + 1).toString().padStart(2, '0');
+            const year = date.getFullYear();
+            const hours = date.getHours().toString().padStart(2, '0');
+            const minutes = date.getMinutes().toString().padStart(2, '0');
+            
+            return `${day}/${month}/${year} ${hours}:${minutes}`;
+        }
+        
+        // Show modal
+        function showModal(title, message) {
+            document.getElementById('modal-title').textContent = title;
+            document.getElementById('modal-message').textContent = message;
+            document.getElementById('login-modal').style.display = 'block';
+        }
+        
+        // Close modal
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            createStars();
+            updateCountdown();
+            countdownTimer = setInterval(updateCountdown, 1000);
+            loadSavedCountdowns();
+            
+            // Set default date to tomorrow
+            const tomorrow = new Date();
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            document.getElementById('event-date').valueAsDate = tomorrow;
+        });
+    </script>
+<audio id="myAudio" src="https://raw.githubusercontent.com/username/repository-name/branch-name/helo.mp3" type="audio/mp3" controls></audio>
+<script>
+    window.onload = function() {
+        var audio = document.getElementById('myAudio');
+        audio.play().catch(function(error) {
+            console.log('Không thể phát âm thanh:', error);
+        });
+    };
+</script>
+</body>
+</html>
