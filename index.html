@@ -1,261 +1,195 @@
 <!DOCTYPE html>
-<html>
+<html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chào mừng!</title>
+    <title>Xin chào, Mình là Hiếu</title>
     <style>
         body {
-            margin: 0;
-            padding: 0;
-            overflow: hidden;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(to right, #667eea, #764ba2);
             font-family: 'Arial', sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
-            perspective: 1000px;
-            animation: bgColorChange 15s infinite alternate;
+            margin: 0;
+            overflow: hidden;
         }
-        
-        .welcome-container {
-            position: relative;
-            transform-style: preserve-3d;
-            animation: float 6s ease-in-out infinite;
-            text-align: center;
-            padding: 30px;
-            background-color: rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(10px);
+        .card {
+            background: rgba(255, 255, 255, 0.1);
             border-radius: 20px;
-            box-shadow: 0 25px 45px rgba(0, 0, 0, 0.2);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            max-width: 80%;
-            width: 500px;
-            color: white;
-            animation: textColorChange 8s infinite alternate;
+            padding: 40px;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+            text-align: center;
+            color: #fff;
         }
-        
-        h1 {
-            font-size: 2.5rem;
-            margin-bottom: 20px;
-            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-            transform: translateZ(50px);
-        }
-        
-        p {
-            font-size: 1.2rem;
-            line-height: 1.6;
-            margin-bottom: 15px;
-            transform: translateZ(30px);
-        }
-        
         .bank-info {
-            background-color: rgba(0, 0, 0, 0.2);
-            padding: 15px;
-            border-radius: 10px;
+            background: rgba(0, 0, 0, 0.2);
             margin-top: 20px;
-            transform: translateZ(20px);
-            animation: bankColorChange 10s infinite alternate;
+            padding: 10px;
+            border-radius: 10px;
+            font-size: 14px;
         }
-        
-        @keyframes float {
-            0%, 100% {
-                transform: translateY(0) rotateY(0);
-            }
-            50% {
-                transform: translateY(-20px) rotateY(5deg);
-            }
-        }
-        
-        @keyframes bgColorChange {
-            0% { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
-            20% { background: linear-gradient(135deg, #ff7e5f 0%, #feb47b 100%); }
-            40% { background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); }
-            60% { background: linear-gradient(135deg, #cc2b5e 0%, #753a88 100%); }
-            80% { background: linear-gradient(135deg, #dd5e89 0%, #f7bb97 100%); }
-            100% { background: linear-gradient(135deg, #4568dc 0%, #b06ab3 100%); }
-        }
-        
-        @keyframes textColorChange {
-            0% { color: white; }
-            25% { color: #fffacd; }
-            50% { color: #e0ffff; }
-            75% { color: #ffe4e1; }
-            100% { color: #f0fff0; }
-        }
-        
-        @keyframes bankColorChange {
-            0% { background-color: rgba(0, 0, 0, 0.2); }
-            50% { background-color: rgba(255, 0, 0, 0.2); }
-            100% { background-color: rgba(0, 0, 255, 0.2); }
-        }
-        
-        .music-control {
-            position: absolute;
-            bottom: 20px;
-            right: 20px;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-            backdrop-filter: blur(5px);
-            color: white;
-            animation: musicBtnColor 5s infinite alternate;
-        }
-        
-        @keyframes musicBtnColor {
-            0% { color: white; background: rgba(255, 255, 255, 0.2); }
-            25% { color: #ff7e5f; background: rgba(255, 126, 95, 0.2); }
-            50% { color: #11998e; background: rgba(17, 153, 142, 0.2); }
-            75% { color: #cc2b5e; background: rgba(204, 43, 94, 0.2); }
-            100% { color: #4568dc; background: rgba(69, 104, 220, 0.2); }
-        }
-        
-        .confetti {
-            position: absolute;
-            width: 10px;
-            height: 10px;
-            opacity: 0;
-            animation: confettiColor 3s infinite;
-        }
-        
-        @keyframes confettiColor {
-            0% { background-color: #ff0000; }
-            20% { background-color: #00ff00; }
-            40% { background-color: #0000ff; }
-            60% { background-color: #ffff00; }
-            80% { background-color: #ff00ff; }
-            100% { background-color: #00ffff; }
-        }
-        
-        @media (max-width: 768px) {
-            h1 {
-                font-size: 1.8rem;
-            }
-            p {
-                font-size: 1rem;
-            }
-            .welcome-container {
-                padding: 20px;
-                width: 85%;
-            }
+        .date {
+            margin-top: 20px;
+            font-weight: bold;
+            font-size: 18px;
+            color: #FFD700;
         }
     </style>
 </head>
 <body>
-    <div class="welcome-container">
-        <h1>Xin chào, Mình là Hiếu</h1>
-        <p>"Cảm ơn bạn đã ghé thăm, trang web này không giúp bạn giàu lên, nhưng có thể làm bạn cười nhẹ một cái!"</p>
-        <p>Nếu thấy hữu ích hãy Donate cho mình ly Cafe nha!</p>
-        <div class="bank-info">
-            Ngân hàng: VCB - STK 123456789<br>
-            Chủ Tài Khoản: Hiếu Đẹp Troai
-        </div>
+
+<div class="card">
+    <h1>Xin chào, Mình là Hiếu</h1>
+    <p>"Cảm ơn bạn đã ghé thăm, trang web này không giúp bạn giàu lên, nhưng có thể làm bạn cười nhẹ một cái"</p>
+    <p>Nếu thấy hữu ích hãy Donate cho mình ly Cafe nha!</p>
+    <div class="bank-info">
+        <p><strong>Ngân hàng:</strong> VCB - STK 123456789</p>
+        <p><strong>Chủ Tài Khoản:</strong> Hiếu Đẹp Troai 😁</p>
     </div>
-    
-    <div class="music-control" onclick="toggleMusic()">
-        ♫
-    </div>
-    
-    <audio id="bgMusic" loop>
-        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
-        Trình duyệt của bạn không hỗ trợ audio.
-    </audio>
-    
-    <script>
-        // Tạo hiệu ứng confetti
-        function createConfetti() {
-            const confetti = document.createElement('div');
-            confetti.className = 'confetti';
-            confetti.style.left = Math.random() * 100 + 'vw';
-            confetti.style.top = -10 + 'px';
-            confetti.style.transform = 'rotate(' + Math.random() * 360 + 'deg)';
-            document.body.appendChild(confetti);
-            
-            let position = -10;
-            let rotation = Math.random() * 360;
-            const speed = 2 + Math.random() * 3;
-            const spin = Math.random() * 10 - 5;
-            
-            const fall = setInterval(() => {
-                position += speed;
-                rotation += spin;
-                
-                confetti.style.top = position + 'px';
-                confetti.style.transform = 'rotate(' + rotation + 'deg)';
-                confetti.style.opacity = 1 - position / window.innerHeight;
-                
-                if (position > window.innerHeight) {
-                    clearInterval(fall);
-                    confetti.remove();
-                }
-            }, 20);
-        }
-        
-        // Tạo confetti định kỳ
-        setInterval(createConfetti, 150);
-        
-        // Điều khiển âm nhạc
-        const music = document.getElementById('bgMusic');
-        let isPlaying = false;
-        
-        function toggleMusic() {
-            if (isPlaying) {
-                music.pause();
-                isPlaying = false;
-            } else {
-                music.play();
-                isPlaying = true;
-            }
-        }
-        
-        // Bắt đầu nhạc khi người dùng tương tác
-        document.body.addEventListener('click', function() {
-            if (!isPlaying) {
-                music.play();
-                isPlaying = true;
-            }
-        }, { once: true });
-        
-        // Hiệu ứng 3D khi di chuột
-        document.addEventListener('mousemove', function(e) {
-            const container = document.querySelector('.welcome-container');
-            const xAxis = (window.innerWidth / 2 - e.pageX) / 25;
-            const yAxis = (window.innerHeight / 2 - e.pageY) / 25;
-            container.style.transform = `rotateY(${xAxis}deg) rotateX(${yAxis}deg)`;
-        });
-        
-        // Cho mobile (touch events)
-        document.addEventListener('touchmove', function(e) {
-            const container = document.querySelector('.welcome-container');
-            const touch = e.touches[0];
-            const xAxis = (window.innerWidth / 2 - touch.pageX) / 25;
-            const yAxis = (window.innerHeight / 2 - touch.pageY) / 25;
-            container.style.transform = `rotateY(${xAxis}deg) rotateX(${yAxis}deg)`;
-        });
-        
-        // Thay đổi màu chữ ngẫu nhiên
-        function randomizeTextColors() {
-            const colors = ['#FFD700', '#FF69B4', '#7FFFD4', '#9370DB', '#00FA9A', '#FF6347'];
-            const elements = document.querySelectorAll('h1, p');
-            
-            elements.forEach(el => {
-                const randomColor = colors[Math.floor(Math.random() * colors.length)];
-                el.style.color = randomColor;
-            });
-        }
-        
-        // Thay đổi màu mỗi 3 giây
-        setInterval(randomizeTextColors, 3000);
-    </script>
+    <div id="date" class="date"></div>
+</div>
+
+<audio id="welcome-audio">
+    <source src="helo.mp3" type="audio/mpeg">
+    Trình duyệt của bạn không hỗ trợ âm thanh.
+</audio>
+
+<script>
+  // Phát nhạc 1 lần khi vào trang
+  window.addEventListener('DOMContentLoaded', function () {
+    const audio = document.getElementById('welcome-audio');
+    if (!sessionStorage.getItem('audioPlayed')) {
+      audio.play().then(() => {
+        sessionStorage.setItem('audioPlayed', 'true');
+      }).catch(err => {
+        console.log('Autoplay bị chặn bởi trình duyệt:', err);
+      });
+    }
+  });
+
+  // ====== Hàm tự chuyển Dương lịch -> Âm lịch chuẩn ======
+  function jdFromDate(dd, mm, yy) {
+      var a = Math.floor((14 - mm) / 12);
+      var y = yy + 4800 - a;
+      var m = mm + 12 * a - 3;
+      var jd = dd + Math.floor((153 * m + 2)/5) + 365*y + Math.floor(y/4) - Math.floor(y/100) + Math.floor(y/400) - 32045;
+      if (jd < 2299161) {
+          jd = dd + Math.floor((153 * m + 2)/5) + 365*y + Math.floor(y/4) - 32083;
+      }
+      return jd;
+  }
+  function getNewMoonDay(k, timeZone) {
+      var T = k/1236.85;
+      var T2 = T * T;
+      var T3 = T2 * T;
+      var dr = Math.PI/180;
+      var Jd1 = 2415020.75933 + 29.53058868*k + 0.0001178*T2 - 0.000000155*T3;
+      Jd1 += 0.00033*Math.sin((166.56 + 132.87*T - 0.009173*T2)*dr);
+      var M = 359.2242 + 29.10535608*k - 0.0000333*T2 - 0.00000347*T3;
+      var Mpr = 306.0253 + 385.81691806*k + 0.0107306*T2 + 0.00001236*T3;
+      var F = 21.2964 + 390.67050646*k - 0.0016528*T2 - 0.00000239*T3;
+      var C1 = (0.1734 - 0.000393*T)*Math.sin(M*dr) + 0.0021*Math.sin(2*dr*M);
+      C1 -= 0.4068*Math.sin(Mpr*dr) + 0.0161*Math.sin(2*dr*Mpr);
+      C1 -= 0.0004*Math.sin(3*dr*Mpr);
+      C1 += 0.0104*Math.sin(2*dr*F) - 0.0051*Math.sin((M+Mpr)*dr);
+      C1 -= 0.0074*Math.sin((M-Mpr)*dr) + 0.0004*Math.sin((2*F+M)*dr);
+      C1 -= 0.0004*Math.sin((2*F-M)*dr) - 0.0006*Math.sin((2*F+Mpr)*dr);
+      C1 += 0.0010*Math.sin((2*F-Mpr)*dr) + 0.0005*Math.sin((2*Mpr+M)*dr);
+      var deltaT = 0;
+      if (T < -11) {
+          deltaT= 0.001 + 0.000839*T + 0.0002261*T2 - 0.00000845*T3 -0.000000081*T*T3;
+      } else {
+          deltaT= -0.000278 + 0.000265*T + 0.000262*T2;
+      }
+      var JdNew = Jd1 + C1 - deltaT;
+      return Math.floor(JdNew + 0.5 + timeZone/24);
+  }
+  function getLunarMonth11(yy, timeZone) {
+      var off = jdFromDate(31, 12, yy) - 2415021;
+      var k = Math.floor(off / 29.530588853);
+      var nm = getNewMoonDay(k, timeZone);
+      var sunLong = getSunLongitude(nm, timeZone);
+      if (sunLong >= 9) {
+          nm = getNewMoonDay(k-1, timeZone);
+      }
+      return nm;
+  }
+  function getSunLongitude(jdn, timeZone) {
+      var T = (jdn - 2451545.5 - timeZone/24) / 36525;
+      var T2 = T*T;
+      var dr = Math.PI/180;
+      var M = 357.52910 + 35999.05030*T - 0.0001559*T2 - 0.00000048*T*T2;
+      var L0 = 280.46645 + 36000.76983*T + 0.0003032*T2;
+      var DL = (1.914600 - 0.004817*T - 0.000014*T2)*Math.sin(dr*M);
+      DL += (0.019993 - 0.000101*T)*Math.sin(2*dr*M) + 0.000290*Math.sin(3*dr*M);
+      var L = L0 + DL;
+      L = L*dr;
+      L = L - Math.PI*2*(Math.floor(L/(Math.PI*2)));
+      return Math.floor(L/Math.PI*6);
+  }
+  function convertSolar2Lunar(dd, mm, yy, timeZone) {
+      var dayNumber = jdFromDate(dd, mm, yy);
+      var k = Math.floor((dayNumber - 2415021.076998695) / 29.530588853);
+      var monthStart = getNewMoonDay(k+1, timeZone);
+      if (monthStart > dayNumber) {
+          monthStart = getNewMoonDay(k, timeZone);
+      }
+      var a11 = getLunarMonth11(yy, timeZone);
+      var b11 = a11;
+      var lunarYear = yy;
+      if (a11 >= monthStart) {
+          a11 = getLunarMonth11(yy-1, timeZone);
+          lunarYear = yy;
+      } else {
+          b11 = getLunarMonth11(yy+1, timeZone);
+          lunarYear = yy + 1;
+      }
+      var lunarDay = dayNumber - monthStart + 1;
+      var diff = Math.floor((monthStart - a11)/29);
+      var lunarMonth = diff + 11;
+      if (b11 - a11 > 365) {
+          var leapMonthDiff = getLeapMonthOffset(a11, timeZone);
+          if (diff >= leapMonthDiff) {
+              lunarMonth = diff + 10;
+          }
+      }
+      if (lunarMonth > 12) {
+          lunarMonth = lunarMonth - 12;
+      }
+      if (lunarMonth >= 11 && diff < 4) {
+          lunarYear -= 1;
+      }
+      return [lunarDay, lunarMonth, lunarYear];
+  }
+  function getLeapMonthOffset(a11, timeZone) {
+      var k = Math.floor((a11 - 2415021.076998695) / 29.530588853 + 0.5);
+      var last = 0;
+      var i = 1;
+      var arc = getSunLongitude(getNewMoonDay(k+i, timeZone), timeZone);
+      do {
+          last = arc;
+          i++;
+          arc = getSunLongitude(getNewMoonDay(k+i, timeZone), timeZone);
+      } while (arc != last && i < 14);
+      return i-1;
+  }
+
+  // ====== Gọi hàm để hiển thị ngày dương và âm ======
+  const now = new Date();
+  const day = now.getDate();
+  const month = now.getMonth() + 1;
+  const year = now.getFullYear();
+  const [lunarDay, lunarMonth, lunarYear] = convertSolar2Lunar(day, month, year, 7);
+
+  document.getElementById('date').innerHTML = `
+      Thứ ${["Bảy","Chủ nhật","Hai","Ba","Tư","Năm","Sáu"][now.getDay()]}, ${day} tháng ${month}, ${year}<br>
+      Âm lịch: ${lunarDay} tháng ${lunarMonth} năm ${lunarYear}
+  `;
+</script>
+
 </body>
 </html>
-
 
 
 <!DOCTYPE html>
