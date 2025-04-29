@@ -15,6 +15,10 @@
             font-family: Arial, sans-serif;
             text-align: center;
             font-size: 18px;
+            line-height: 1.6;
+        }
+        #info, #clock, #countdown {
+            margin-bottom: 20px;
         }
     </style>
 </head>
@@ -31,12 +35,10 @@
         <br>
         🏦 Ngân hàng: VCB<br>
         🔢 Số tài khoản: 123456789<br>
-        😎 Chủ tài khoản: Hiếu Đẹp Troai<br>
-        <br>
+        😎 Chủ tài khoản: Hiếu Đẹp Troai
     </div>
     <div id="clock"></div>
-    <div id="countdownTetTay"></div>
-    <div id="countdownTetTa"></div>
+    <div id="countdown"></div>
 <script>
     function convertToLunar(date) {
         const lunarInfo2025 = [
@@ -73,90 +75,51 @@
         const lunar = convertToLunar(now);
 
         document.getElementById('clock').innerHTML =
-            `${hours} giờ ${minutes} phút ${seconds} giây: ${weekdays[now.getDay()]}<br>` +
+            `Hôm nay: ${hours} giờ ${minutes} phút ${seconds} giây: ${weekdays[now.getDay()]}<br>` +
             `Dương lịch ${now.getDate()}/${now.getMonth() + 1}/${now.getFullYear()}<br>` +
             `Âm lịch ${lunar.lunarDay}/${lunar.lunarMonth}/${lunar.lunarYear}`;
     }
 
-    function updateCountdown(targetDate, elementId) {
-        const diff = targetDate - new Date();
-        if (diff <= 0) {
-            document.getElementById(elementId).innerHTML = 'Hết giờ';
-            return;
+    function updateCountdown() {
+        const now = new Date();
+        const tetTay = new Date('2026-01-01');
+        const tetTa = new Date('2026-02-17');
+
+        const diffTay = tetTay - now;
+        const diffTa = tetTa - now;
+
+        let countdownText = 'Đồng hồ đếm ngược đến 01/01/2026<br>';
+
+        if (diffTay <= 0) {
+            countdownText += 'Tết Tây: Hết giờ<br>';
+        } else {
+            const daysTay = Math.floor(diffTay / (1000 * 60 * 60 * 24));
+            const hoursTay = Math.floor((diffTay / (1000 * 60 * 60)) % 24);
+            const minutesTay = Math.floor((diffTay / (1000 * 60)) % 60);
+            const secondsTay = Math.floor((diffTay / 1000) % 60);
+            countdownText += `Tết Tây còn: ${daysTay} ngày ${hoursTay} giờ ${minutesTay} phút ${secondsTay} giây<br>`;
         }
 
-        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-        const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
-        const minutes = Math.floor((diff / (1000 * 60)) % 60);
-        const seconds = Math.floor((diff / 1000) % 60);
+        if (diffTa <= 0) {
+            countdownText += 'Tết Ta: Hết giờ';
+        } else {
+            const daysTa = Math.floor(diffTa / (1000 * 60 * 60 * 24));
+            const hoursTa = Math.floor((diffTa / (1000 * 60 * 60)) % 24);
+            const minutesTa = Math.floor((diffTa / (1000 * 60)) % 60);
+            const secondsTa = Math.floor((diffTa / 1000) % 60);
+            countdownText += `Tết Ta còn: ${daysTa} ngày ${hoursTa} giờ ${minutesTa} phút ${secondsTa} giây`;
+        }
 
-        document.getElementById(elementId).innerHTML =
-            `${days} ngày ${hours} giờ ${minutes} phút ${seconds} giây`;
+        document.getElementById('countdown').innerHTML = countdownText;
     }
-
-    const tetTay = new Date('2026-01-01');
-    const tetTa = new Date('2026-02-17');
 
     function refreshAll() {
         updateClock();
-        document.getElementById('countdownTetTay').innerHTML = 'Đếm ngược đến Tết Tây 2026:<br>';
-        document.getElementById('countdownTetTa').innerHTML = 'Đếm ngược đến Tết Ta 2026:<br>';
-        updateCountdown(tetTay, 'countdownTetTay');
-        updateCountdown(tetTa, 'countdownTetTa');
+        updateCountdown();
     }
 
     setInterval(refreshAll, 1000);
     refreshAll();
 </script>
-</body>
-</html>
-
-<!DOCTYPE html>
-<html lang="vi">
-<head>
-  <meta charset="UTF-8">
-  <title>Trang chính</title>
-  <style>
-    body {
-      margin: 0;
-      padding: 0;
-      font-family: Arial, sans-serif;
-    }
-
-    .top-center-nav {
-      position: fixed;
-      top: 0;
-      left: 50%;
-      transform: translateX(-50%);
-      background-color: #f0f0f0;
-      padding: 10px 20px;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-      border-radius: 0 0 10px 10px;
-    }
-
-    .top-center-nav a {
-      margin: 0 15px;
-      text-decoration: none;
-      color: #333;
-      font-weight: bold;
-    }
-
-    .top-center-nav a:hover {
-      color: #007BFF;
-    }
-
-    body::before {
-      content: "";
-      display: block;
-      height: 60px; /* Tạo khoảng trống cho thanh menu cố định */
-    }
-  </style>
-</head>
-<body>
-
-  <div class="top-center-nav">
-    <a href="3D - 2.html">3D</a>
-  </div>
-
 </body>
 </html>
