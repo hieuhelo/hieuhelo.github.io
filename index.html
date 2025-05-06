@@ -1,67 +1,89 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tìm kiếm nhiều ảnh bằng Google Lens</title>
-    <style>
-        body {
-            font-family: sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-            background-color: #f0f2f5;
-        }
-        .container {
-            background-color: #ffffff;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            text-align: center;
-        }
-        input[type="file"] {
-            display: none;
-        }
-        .upload-button {
-            display: inline-block;
-            padding: 10px 20px;
-            background-color: #4285f4;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-            transition: background-color 0.3s ease;
-        }
-        .upload-button:hover {
-            background-color: #357ae8;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FunnyAIChat</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background-color: #f0f0f0;
+      margin: 0;
+      padding: 20px;
+    }
+    #chat-container {
+      width: 80%;
+      max-width: 600px;
+      background-color: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    #message-input {
+      width: 70%;
+      padding: 10px;
+      margin: 10px 0;
+    }
+    #send-btn {
+      padding: 10px 20px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    #send-btn:hover {
+      background-color: #45a049;
+    }
+    #response {
+      margin-top: 20px;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      min-height: 50px;
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Tìm kiếm nhiều ảnh bằng Google Lens</h1>
-        <p>Chọn nhiều hình ảnh để tìm kiếm bằng Google Lens (giữ phím Ctrl hoặc Shift để chọn nhiều ảnh):</p>
-        <label for="imageUpload" class="upload-button">Chọn ảnh</label>
-        <input type="file" id="imageUpload" accept="image/*" multiple>
-    </div>
+  <div id="chat-container">
+    <h2>FunnyAIChat</h2>
+    <input type="text" id="message-input" placeholder="Nhập tin nhắn...">
+    <button id="send-btn">Gửi</button>
+    <div id="response">Phản hồi sẽ xuất hiện ở đây...</div>
+  </div>
 
-    <script>
-        document.getElementById('imageUpload').addEventListener('change', function() {
-            const files = this.files;
-            if (files && files.length > 0) {
-                for (let i = 0; i < files.length; i++) {
-                    const file = files[i];
-                    const imageUrl = URL.createObjectURL(file);
-                    const googleLensUrl = `https://lens.google.com/uploadbyurl?url=${encodeURIComponent(imageUrl)}`;
-                    window.open(googleLensUrl, '_blank');
-                }
-                // Sau khi mở tất cả các tab, bạn có thể tùy chọn reset input file để người dùng có thể chọn ảnh mới dễ dàng hơn
-                this.value = '';
-            }
-        });
-    </script>
+  <script>
+    const backendUrl = "https://db95dc10-de1c-49c4-914f-c194d3f32ce7-00-2c0heeq09xp49.sisko.replit.dev/chat";
+    const messageInput = document.getElementById("message-input");
+    const sendBtn = document.getElementById("send-btn");
+    const responseDiv = document.getElementById("response");
+
+    sendBtn.addEventListener("click", async () => {
+      const message = messageInput.value.trim();
+      if (message) {
+        try {
+          const res = await fetch(backendUrl, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ message })
+          });
+          const data = await res.json();
+          responseDiv.textContent = data.reply || data.error || "Lỗi không xác định";
+        } catch (error) {
+          responseDiv.textContent = "Lỗi kết nối: " + error.message;
+        }
+        messageInput.value = "";
+      }
+    });
+
+    messageInput.addEventListener("keypress", (e) => {
+      if (e.key === "Enter" && messageInput.value.trim()) {
+        sendBtn.click();
+      }
+    });
+  </script>
 </body>
 </html>
