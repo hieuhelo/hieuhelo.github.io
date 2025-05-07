@@ -33,7 +33,13 @@
                         body: JSON.stringify({ message: message })
                     });
                     const data = await response.json();
-                    chatbox.innerHTML += `<p><strong>Bot:</strong> ${data.choices[0].message.content}</p>`;
+                    if (data.error) {
+                        chatbox.innerHTML += `<p><strong>Error:</strong> ${data.error}</p>`;
+                    } else if (data.choices && data.choices[0] && data.choices[0].message && data.choices[0].message.content) {
+                        chatbox.innerHTML += `<p><strong>Bot:</strong> ${data.choices[0].message.content}</p>`;
+                    } else {
+                        chatbox.innerHTML += `<p><strong>Bot:</strong> No response</p>`;
+                    }
                 } catch (error) {
                     chatbox.innerHTML += `<p><strong>Error:</strong> ${error.message}</p>`;
                 }
