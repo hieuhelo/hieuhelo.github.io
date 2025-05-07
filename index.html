@@ -1,89 +1,21 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>FunnyAIChat</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      background-color: #f0f0f0;
-      margin: 0;
-      padding: 20px;
-    }
-    #chat-container {
-      width: 80%;
-      max-width: 600px;
-      background-color: white;
-      padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    }
-    #message-input {
-      width: 70%;
-      padding: 10px;
-      margin: 10px 0;
-    }
-    #send-btn {
-      padding: 10px 20px;
-      background-color: #4CAF50;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-    #send-btn:hover {
-      background-color: #45a049;
-    }
-    #response {
-      margin-top: 20px;
-      padding: 10px;
-      border: 1px solid #ddd;
-      border-radius: 5px;
-      min-height: 50px;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatbot Mỏ Hỗn Bá Đạo</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div id="chat-container">
-    <h2>FunnyAIChat</h2>
-    <input type="text" id="message-input" placeholder="Nhập tin nhắn...">
-    <button id="send-btn">Gửi</button>
-    <div id="response">Phản hồi sẽ xuất hiện ở đây...</div>
-  </div>
-
-  <script>
-    const backendUrl = "https://dfe4650b-168b-4c00-876e-b4f3cd561529-00-2zfu5fmr5pneh.sisko.replit.dev/chat/";
-    const messageInput = document.getElementById("message-input");
-    const sendBtn = document.getElementById("send-btn");
-    const responseDiv = document.getElementById("response");
-
-    sendBtn.addEventListener("click", async () => {
-      const message = messageInput.value.trim();
-      if (message) {
-        try {
-          const res = await fetch(backendUrl, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ message })
-          });
-          const data = await res.json();
-          responseDiv.textContent = data.reply || data.error || "Lỗi không xác định";
-        } catch (error) {
-          responseDiv.textContent = "Lỗi kết nối: " + error.message;
-        }
-        messageInput.value = "";
-      }
-    });
-
-    messageInput.addEventListener("keypress", (e) => {
-      if (e.key === "Enter" && messageInput.value.trim()) {
-        sendBtn.click();
-      }
-    });
-  </script>
+    <div class="chat-container">
+        <div class="chat-log" id="chatLog">
+            <div class="chatbot-message">Chào bạn "tới nóc"! Muốn "quẩy" gì với tui không? 😉</div>
+        </div>
+        <div class="input-area">
+            <input type="text" id="messageInput" placeholder="Nhập tin nhắn rồi 'phệt' Enter...">
+            <button id="sendButton">Gửi</button>
+        </div>
+    </div>
+    <script src="script.js"></script>
 </body>
 </html>
