@@ -106,6 +106,22 @@
       margin-top: 10px;
       color: #333;
     }
+
+    #playButton {
+      padding: 10px 20px;
+      font-size: 1em;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-top: 20px;
+    }
+
+    #playButton:hover {
+      background-color: #0056b3;
+    }
+
   </style>
 </head>
 <body>
@@ -133,13 +149,15 @@
   </div>
 
   <audio id="myAudio" src="hieu audio" preload="auto"></audio>
+  <button id="playButton">Phát nhạc nền 🎵</button>
+
   <script>
     document.addEventListener('DOMContentLoaded', function() {
-      var audio = document.getElementById('myAudio');
-      audio.play().catch(function(error) {
-        console.error("Lỗi tự động phát âm thanh:", error);
-        // Xử lý lỗi nếu trình duyệt chặn tự động phát
-        // Bạn có thể hiển thị một nút để người dùng chủ động phát âm thanh (tùy chọn)
+      const audio = document.getElementById('myAudio');
+      const playButton = document.getElementById('playButton');
+
+      playButton.addEventListener('click', () => {
+        audio.play().catch(error => console.error("Lỗi phát âm thanh:", error));
       });
     });
 
