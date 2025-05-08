@@ -3,166 +3,443 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ngày giờ và Đếm ngược</title>
+    <title>Trình chỉnh sửa ảnh cơ bản</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         body {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            margin: 0;
-            font-family: Arial, sans-serif;
-            text-align: center;
-            font-size: 18px;
-            line-height: 1.6;
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6; /* Màu nền xám nhạt */
         }
-        #info, #clock, #countdown, #quote-container {
-            margin-bottom: 20px;
+        .control-panel {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
-        button {
-            padding: 10px 20px;
-            font-size: 16px;
+        .control-panel h3 {
+            font-size: 1.125rem; /* 18px */
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #1f2937; /* Màu chữ xám đậm */
+        }
+        .control-group {
+            margin-bottom: 1.5rem;
+        }
+        .control-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #374151; /* Màu chữ xám trung bình */
+        }
+        .control-group input[type="range"] {
+            width: 100%;
             cursor: pointer;
-            background-color: #4CAF50;
+        }
+        .filter-btn, .action-btn {
+            background-color: #3b82f6; /* Màu xanh dương */
             color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem; /* 6px */
             border: none;
-            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            font-weight: 500;
         }
-        button:hover {
-            background-color: #45a049;
+        .filter-btn:hover, .action-btn:hover {
+            background-color: #2563eb; /* Màu xanh dương đậm hơn khi hover */
         }
-        #quote {
-            font-style: italic;
-            color: #555;
+        .filter-btn.active {
+            background-color: #1d4ed8; /* Màu xanh dương đậm hơn cho nút active */
+        }
+        .canvas-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #e5e7eb; /* Màu nền xám nhạt hơn cho vùng canvas */
+            border-radius: 8px;
+            overflow: hidden;
+            min-height: 300px; /* Chiều cao tối thiểu cho vùng canvas */
+        }
+        canvas {
+            max-width: 100%;
+            max-height: 70vh; /* Chiều cao tối đa của canvas */
+            object-fit: contain;
+            border-radius: 4px;
+        }
+        .hidden {
+            display: none;
+        }
+        /* Thông báo */
+        .message-box {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #10b981; /* Màu xanh lá */
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 0.375rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+        }
+        .message-box.show {
+            opacity: 1;
+        }
+        .message-box.error {
+            background-color: #ef4444; /* Màu đỏ */
         }
     </style>
 </head>
-<body>
-    <div id="info">
-        Xin chào, mình là Hiếu! 👋<br>
-        Cảm ơn bạn đã ghé thăm. 😊<br>
-        <br>
-        Trang web này không giúp bạn giàu lên đâu,<br>
-        nhưng biết đâu lại khiến bạn cười nhẹ một cái:<br>
-        😅😂🤣😉😜😝😙😚😘<br>
-        <br>
-        Nếu thấy vui vui, hữu ích gì đó... 🧠<br>
-        thì donate cho mình ly cà phê nha! ☕<br>
-        <br>
-        🏦 Ngân hàng: VCB<br>
-        🔢 Số tài khoản: 123456789<br>
-        😎 Chủ tài khoản: Hiếu Đẹp Troai
+<body class="p-4 md:p-8">
+    <div class="container mx-auto max-w-6xl">
+        <header class="text-center mb-8">
+            <h1 class="text-3xl md:text-4xl font-bold text-gray-800">Trình chỉnh sửa ảnh cơ bản</h1>
+            <p class="text-gray-600 mt-2">Tải ảnh lên và thử các công cụ chỉnh sửa.</p>
+        </header>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="md:col-span-1 control-panel">
+                <div>
+                    <label for="imageLoader" class="block mb-2 text-sm font-medium text-gray-900">Tải ảnh lên:</label>
+                    <input type="file" id="imageLoader" accept="image/*" class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none p-2">
+                </div>
+
+                <div class="mt-6 control-group" id="controlsContainer" class="hidden">
+                    <h3>Nâng cao chất lượng</h3>
+                    <div>
+                        <label for="brightness">Độ sáng:</label>
+                        <input type="range" id="brightness" min="0" max="200" value="100">
+                    </div>
+                    <div class="mt-4">
+                        <label for="contrast">Độ tương phản:</label>
+                        <input type="range" id="contrast" min="0" max="200" value="100">
+                    </div>
+                    <div class="mt-4">
+                        <label for="saturation">Độ bão hòa:</label>
+                        <input type="range" id="saturation" min="0" max="200" value="100">
+                    </div>
+                     <div class="mt-4">
+                        <label for="blur">Làm mờ (Blur):</label>
+                        <input type="range" id="blur" min="0" max="10" value="0" step="0.1">
+                    </div>
+                </div>
+
+                <div class="mt-6 control-group" id="filtersContainer" class="hidden">
+                    <h3>Bộ lọc</h3>
+                    <div class="grid grid-cols-2 gap-2">
+                        <button class="filter-btn" data-filter="grayscale">Thang độ xám</button>
+                        <button class="filter-btn" data-filter="sepia">Nâu đỏ</button>
+                        <button class="filter-btn" data-filter="invert">Đảo ngược</button>
+                        <button class="filter-btn" data-filter="vintage">Cổ điển</button>
+                        </div>
+                </div>
+
+                <div class="mt-8 space-y-3" id="actionsContainer" class="hidden">
+                    <h3>Thao tác</h3>
+                    <button id="resetControls" class="w-full action-btn bg-yellow-500 hover:bg-yellow-600">Đặt lại chỉnh sửa</button>
+                    <button id="downloadImage" class="w-full action-btn bg-green-500 hover:bg-green-600">Tải ảnh xuống</button>
+                </div>
+            </div>
+
+            <div class="md:col-span-2 canvas-container">
+                <canvas id="imageCanvas"></canvas>
+                <p id="canvasPlaceholder" class="text-gray-500">Chưa có ảnh nào được chọn. Vui lòng tải ảnh lên.</p>
+            </div>
+        </div>
     </div>
-    <div id="quote-container">
-        <button onclick="showQuote()">Nhận câu nói vui!</button>
-        <div id="quote"></div>
-    </div>
-    <div id="clock"></div>
-    <div id="countdown"></div>
-    <audio id="clickSound" src="hieuhelo.mp3"></audio>
-<script>
-    const quotes = [
-        "Đừng để hôm nay buồn, vì mai còn buồn hơn nếu bạn không cười! 😄",
-        "Cuộc sống như cốc cà phê, đắng nhưng thơm nếu biết thưởng thức! ☕",
-        "Hãy bước đi như mèo, nhẹ nhàng nhưng đầy kiêu hãnh! 🐾",
-        "Mơ lớn đi, nhưng đừng ngủ quên trong giấc mơ nhé! 🌟",
-        "Nếu crush không trả lời, có lẽ họ đang bận ngắm bạn từ xa! 😜",
-        "Thời gian giống như Wi-Fi, quý giá nhưng hay mất lúc cần nhất! 📡",
-        "Hãy là chính mình, trừ khi bạn là cà chua – thì làm sốt cà đi! 🍅",
-        "Cười nhiều lên, vì nụ cười là chiếc vé miễn phí vào trái tim! 😊",
-        "Đừng sợ thất bại, vì nó chỉ là cách vũ trụ nói 'thử lại đi'! 🚀",
-        "Một ngày không vui là một ngày bạn quên ăn món yêu thích! 🍕"
-    ];
 
-    function showQuote() {
-        const randomIndex = Math.floor(Math.random() * quotes.length);
-        document.getElementById('quote').innerHTML = quotes[randomIndex];
-        const sound = document.getElementById('clickSound');
-        sound.currentTime = 0; // Reset âm thanh để phát lại từ đầu
-        sound.play(); // Phát âm thanh
-    }
+    <div id="messageBox" class="message-box"></div>
 
-    function convertToLunar(date) {
-        const lunarInfo2025 = [
-            { start: new Date('2025-01-29'), lunarMonth: 1, lunarDay: 1 },
-            { start: new Date('2025-02-27'), lunarMonth: 2, lunarDay: 1 },
-            { start: new Date('2025-03-29'), lunarMonth: 3, lunarDay: 1 },
-            { start: new Date('2025-04-28'), lunarMonth: 4, lunarDay: 1 },
-            { start: new Date('2025-05-27'), lunarMonth: 5, lunarDay: 1 },
-            { start: new Date('2025-06-25'), lunarMonth: 6, lunarDay: 1 },
-            { start: new Date('2025-07-25'), lunarMonth: 7, lunarDay: 1 },
-            { start: new Date('2025-08-24'), lunarMonth: 8, lunarDay: 1 },
-            { start: new Date('2025-09-22'), lunarMonth: 9, lunarDay: 1 },
-            { start: new Date('2025-10-22'), lunarMonth: 10, lunarDay: 1 },
-            { start: new Date('2025-11-20'), lunarMonth: 11, lunarDay: 1 },
-            { start: new Date('2025-12-20'), lunarMonth: 12, lunarDay: 1 }
-        ];
+    <script>
+        const imageLoader = document.getElementById('imageLoader');
+        const canvas = document.getElementById('imageCanvas');
+        const ctx = canvas.getContext('2d');
+        const canvasPlaceholder = document.getElementById('canvasPlaceholder');
 
-        let lunarMonth = 12, lunarDay = 1;
-        for (const info of lunarInfo2025) {
-            if (date >= info.start) {
-                lunarMonth = info.lunarMonth;
-                lunarDay = Math.floor((date - info.start) / (1000 * 60 * 60 * 24)) + 1;
-            } else break;
-        }
-        return { lunarDay, lunarMonth, lunarYear: 2025 };
-    }
+        // Các thanh điều khiển
+        const brightnessSlider = document.getElementById('brightness');
+        const contrastSlider = document.getElementById('contrast');
+        const saturationSlider = document.getElementById('saturation');
+        const blurSlider = document.getElementById('blur');
 
-    function updateClock() {
-        const now = new Date();
-        const hours = now.getHours();
-        const minutes = now.getMinutes();
-        const seconds = now.getSeconds();
-        const weekdays = ['Chủ nhật', 'Thứ 2', 'Thứ 3', 'Thứ 4', 'Thứ 5', 'Thứ 6', 'Thứ 7'];
-        const lunar = convertToLunar(now);
 
-        document.getElementById('clock').innerHTML =
-            `Hôm nay: ${hours} giờ ${minutes} phút ${seconds} giây: ${weekdays[now.getDay()]}<br>` +
-            `Dương lịch ${now.getDate()}/${now.getMonth() + 1}/${now.getFullYear()}<br>` +
-            `Âm lịch ${lunar.lunarDay}/${lunar.lunarMonth}/${lunar.lunarYear}`;
-    }
+        // Các nút
+        const resetControlsBtn = document.getElementById('resetControls');
+        const downloadImageBtn = document.getElementById('downloadImage');
+        const filterButtons = document.querySelectorAll('.filter-btn');
 
-    function updateCountdown() {
-        const now = new Date();
-        const tetTay = new Date('2026-01-01');
-        const tetTa = new Date('2026-02-17');
+        // Container của các control
+        const controlsContainer = document.getElementById('controlsContainer');
+        const filtersContainer = document.getElementById('filtersContainer');
+        const actionsContainer = document.getElementById('actionsContainer');
 
-        const diffTay = tetTay - now;
-        const diffTa = tetTa - now;
+        let originalImage = null; // Lưu trữ ảnh gốc để reset
+        let currentImage = null; // Ảnh hiện tại đang được chỉnh sửa
+        let currentFilters = {
+            brightness: 100,
+            contrast: 100,
+            saturation: 100,
+            grayscale: 0,
+            sepia: 0,
+            invert: 0,
+            blur: 0,
+            // Thêm các giá trị mặc định cho bộ lọc khác ở đây
+            vintage: false // Ví dụ cho bộ lọc cổ điển
+        };
+        let activeFilterButton = null; // Theo dõi nút bộ lọc đang được chọn
 
-        let countdownText = 'Đồng hồ đếm ngược đến 01/01/2026<br>';
-
-        if (diffTay <= 0) {
-            countdownText += 'Tết Tây: Hết giờ<br>';
-        } else {
-            const daysTay = Math.floor(diffTay / (1000 * 60 * 60 * 24));
-            const hoursTay = Math.floor((diffTay / (1000 * 60 * 60)) % 24);
-            const minutesTay = Math.floor((diffTay / (1000 * 60)) % 60);
-            const secondsTay = Math.floor((diffTay / 1000) % 60);
-            countdownText += `Tết Tây còn: ${daysTay} ngày ${hoursTay} giờ ${minutesTay} phút ${secondsTay} giây<br>`;
+        // Hàm hiển thị thông báo
+        function showMessage(message, type = 'success', duration = 3000) {
+            const messageBox = document.getElementById('messageBox');
+            messageBox.textContent = message;
+            messageBox.className = `message-box ${type}`; // Thêm class 'error' nếu là lỗi
+            messageBox.classList.add('show');
+            setTimeout(() => {
+                messageBox.classList.remove('show');
+            }, duration);
         }
 
-        if (diffTa <= 0) {
-            countdownText += 'Tết Ta: Hết giờ';
-        } else {
-            const daysTa = Math.floor(diffTa / (1000 * 60 * 60 * 24));
-            const hoursTa = Math.floor((diffTa / (1000 * 60 * 60)) % 24);
-            const minutesTa = Math.floor((diffTa / (1000 * 60)) % 60);
-            const secondsTa = Math.floor((diffTa / 1000) % 60);
-            countdownText += `Tết Ta còn: ${daysTa} ngày ${hoursTa} giờ ${minutesTa} phút ${secondsTa} giây`;
+        // Xử lý tải ảnh lên
+        imageLoader.addEventListener('change', (event) => {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    originalImage = new Image();
+                    originalImage.onload = () => {
+                        currentImage = originalImage;
+                        // Đặt kích thước canvas bằng kích thước ảnh gốc nhưng giới hạn bởi max-width/height
+                        const MAX_WIDTH = canvas.parentElement.clientWidth * 0.9; // 90% chiều rộng của parent
+                        const MAX_HEIGHT = window.innerHeight * 0.7; // 70% chiều cao cửa sổ
+
+                        let newWidth = originalImage.width;
+                        let newHeight = originalImage.height;
+
+                        if (newWidth > MAX_WIDTH) {
+                            newHeight *= MAX_WIDTH / newWidth;
+                            newWidth = MAX_WIDTH;
+                        }
+
+                        if (newHeight > MAX_HEIGHT) {
+                            newWidth *= MAX_HEIGHT / newHeight;
+                            newHeight = MAX_HEIGHT;
+                        }
+                        canvas.width = newWidth;
+                        canvas.height = newHeight;
+
+                        resetAllFiltersAndDraw(); // Vẽ ảnh gốc lên canvas và reset filter
+                        canvasPlaceholder.classList.add('hidden');
+                        canvas.classList.remove('hidden');
+                        controlsContainer.classList.remove('hidden');
+                        filtersContainer.classList.remove('hidden');
+                        actionsContainer.classList.remove('hidden');
+                        showMessage('Tải ảnh lên thành công!', 'success');
+                    }
+                    originalImage.onerror = () => {
+                        showMessage('Không thể tải ảnh. Định dạng không được hỗ trợ hoặc tệp bị lỗi.', 'error');
+                        canvasPlaceholder.classList.remove('hidden');
+                        canvas.classList.add('hidden');
+                        controlsContainer.classList.add('hidden');
+                        filtersContainer.classList.add('hidden');
+                        actionsContainer.classList.add('hidden');
+                    }
+                    originalImage.src = e.target.result;
+                }
+                reader.readAsDataURL(file);
+            } else {
+                // Nếu không chọn file nào (ví dụ, nhấn cancel)
+                if (!originalImage) { // Chỉ ẩn nếu chưa có ảnh nào được tải trước đó
+                    canvasPlaceholder.classList.remove('hidden');
+                    canvas.classList.add('hidden');
+                    controlsContainer.classList.add('hidden');
+                    filtersContainer.classList.add('hidden');
+                    actionsContainer.classList.add('hidden');
+                }
+            }
+        });
+
+        // Hàm áp dụng các thay đổi và vẽ lại ảnh
+        function applyChangesAndRedraw() {
+            if (!currentImage) return;
+
+            // Tạo một canvas tạm để xử lý ảnh gốc mà không làm thay đổi nó
+            const tempCanvas = document.createElement('canvas');
+            const tempCtx = tempCanvas.getContext('2d');
+            tempCanvas.width = originalImage.width; // Sử dụng kích thước gốc
+            tempCanvas.height = originalImage.height;
+
+            // Áp dụng các bộ lọc CSS vào context của canvas tạm
+            let filterString = '';
+            filterString += `brightness(${currentFilters.brightness}%) `;
+            filterString += `contrast(${currentFilters.contrast}%) `;
+            filterString += `saturate(${currentFilters.saturation}%) `;
+            filterString += `grayscale(${currentFilters.grayscale}%) `;
+            filterString += `sepia(${currentFilters.sepia}%) `;
+            filterString += `invert(${currentFilters.invert}%) `;
+            filterString += `blur(${currentFilters.blur}px) `;
+
+
+            tempCtx.filter = filterString.trim();
+            tempCtx.drawImage(originalImage, 0, 0, originalImage.width, originalImage.height);
+
+
+            // Xử lý bộ lọc tùy chỉnh (ví dụ: vintage) không có trong CSS filter
+            if (currentFilters.vintage) {
+                applyVintageFilter(tempCtx, tempCanvas.width, tempCanvas.height);
+            }
+
+            // Vẽ ảnh đã xử lý từ canvas tạm lên canvas chính (đã được resize)
+            ctx.clearRect(0, 0, canvas.width, canvas.height); // Xóa canvas chính
+            ctx.drawImage(tempCanvas, 0, 0, canvas.width, canvas.height); // Vẽ lại với kích thước hiển thị
         }
 
-        document.getElementById('countdown').innerHTML = countdownText;
-    }
+        // Hàm áp dụng bộ lọc Cổ điển (Vintage)
+        function applyVintageFilter(context, width, height) {
+            // Đây là một ví dụ đơn giản, bạn có thể tùy chỉnh các giá trị này
+            // Làm cho ảnh hơi ngả vàng và giảm độ tương phản nhẹ
+            context.globalCompositeOperation = 'multiply';
+            context.fillStyle = 'rgba(255, 210, 100, 0.15)'; // Lớp màu vàng nhạt
+            context.fillRect(0, 0, width, height);
+            context.globalCompositeOperation = 'source-over'; // Reset lại
 
-    function refreshAll() {
-        updateClock();
-        updateCountdown();
-    }
+            // Giảm độ bão hòa một chút (có thể cần điều chỉnh thêm)
+            // Vì CSS filter đã có saturate, bộ lọc này có thể phức tạp hơn
+            // hoặc bạn có thể kết hợp với các thao tác pixel trực tiếp
+            const imageData = context.getImageData(0, 0, width, height);
+            const data = imageData.data;
+            for (let i = 0; i < data.length; i += 4) {
+                // Giảm nhẹ độ bão hòa bằng cách làm cho các màu gần xám hơn
+                const r = data[i];
+                const g = data[i+1];
+                const b = data[i+2];
+                const gray = 0.299 * r + 0.587 * g + 0.114 * b; // Độ xám trung bình
+                data[i] = r * 0.8 + gray * 0.2;
+                data[i+1] = g * 0.8 + gray * 0.2;
+                data[i+2] = b * 0.8 + gray * 0.2;
+            }
+            context.putImageData(imageData, 0, 0);
+        }
 
-    setInterval(refreshAll, 1000);
-    refreshAll();
-</script>
-</body>
-</html>
+
+        // Lắng nghe sự kiện thay đổi trên các thanh trượt
+        brightnessSlider.addEventListener('input', (e) => {
+            currentFilters.brightness = e.target.value;
+            applyChangesAndRedraw();
+        });
+        contrastSlider.addEventListener('input', (e) => {
+            currentFilters.contrast = e.target.value;
+            applyChangesAndRedraw();
+        });
+        saturationSlider.addEventListener('input', (e) => {
+            currentFilters.saturation = e.target.value;
+            applyChangesAndRedraw();
+        });
+         blurSlider.addEventListener('input', (e) => {
+            currentFilters.blur = e.target.value;
+            applyChangesAndRedraw();
+        });
+
+
+        // Xử lý các nút bộ lọc
+        filterButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const filterType = button.dataset.filter;
+
+                // Bỏ active nút cũ (nếu có)
+                if (activeFilterButton && activeFilterButton !== button) {
+                    activeFilterButton.classList.remove('active');
+                    // Reset bộ lọc của nút cũ nếu cần
+                    if (activeFilterButton.dataset.filter === 'vintage') {
+                         currentFilters.vintage = false;
+                    } else {
+                        currentFilters[activeFilterButton.dataset.filter] = 0; // Hoặc giá trị mặc định
+                    }
+                }
+
+
+                // Chuyển đổi trạng thái bộ lọc
+                if (filterType === 'grayscale' || filterType === 'sepia' || filterType === 'invert') {
+                    if (currentFilters[filterType] > 0) { // Nếu đang active, tắt nó đi
+                        currentFilters[filterType] = 0;
+                        button.classList.remove('active');
+                        activeFilterButton = null;
+                    } else { // Nếu chưa active, bật nó và tắt các bộ lọc khác cùng loại
+                        currentFilters.grayscale = 0;
+                        currentFilters.sepia = 0;
+                        currentFilters.invert = 0;
+                        currentFilters[filterType] = 100; // Hoặc giá trị phù hợp cho bộ lọc (ví dụ: sepia(1))
+                        button.classList.add('active');
+                        activeFilterButton = button;
+                    }
+                } else if (filterType === 'vintage') {
+                    currentFilters.vintage = !currentFilters.vintage; // Toggle
+                     if (currentFilters.vintage) {
+                        button.classList.add('active');
+                        activeFilterButton = button;
+                    } else {
+                        button.classList.remove('active');
+                        activeFilterButton = null;
+                    }
+                }
+                // Tắt các bộ lọc khác khi một bộ lọc mới được chọn (trừ vintage có thể kết hợp)
+                filterButtons.forEach(btn => {
+                    if (btn !== button && btn.dataset.filter !== 'vintage') { // không reset nút vintage
+                        btn.classList.remove('active');
+                        if (btn.dataset.filter !== 'vintage') { // không reset giá trị của vintage
+                           currentFilters[btn.dataset.filter] = 0;
+                        }
+                    }
+                });
+                 // Nếu nút được click là nút đang active (và không phải vintage), thì hủy active nó
+                if (button.classList.contains('active') && button !== activeFilterButton && filterType !== 'vintage') {
+                     button.classList.remove('active');
+                     currentFilters[filterType] = 0;
+                     activeFilterButton = null;
+                } else if (filterType !== 'vintage') { // Nếu là bộ lọc mới (không phải vintage)
+                     if(activeFilterButton && activeFilterButton.dataset.filter !== 'vintage') {
+                        activeFilterButton.classList.remove('active');
+                        currentFilters[activeFilterButton.dataset.filter] = 0;
+                     }
+                     button.classList.add('active');
+                     currentFilters[filterType] = 100;
+                     activeFilterButton = button;
+                }
+
+
+                applyChangesAndRedraw();
+            });
+        });
+
+        // Hàm reset tất cả bộ lọc và vẽ lại ảnh gốc
+        function resetAllFiltersAndDraw() {
+            if (!originalImage) return;
+            currentImage = originalImage; // Đặt lại ảnh hiện tại về ảnh gốc
+
+            // Reset giá trị của các thanh trượt và bộ lọc
+            brightnessSlider.value = 100;
+            contrastSlider.value = 100;
+            saturationSlider.value = 100;
+            blurSlider.value = 0;
+
+            currentFilters = {
+                brightness: 100,
+                contrast: 100,
+                saturation: 100,
+                grayscale: 0,
+                sepia: 0,
+                invert: 0,
+                blur: 0,
+                vintage: false
+            };
+
+            // Bỏ active tất cả các nút bộ lọc
+            filterButtons.forEach(btn => btn.classList.remove('active'));
+            activeFilterButton = null;
+
+            // Vẽ lại ảnh gốc lên canvas chính (đã được resize)
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.filter = 'none'; // Đảm bảo không có filter CSS nào được áp dụng
+            ctx.drawImage(originalImage, 0, 0, canvas.width,
