@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Những Câu Nói Hay & Ý Nghĩa</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        #category-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+
+        .category-button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .category-button:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+        }
+
+        .category-button:active {
+            transform: translateY(0);
+        }
+
+        #quote-display {
+            background-color: #ffffff;
+            border-left: 5px solid #3498db;
+            padding: 25px;
+            margin-top: 20px;
+            min-height: 100px;
+            width: 80%;
+            max-width: 700px;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        #quote-text {
+            font-size: 1.3em;
+            font-style: italic;
+            color: #34495e;
+            margin-bottom: 10px;
+        }
+
+        #quote-author {
+            font-size: 1em;
+            color: #7f8c8d;
+            margin-top: 10px;
+        }
+         footer {
+            margin-top: 40px;
+            font-size: 0.9em;
+            color: #777;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Tuyển Tập Những Câu Nói Hay & Ý Nghĩa</h1>
+
+    <div id="category-buttons">
+        </div>
+
+    <div id="quote-display" style="display: none;">
+        <p id="quote-text"></p>
+        <p id="quote-author"></p>
+    </div>
+
+    <footer>
+        <p>Nhấp vào một danh mục để khám phá những câu nói truyền cảm hứng.</p>
+    </footer>
+
+    <script>
+        const quotes = {
+            "Cuộc sống": [
+                { text: "Cuộc sống không phải là chờ đợi cơn bão qua đi, mà là học cách khiêu vũ dưới mưa.", author: "Vivian Greene" },
+                { text: "Điều quan trọng không phải là chúng ta sống bao lâu, mà là chúng ta sống như thế nào.", author: "Philip James Bailey" },
+                { text: "Hãy sống như thể bạn sẽ chết ngày mai. Hãy học như thể bạn sẽ sống mãi mãi.", author: "Mahatma Gandhi" },
+                { text: "Cuộc sống là 10% những gì xảy ra với bạn và 90% cách bạn phản ứng với nó.", author: "Charles R. Swindoll" },
+                { text: "Mục đích của cuộc sống không phải là để hạnh phúc. Đó là để hữu ích, để danh dự, để từ bi, để tạo ra sự khác biệt rằng bạn đã sống và sống tốt.", author: "Ralph Waldo Emerson" },
+                { text: "Cuộc sống thực sự rất đơn giản, nhưng chúng ta cứ khăng khăng làm cho nó phức tạp.", author: "Khổng Tử" },
+                { text: "Đừng chăm chăm đếm ngày, hãy làm cho mỗi ngày đều đáng giá.", author: "Muhammad Ali" },
+                { text: "Bạn chỉ sống một lần, nhưng nếu bạn làm đúng, một lần là đủ.", author: "Mae West" },
+                { text: "Cuộc sống giống như đi xe đạp. Để giữ thăng bằng, bạn phải tiếp tục di chuyển.", author: "Albert Einstein" },
+                { text: "Những điều tốt đẹp nhất trong cuộc sống không phải là những thứ bạn có thể nhìn thấy hoặc chạm vào, chúng phải được cảm nhận bằng trái tim.", author: "Helen Keller" },
+                { text: "Thử thách là những gì làm cho cuộc sống thú vị và vượt qua chúng là những gì làm cho cuộc sống có ý nghĩa.", author: "Joshua J. Marine" },
+                { text: "Cuộc sống không được đo bằng số lần thở mà chúng ta hít vào, mà bằng những khoảnh khắc khiến chúng ta nghẹt thở.", author: "Maya Angelou" },
+                { text: "Sự khác biệt giữa bình thường và phi thường chỉ là một chút 'thêm'.", author: "Jimmy Johnson" },
+                { text: "Hãy là sự thay đổi mà bạn muốn thấy trong thế giới.", author: "Mahatma Gandhi" },
+                { text: "Mỗi ngày mới mang đến một cơ hội để thay đổi cuộc đời bạn.", author: "Khuyết danh" }
+            ],
+            "Tình yêu": [
+                { text: "Yêu không phải là nhìn nhau, mà là cùng nhau nhìn về một hướng.", author: "Antoine de Saint-Exupéry" },
+                { text: "Chúng ta yêu không phải vì tìm thấy một người hoàn hảo, mà vì học cách nhìn thấy một người không hoàn hảo một cách hoàn hảo.", author: "Sam Keen" },
+                { text: "Nơi nào có tình yêu, nơi đó có sự sống.", author: "Mahatma Gandhi" },
+                { text: "Tình yêu đích thực không phải là không bao giờ chia cách, mà là dù có xa cách đến đâu cũng sẽ quay về.", author: "Khuyết danh" },
+                { text: "Tình yêu là khi hạnh phúc của người khác quan trọng hơn hạnh phúc của chính bạn.", author: "H. Jackson Brown, Jr." },
+                { text: "Được yêu sâu sắc bởi một người mang lại cho bạn sức mạnh, trong khi yêu một người sâu sắc mang lại cho bạn lòng can đảm.", author: "Lão Tử" },
+                { text: "Tình yêu không phải là thứ bạn tìm thấy. Tình yêu là thứ tìm thấy bạn.", author: "Loretta Young" },
+                { text: "Tình yêu bao gồm một linh hồn duy nhất cư ngụ trong hai cơ thể.", author: "Aristotle" },
+                { text: "Cách tốt nhất để yêu bất cứ điều gì là nhận ra rằng nó có thể bị mất đi.", author: "Gilbert K. Chesterton" },
+                { text: "Tình yêu là một trò chơi mà hai người có thể chơi và cả hai cùng thắng.", author: "Eva Gabor" },
+                { text: "Tình yêu giống như gió, bạn không thể nhìn thấy nhưng bạn có thể cảm nhận được.", author: "Nicholas Sparks" },
+                { text: "Một cuộc đời không có tình yêu cũng giống như một năm không có mùa hè.", author: "Tục ngữ Thụy Điển" },
+                { text: "Trái tim muốn những gì nó muốn. Không có logic nào cho những điều này.", author: "Woody Allen" },
+                { text: "Tình yêu không phải là về số ngày, tháng hay năm bạn đã ở bên nhau. Tình yêu là về việc bạn yêu nhau nhiều như thế nào mỗi ngày.", author: "Khuyết danh" },
+                { text: "Nếu tôi biết tình yêu là gì, đó là nhờ có bạn.", author: "Hermann Hesse" }
+            ],
+            "Du lịch": [
+                { text: "Thế giới là một cuốn sách, và những người không đi du lịch chỉ đọc một trang.", author: "Thánh Augustine" },
+                { text: "Du lịch – nó khiến bạn không nói nên lời, sau đó biến bạn thành một người kể chuyện.", author: "Ibn Battuta" },
+                { text: "Đừng nói cho tôi biết bạn học hành thế nào, hãy nói cho tôi biết bạn đã đi bao nhiêu.", author: "Mohammed" },
+                { text: "Cuộc sống hoặc là một cuộc phiêu lưu táo bạo hoặc không là gì cả.", author: "Helen Keller" },
+                { text: "Đi một ngày đàng, học một sàng khôn.", author: "Tục ngữ Việt Nam" },
+                { text: "Du lịch không phải là thứ bạn giỏi. Đó là thứ bạn làm.", author: "Gayle Forman" },
+                { text: "Đầu tư vào du lịch là đầu tư vào chính mình.", author: "Matthew Karsten" },
+                { text: "Một khi bạn đã đi du lịch, cuộc hành trình không bao giờ kết thúc, mà được lặp đi lặp lại trong những góc yên tĩnh nhất của tâm trí.", author: "Pat Conroy" },
+                { text: "Tôi chưa đến mọi nơi, nhưng nó nằm trong danh sách của tôi.", author: "Susan Sontag" },
+                { text: "Du lịch làm cho một người trở nên khiêm tốn. Bạn thấy được vị trí nhỏ bé của mình trong thế giới này.", author: "Gustave Flaubert" },
+                { text: "Đừng lo lắng về những ổ gà trên đường và hãy tận hưởng cuộc hành trình.", author: "Fitzhugh Mullan" },
+                { text: "Mục tiêu của du lịch không phải là đặt chân lên vùng đất xa lạ, mà là cuối cùng đặt chân lên vùng đất của chính mình như một vùng đất xa lạ.", author: "G.K. Chesterton" },
+                { text: "Một chuyến đi được đo bằng bạn bè, chứ không phải dặm.", author: "Tim Cahill" },
+                { text: "Chỉ những người lang thang mới biết đường về nhà.", author: "J.R.R. Tolkien" },
+                { text: "Hãy lấp đầy cuộc sống của bạn bằng những cuộc phiêu lưu, không phải những thứ vật chất. Hãy có những câu chuyện để kể, không phải những thứ để khoe.", author: "Khuyết danh" }
+            ],
+            "Cảm hứng": [
+                { text: "Cách tốt nhất để dự đoán tương lai là tạo ra nó.", author: "Peter Drucker" },
+                { text: "Hãy tin rằng bạn có thể và bạn đã đi được nửa đường.", author: "Theodore Roosevelt" },
+                { text: "Không quan trọng bạn đi chậm như thế nào miễn là bạn không dừng lại.", author: "Khổng Tử" },
+                { text: "Bắt đầu từ nơi bạn đứng. Sử dụng những gì bạn có. Làm những gì bạn có thể.", author: "Arthur Ashe" },
+                { text: "Thất bại duy nhất thực sự là không cố gắng.", author: "George Clooney" },
+                { text: "Những người đủ điên rồ để nghĩ rằng họ có thể thay đổi thế giới, chính là những người làm được điều đó.", author: "Steve Jobs" },
+                { text: "Nếu bạn muốn nâng mình lên, hãy nâng người khác lên.", author: "Booker T. Washington" },
+                { text: "Hãy là ngọn hải đăng cho những người đang tìm kiếm ánh sáng.", author: "Khuyết danh" },
+                { text: "Đừng chờ đợi cơ hội. Hãy tạo ra nó.", author: "George Bernard Shaw" },
+                { text: "Khó khăn thường chuẩn bị cho những người bình thường một vận mệnh phi thường.", author: "C.S. Lewis" },
+                { text: "Mỗi ngày đều là một trang mới trong cuộc đời bạn. Hãy viết nên một câu chuyện hay.", author: "Khuyết danh" },
+                { text: "Giới hạn duy nhất của chúng ta là những gì chúng ta tự đặt ra.", author: "Khuyết danh" },
+                { text: "Nếu giấc mơ của bạn không làm bạn sợ hãi, chúng chưa đủ lớn.", author: "Ellen Johnson Sirleaf" },
+                { text: "Hành động là chìa khóa nền tảng cho mọi thành công.", author: "Pablo Picasso" },
+                { text: "Hãy làm điều gì đó hôm nay mà tương lai của bạn sẽ cảm ơn bạn vì điều đó.", author: "Sean Patrick Flanery" }
+            ],
+            "Kiến thức": [
+                { text: "Đầu tư vào kiến thức mang lại lợi nhuận tốt nhất.", author: "Benjamin Franklin" },
+                { text: "Kiến thức là sức mạnh.", author: "Francis Bacon" },
+                { text: "Học, học nữa, học mãi.", author: "Lenin" },
+                { text: "Tri thức thực sự là biết mức độ thiếu hiểu biết của một người.", author: "Khổng Tử" },
+                { text: "Sự tò mò là ngọn bấc trong ngọn nến của việc học.", author: "William Arthur Ward" },
+                { text: "Hãy chia sẻ kiến thức của bạn. Đó là một cách để đạt được sự bất tử.", author: "Đạt Lai Lạt Ma" },
+                { text: "Điều đẹp đẽ về việc học là không ai có thể lấy nó đi khỏi bạn.", author: "B.B. King" },
+                { text: "Trí tuệ không phải là sản phẩm của việc học ở trường mà là của nỗ lực cả đời để có được nó.", author: "Albert Einstein" },
+                { text: "Đừng bao giờ ngừng học hỏi, vì cuộc sống không bao giờ ngừng dạy.", author: "Khuyết danh" },
+                { text: "Càng đọc nhiều, bạn càng biết nhiều. Càng học nhiều, bạn càng đi nhiều nơi.", author: "Dr. Seuss" },
+                { text: "Kiến thức có điểm khởi đầu nhưng không có điểm kết thúc.", author: "Tục ngữ Ba Tư" },
+                { text: "Mục đích của giáo dục là thay thế một cái đầu trống rỗng bằng một cái đầu rộng mở.", author: "Malcolm Forbes" },
+                { text: "Chỉ có một điều tốt, đó là kiến thức, và một điều xấu, đó là sự ngu dốt.", author: "Socrates" },
+                { text: "Học tập không phải là một môn thể thao khán giả.", author: "D. Blocher" },
+                { text: "Người đặt câu hỏi là kẻ ngốc trong năm phút, nhưng người không hỏi thì ngốc cả đời.", author: "Tục ngữ Trung Quốc" }
+            ],
+            "Sức khoẻ": [
+                { text: "Sức khỏe là của cải thực sự, không phải vàng bạc.", author: "Mahatma Gandhi" },
+                { text: "Hãy chăm sóc cơ thể của bạn. Đó là nơi duy nhất bạn phải sống.", author: "Jim Rohn" },
+                { text: "Thời gian và sức khỏe là hai tài sản quý giá mà chúng ta không nhận ra và trân trọng cho đến khi chúng cạn kiệt.", author: "Denis Waitley" },
+                { text: "Sức khỏe tốt không phải là thứ chúng ta có thể mua. Tuy nhiên, nó có thể là một tài khoản tiết kiệm cực kỳ giá trị.", author: "Anne Wilson Schaef" },
+                { text: "Tâm trí và cơ thể khỏe mạnh là điều cần thiết cho một cuộc sống hạnh phúc.", author: "Khuyết danh" },
+                { text: "Tài sản đầu tiên là sức khỏe.", author: "Ralph Waldo Emerson" },
+                { text: "Để đảm bảo sức khỏe tốt: ăn nhẹ, hít thở sâu, sống điều độ, vun đắp sự vui vẻ và duy trì sự quan tâm đến cuộc sống.", author: "William Londen" },
+                { text: "Một nụ cười bằng mười thang thuốc bổ.", author: "Tục ngữ Việt Nam" },
+                { text: "Vận động là thuốc cho cơ thể và tâm trí.", author: "Edward Stanley" },
+                { text: "Ăn để sống, không phải sống để ăn.", author: "Socrates" },
+                { text: "Sức khỏe là sự hài hòa hoàn toàn của cơ thể, tâm trí và tinh thần.", author: "B.K.S. Iyengar" },
+                { text: "Hãy để thức ăn là thuốc của bạn và thuốc là thức ăn của bạn.", author: "Hippocrates" },
+                { text: "Những người không tìm thấy thời gian để tập thể dục sẽ phải tìm thời gian cho bệnh tật.", author: "Edward Smith-Stanley" },
+                { text: "Nghỉ ngơi khi bạn mệt mỏi. Làm mới và làm mới bản thân, cơ thể, tâm trí, tinh thần của bạn. Sau đó quay lại làm việc.", author: "Ralph Marston" },
+                { text: "Giấc ngủ ngon là nền tảng của sức khỏe.", author: "Khuyết danh" }
+            ],
+            "Thành công": [
+                { text: "Thành công không phải là chìa khóa của hạnh phúc. Hạnh phúc là chìa khóa của thành công. Nếu bạn yêu những gì bạn đang làm, bạn sẽ thành công.", author: "Albert Schweitzer" },
+                { text: "Đừng nhắm đến thành công nếu bạn muốn nó; chỉ cần làm những gì bạn yêu thích và tin tưởng, và nó sẽ đến một cách tự nhiên.", author: "David Frost" },
+                { text: "Con đường dẫn đến thành công và con đường dẫn đến thất bại gần như giống hệt nhau.", author: "Colin R. Davis" },
+                { text: "Thành công là tổng hợp của những nỗ lực nhỏ, lặp đi lặp lại ngày này qua ngày khác.", author: "Robert Collier" },
+                { text: "Tôi thấy rằng càng làm việc chăm chỉ, tôi dường như càng có nhiều may mắn.", author: "Thomas Jefferson" },
+                { text: "Thành công thường đến với những người quá bận rộn để tìm kiếm nó.", author: "Henry David Thoreau" },
+                { text: "Thất bại là gia vị mang lại hương vị cho thành công.", author: "Truman Capote" },
+                { text: "Chỉ có một thành công duy nhất – đó là có thể sống cuộc đời theo cách của riêng bạn.", author: "Christopher Morley" },
+                { text: "Đừng sợ từ bỏ cái tốt để theo đuổi cái vĩ đại.", author: "John D. Rockefeller" },
+                { text: "Để thành công, thái độ cũng quan trọng như năng lực.", author: "Walter Scott" },
+                { text: "Bí mật của thành công là làm những việc thông thường một cách phi thường.", author: "John D. Rockefeller Jr." },
+                { text: "Thành công không phải là đích đến, mà là cuộc hành trình.", author: "Zig Ziglar" },
+                { text: "Hành động là chìa khóa nền tảng cho mọi thành công.", author: "Pablo Picasso" },
+                { text: "Kỷ luật là cầu nối giữa mục tiêu và thành tựu.", author: "Jim Rohn" },
+                { text: "Người chiến thắng không bao giờ bỏ cuộc, và người bỏ cuộc không bao giờ chiến thắng.", author: "Vince Lombardi" }
+            ],
+            "Hạnh phúc": [
+                { text: "Hạnh phúc không phải là thứ có sẵn. Nó đến từ hành động của chính bạn.", author: "Đạt Lai Lạt Ma" },
+                { text: "Hạnh phúc không phải là đích đến, mà là một hành trình.", author: "Margaret Lee Runbeck" },
+                { text: "Hàng ngàn ngọn nến có thể được thắp sáng từ một ngọn nến duy nhất, và cuộc đời của ngọn nến sẽ không bị rút ngắn. Hạnh phúc không bao giờ giảm đi khi được chia sẻ.", author: "Phật" },
+                { text: "Hạnh phúc là khi những gì bạn nghĩ, những gì bạn nói và những gì bạn làm hài hòa với nhau.", author: "Mahatma Gandhi" },
+                { text: "Bí quyết của hạnh phúc không phải là làm những gì mình thích, mà là thích những gì mình làm.", author: "James M. Barrie" },
+                { text: "Hạnh phúc không phải là có được những gì bạn muốn, mà là muốn những gì bạn có.", author: "Rabbi Hyman Schachtel" },
+                { text: "Hạnh phúc phụ thuộc vào chính chúng ta.", author: "Aristotle" },
+                { text: "Nếu bạn muốn người khác hạnh phúc, hãy thực hành lòng từ bi. Nếu bạn muốn mình hạnh phúc, hãy thực hành lòng từ bi.", author: "Đạt Lai Lạt Ma" },
+                { text: "Hạnh phúc không phải là sự vắng mặt của vấn đề, mà là khả năng đối phó với chúng.", author: "Steve Maraboli" },
+                { text: "Cách chắc chắn nhất để tìm thấy hạnh phúc cho chính mình là tìm cách làm cho người khác hạnh phúc.", author: "Martin Luther King Jr." },
+                { text: "Hạnh phúc là một trạng thái của tâm trí. Nó chỉ là cách bạn nhìn mọi thứ.", author: "Walt Disney" },
+                { text: "Niềm vui lớn nhất trong cuộc sống là làm những điều mà người ta nói bạn không thể làm.", author: "Walter Bagehot" },
+                { text: "Sự lạc quan là nam châm của hạnh phúc. Nếu bạn giữ thái độ tích cực, những điều tốt đẹp và những người tốt sẽ bị thu hút về phía bạn.", author: "Mary Lou Retton" },
+                { text: "Hạnh phúc là một nghệ thuật được tìm thấy trong những điều nhỏ nhặt của cuộc sống.", author: "Khuyết danh" },
+                { text: "Đừng trì hoãn hạnh phúc cho đến khi mọi thứ hoàn hảo. Nó sẽ không bao giờ hoàn hảo. Luôn có những thử thách, trở ngại và những điều kiện không hoàn hảo. Vậy thì sao? Hãy bắt đầu ngay bây giờ.", author: "Khuyết danh" }
+            ],
+            "Thời gian": [
+                { text: "Thời gian là thứ quý giá nhất mà một người có thể tiêu.", author: "Theophrastus" },
+                { text: "Thời gian đã mất không bao giờ tìm lại được.", author: "Benjamin Franklin" },
+                { text: "Đừng bao giờ để đến ngày mai những gì bạn có thể làm hôm nay.", author: "Benjamin Franklin" },
+                { text: "Thời gian là một ảo ảnh.", author: "Albert Einstein" },
+                { text: "Cách tuyệt vời nhất để lãng phí thời gian là phàn nàn về việc không có đủ thời gian.", author: "Khuyết danh" },
+                { text: "Thời gian là một người thầy vĩ đại, nhưng không may nó giết chết tất cả học trò của mình.", author: "Hector Berlioz" },
+                { text: "Quá khứ đã qua, tương lai chưa đến, chúng ta chỉ có hiện tại. Hãy sống trọn vẹn từng khoảnh khắc.", author: "Thích Nhất Hạnh" },
+                { text: "Bạn có thể trì hoãn, nhưng thời gian thì không.", author: "Benjamin Franklin" },
+                { text: "Thời gian bay nhanh hơn cả mũi tên, và ngày hôm qua sẽ không bao giờ trở lại.", author: "Khuyết danh" },
+                { text: "Vấn đề là, bạn nghĩ rằng bạn có thời gian.", author: "Jack Kornfield" },
+                { text: "Thời gian là miễn phí, nhưng nó vô giá. Bạn không thể sở hữu nó, nhưng bạn có thể sử dụng nó. Bạn không thể giữ nó, nhưng bạn có thể tiêu nó. Một khi bạn đã mất nó, bạn không bao giờ có thể lấy lại được.", author: "Harvey Mackay" },
+                { text: "Đừng đếm từng giờ, hãy làm cho từng giờ đều đáng giá.", author: "Khuyết danh" },
+                { text: "Chìa khóa không phải là ưu tiên những gì có trong lịch trình của bạn, mà là lên lịch cho các ưu tiên của bạn.", author: "Stephen Covey" },
+                { text: "Người bình thường chỉ nghĩ đến việc giết thời gian, người tài năng cố gắng sử dụng thời gian.", author: "Arthur Schopenhauer" },
+                { text: "Tương lai phụ thuộc vào những gì bạn làm hôm nay.", author: "Mahatma Gandhi" }
+            ],
+            "Tình bạn": [
+                { text: "Một người bạn thật sự là người bước vào khi cả thế giới bước ra.", author: "Walter Winchell" },
+                { text: "Tình bạn nhân đôi niềm vui và chia sẻ nỗi buồn.", author: "Francis Bacon" },
+                { text: "Bạn bè là gia đình mà chúng ta tự chọn.", author: "Edna Buchanan" },
+                { text: "Đi cùng bạn trong bóng tối tốt hơn là đi một mình trong ánh sáng.", author: "Helen Keller" },
+                { text: "Một người bạn là người biết tất cả về bạn và vẫn yêu bạn.", author: "Elbert Hubbard" },
+                { text: "Ngôn ngữ của tình bạn không phải là lời nói mà là ý nghĩa.", author: "Henry David Thoreau" },
+                { text: "Tình bạn được sinh ra vào thời điểm một người nói với người khác: 'Cái gì! Bạn cũng vậy sao? Tôi tưởng mình là người duy nhất.'", author: "C.S. Lewis" },
+                { text: "Không có gì trên trái đất này đáng được quý trọng hơn tình bạn chân chính.", author: "Thomas Aquinas" },
+                { text: "Những người bạn tốt giống như những ngôi sao. Bạn không luôn nhìn thấy họ, nhưng bạn biết họ luôn ở đó.", author: "Khuyết danh" },
+                { text: "Tình bạn là sợi dây vàng gắn kết trái tim của cả thế giới.", author: "John Evelyn" },
+                { text: "Một người bạn trung thành đáng giá hơn mười ngàn người họ hàng.", author: "Euripides" },
+                { text: "Cách duy nhất để có một người bạn là trở thành một người bạn.", author: "Ralph Waldo Emerson" },
+                { text: "Tình bạn không phải là một điều lớn lao - đó là hàng triệu điều nhỏ nhặt.", author: "Khuyết danh" },
+                { text: "Bạn bè thể hiện tình yêu của họ trong những lúc khó khăn, không phải trong hạnh phúc.", author: "Euripides" },
+                { text: "Một người bạn thực sự là người nhìn thấy nỗi đau trong mắt bạn trong khi những người khác tin vào nụ cười trên khuôn mặt bạn.", author: "Khuyết danh" }
+            ],
+             "Gia đình": [
+                { text: "Gia đình là nơi cuộc sống bắt đầu và tình yêu không bao giờ kết thúc.", author: "Khuyết danh" },
+                { text: "Gia đình không phải là một điều quan trọng. Đó là tất cả mọi thứ.", author: "Michael J. Fox" },
+                { text: "Hạnh phúc là có một gia đình lớn, yêu thương, quan tâm, gần gũi ở một thành phố khác.", author: "George Burns" },
+                { text: "Gia đình là la bàn dẫn đường cho chúng ta. Họ là nguồn cảm hứng để đạt đến những tầm cao lớn lao, và là niềm an ủi khi chúng ta đôi khi vấp ngã.", author: "Brad Henry" },
+                { text: "Sau tất cả, gia đình là những gì thực sự quan trọng.", author: "Khuyết danh" },
+                { text: "Bạn không chọn gia đình của mình. Họ là món quà của Chúa dành cho bạn, cũng như bạn dành cho họ.", author: "Desmond Tutu" },
+                { text: "Những khoảnh khắc hạnh phúc nhất của tôi là những khoảnh khắc tôi đã trải qua ở nhà trong vòng tay gia đình.", author: "Thomas Jefferson" },
+                { text: "Gia đình là một trong những kiệt tác của thiên nhiên.", author: "George Santayana" },
+                { text: "Sức mạnh của một gia đình, giống như sức mạnh của một đội quân, nằm ở lòng trung thành với nhau.", author: "Mario Puzo" },
+                { text: "Hãy trân trọng gia đình bạn, vì họ là những người sẽ luôn ở bên bạn trong những lúc khó khăn nhất.", author: "Khuyết danh" },
+                { text: "Không có gì giống như ở nhà để được thoải mái thực sự.", author: "Jane Austen" },
+                { text: "Khi mọi thứ trở nên tồi tệ, những người đứng bên bạn mà không nao núng - họ là gia đình của bạn.", author: "Jim Butcher" },
+                { text: "Những kỷ niệm chúng ta tạo ra với gia đình là tất cả.", author: "Candace Cameron Bure" },
+                { text: "Gia đình: nơi những điều tuyệt vời nhất xảy ra và những điều tồi tệ nhất bị lãng quên.", author: "Khuyết danh" },
+                { text: "Tình yêu của một gia đình là phước lành lớn nhất của cuộc đời.", author: "Khuyết danh" }
+            ],
+            "Hy vọng": [
+                { text: "Hy vọng là điều duy nhất mạnh mẽ hơn nỗi sợ hãi.", author: "Suzanne Collins" },
+                { text: "Chúng ta phải chấp nhận sự thất vọng hữu hạn, nhưng không bao giờ đánh mất hy vọng vô hạn.", author: "Martin Luther King Jr." },
+                { text: "Hy vọng là một giấc mơ khi tỉnh thức.", author: "Aristotle" },
+                { text: "Khi bạn có hy vọng, bạn có tất cả.", author: "Khuyết danh" },
+                { text: "Hãy để hy vọng của bạn, không phải nỗi đau của bạn, định hình tương lai của bạn.", author: "Robert H. Schuller" },
+                { text: "Hy vọng mỉm cười từ ngưỡng cửa của năm sắp tới, thì thầm 'nó sẽ hạnh phúc hơn'.", author: "Alfred Lord Tennyson" },
+                { text: "Ngay cả trong những đêm tối nhất, hy vọng vẫn là một ngôi sao.", author: "Khuyết danh" },
+                { text: "Hy vọng là khả năng nhìn thấy ánh sáng bất chấp bóng tối.", author: "Desmond Tutu" },
+                { text: "Đừng bao giờ đánh mất hy vọng. Những cơn bão làm cho con người mạnh mẽ hơn và chúng không kéo dài mãi mãi.", author: "Roy T. Bennett" },
+                { text: "Nơi nào có sự tàn phá, nơi đó có hy vọng cho một kho báu.", author: "Rumi" },
+                { text: "Hy vọng là người bạn đồng hành của quyền lực, và là mẹ của thành công; vì vậy ai hy vọng mạnh mẽ, người đó có món quà của phép lạ trong mình.", author: "Samuel Smiles" },
+                { text: "Hy vọng là lông vũ nhỏ bé đậu trên tâm hồn, hát một giai điệu không lời và không bao giờ ngừng lại.", author: "Emily Dickinson" },
+                { text: "Một khi bạn chọn hy vọng, mọi thứ đều có thể.", author: "Christopher Reeve" },
+                { text: "Hy vọng là một sự lựa chọn. Hãy chọn nó mỗi ngày.", author: "Khuyết danh" },
+                { text: "Trong mọi đám mây, có một tia hy vọng.", author: "Khuyết danh" }
+            ]
+        };
+
+        const categoryButtonsContainer = document.getElementById('category-buttons');
+        const quoteDisplay = document.getElementById('quote-display');
+        const quoteTextElement = document.getElementById('quote-text');
+        const quoteAuthorElement = document.getElementById('quote-author');
+        let lastDisplayedQuotes = {}; // Để theo dõi câu nói cuối cùng hiển thị cho mỗi danh mục
+
+        // Tạo các nút danh mục
+        Object.keys(quotes).forEach(category => {
+            const button = document.createElement('button');
+            button.classList.add('category-button');
+            button.textContent = category;
+            button.dataset.category = category;
+            categoryButtonsContainer.appendChild(button);
+
+            // Khởi tạo lastDisplayedQuotes cho mỗi danh mục
+            lastDisplayedQuotes[category] = -1; // -1 nghĩa là chưa có câu nào được hiển thị
+
+            button.addEventListener('click', function() {
+                displayRandomQuote(category);
+            });
+        });
+
+        function displayRandomQuote(category) {
+            const categoryQuotes = quotes[category];
+            if (!categoryQuotes || categoryQuotes.length === 0) {
+                quoteTextElement.textContent = "Không có câu nói nào trong danh mục này.";
+                quoteAuthorElement.textContent = "";
+                quoteDisplay.style.display = 'flex';
+                quoteDisplay.style.opacity = 1;
+                return;
+            }
+
+            let randomIndex;
+            // Đảm bảo câu nói mới không giống câu nói vừa hiển thị (nếu chỉ có 1 câu thì vẫn hiển thị câu đó)
+            if (categoryQuotes.length > 1) {
+                do {
+                    randomIndex = Math.floor(Math.random() * categoryQuotes.length);
+                } while (randomIndex === lastDisplayedQuotes[category]);
+            } else {
+                randomIndex = 0;
+            }
+
+
+            const selectedQuote = categoryQuotes[randomIndex];
+            lastDisplayedQuotes[category] = randomIndex; // Cập nhật câu nói vừa hiển thị
+
+            // Ẩn câu nói hiện tại (nếu có) trước khi hiển thị câu mới
+            quoteDisplay.style.opacity = 0;
+
+            setTimeout(() => {
+                quoteTextElement.textContent = `"${selectedQuote.text}"`;
+                quoteAuthorElement.textContent = selectedQuote.author ? `- ${selectedQuote.author} -` : "- Khuyết danh -";
+                quoteDisplay.style.display = 'flex';
+                quoteDisplay.style.opacity = 1;
+            }, 300); // Thời gian chờ khớp với transition
+        }
+
+    </script>
+
+</body>
+</html>
