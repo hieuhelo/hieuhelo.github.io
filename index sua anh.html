@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ngày giờ và Đếm ngược</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            font-size: 18px;
+            line-height: 1.6;
+        }
+        #info, #clock, #countdown, #quote-container {
+            margin-bottom: 20px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #quote {
+            font-style: italic;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+    <div id="info">
+        Xin chào, mình là Hiếu! 👋<br>
+        Cảm ơn bạn đã ghé thăm. 😊<br>
+        <br>
+        Trang web này không giúp bạn giàu lên đâu,<br>
+        nhưng biết đâu lại khiến bạn cười nhẹ một cái:<br>
+        😅😂🤣😉😜😝😙😚😘<br>
+        <br>
+        Nếu thấy vui vui, hữu ích gì đó... 🧠<br>
+        thì donate cho mình ly cà phê nha! ☕<br>
+        <br>
+        🏦 Ngân hàng: VCB<br>
+        🔢 Số tài khoản: 123456789<br>
+        😎 Chủ tài khoản: Hiếu Đẹp Troai
+    </div>
+    <div id="quote-container">
+        <button onclick="showQuote()">Nhận câu nói vui!</button>
+        <div id="quote"></div>
+    </div>
+    <div id="clock"></div>
+    <div id="countdown"></div>
+    <audio id="clickSound" src="hieuhelo.mp3"></audio>
+<script>
+    const quotes = [
+        "Đừng để hôm nay buồn, vì mai còn buồn hơn nếu bạn không cười! 😄",
+        "Cuộc sống như cốc cà phê, đắng nhưng thơm nếu biết thưởng thức! ☕",
+        "Hãy bước đi như mèo, nhẹ nhàng nhưng đầy kiêu hãnh! 🐾",
+        "Mơ lớn đi, nhưng đừng ngủ quên trong giấc mơ nhé! 🌟",
+        "Nếu crush không trả lời, có lẽ họ đang bận ngắm bạn từ xa! 😜",
+        "Thời gian giống như Wi-Fi, quý giá nhưng hay mất lúc cần nhất! 📡",
+        "Hãy là chính mình, trừ khi bạn là cà chua – thì làm sốt cà đi! 🍅",
+        "Cười nhiều lên, vì nụ cười là chiếc vé miễn phí vào trái tim! 😊",
+        "Đừng sợ thất bại, vì nó chỉ là cách vũ trụ nói 'thử lại đi'! 🚀",
+        "Một ngày không vui là một ngày bạn quên ăn món yêu thích! 🍕"
+    ];
+
+    function showQuote() {
+        const randomIndex = Math.floor(Math.random() * quotes.length);
+        document.getElementById('quote').innerHTML = quotes[randomIndex];
+        const sound = document.getElementById('clickSound');
+        sound.currentTime = 0; // Reset âm thanh để phát lại từ đầu
+        sound.play(); // Phát âm thanh
+    }
+
+    function convertToLunar(date) {
+        const lunarInfo2025 = [
+            { start: new Date('2025-01-29'), lunarMonth: 1, lunarDay: 1 },
+            { start: new Date('2025-02-27'), lunarMonth: 2, lunarDay: 1 },
+            { start: new Date('2025-03-29'), lunarMonth: 3, lunarDay: 1 },
+            { start: new Date('2025-04-28'), lunarMonth: 4, lunarDay: 1 },
+            { start: new Date('2025-05-27'), lunarMonth: 5, lunarDay: 1 },
+            { start: new Date('2025-06-25'), lunarMonth: 6, lunarDay: 1 },
+            { start: new Date('2025-07-25'), lunarMonth: 7, lunarDay: 1 },
+            { start: new Date('2025-08-24'), lunarMonth: 8, lunarDay: 1 },
+            { start: new Date('2025-09-22'), lunarMonth: 9, lunarDay: 1 },
+            { start: new Date('2025-10-22'), lunarMonth: 10, lunarDay: 1 },
+            { start: new Date('2025-11-20'), lunarMonth: 11, lunarDay: 1 },
+            { start: new Date('2025-12-20'), lunarMonth: 12, lunarDay: 1 }
+        ];
+
+        let lunarMonth = 12, lunarDay = 1;
+        for (const info of lunarInfo2025) {
+            if (date >= info.start) {
+                lunarMonth = info.lunarMonth;
+                lunarDay = Math.floor((date - info.start) / (1000 * 60 * 60 * 24)) + 1;
+            } else break;
+        }
+        return { lunarDay, lunarMonth, lunarYear: 2025 };
+    }
+
+    function updateClock() {
+        const now = new Date();
+        const hours = now.getHours();
+        const minutes = now.getMinutes();
+        const seconds = now.getSeconds();
+        const weekdays = ['Chủ nhật', 'Thứ 2', 'Thứ 3', 'Thứ 4', 'Thứ 5', 'Thứ 6', 'Thứ 7'];
+        const lunar = convertToLunar(now);
+
+        document.getElementById('clock').innerHTML =
+            `Hôm nay: ${hours} giờ ${minutes} phút ${seconds} giây: ${weekdays[now.getDay()]}<br>` +
+            `Dương lịch ${now.getDate()}/${now.getMonth() + 1}/${now.getFullYear()}<br>` +
+            `Âm lịch ${lunar.lunarDay}/${lunar.lunarMonth}/${lunar.lunarYear}`;
+    }
+
+    function updateCountdown() {
+        const now = new Date();
+        const tetTay = new Date('2026-01-01');
+        const tetTa = new Date('2026-02-17');
+
+        const diffTay = tetTay - now;
+        const diffTa = tetTa - now;
+
+        let countdownText = 'Đồng hồ đếm ngược đến 01/01/2026<br>';
+
+        if (diffTay <= 0) {
+            countdownText += 'Tết Tây: Hết giờ<br>';
+        } else {
+            const daysTay = Math.floor(diffTay / (1000 * 60 * 60 * 24));
+            const hoursTay = Math.floor((diffTay / (1000 * 60 * 60)) % 24);
+            const minutesTay = Math.floor((diffTay / (1000 * 60)) % 60);
+            const secondsTay = Math.floor((diffTay / 1000) % 60);
+            countdownText += `Tết Tây còn: ${daysTay} ngày ${hoursTay} giờ ${minutesTay} phút ${secondsTay} giây<br>`;
+        }
+
+        if (diffTa <= 0) {
+            countdownText += 'Tết Ta: Hết giờ';
+        } else {
+            const daysTa = Math.floor(diffTa / (1000 * 60 * 60 * 24));
+            const hoursTa = Math.floor((diffTa / (1000 * 60 * 60)) % 24);
+            const minutesTa = Math.floor((diffTa / (1000 * 60)) % 60);
+            const secondsTa = Math.floor((diffTa / 1000) % 60);
+            countdownText += `Tết Ta còn: ${daysTa} ngày ${hoursTa} giờ ${minutesTa} phút ${secondsTa} giây`;
+        }
+
+        document.getElementById('countdown').innerHTML = countdownText;
+    }
+
+    function refreshAll() {
+        updateClock();
+        updateCountdown();
+    }
+
+    setInterval(refreshAll, 1000);
+    refreshAll();
+</script>
+</body>
+</html>
