@@ -1,55 +1,94 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chatbot Test</title>
+    <title>Chào mừng đến với AI Mỏ Hỗn!</title>
     <style>
-        body { font-family: Arial, sans-serif; margin: 20px; }
-        #chatbox { height: 300px; overflow-y: auto; border: 1px solid #ccc; padding: 10px; }
-        #input { width: 70%; margin-right: 10px; }
+        body {
+            font-family: sans-serif;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start; /* Bắt đầu nội dung từ trên xuống */
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding-top: 20px; /* Thêm khoảng cách trên đầu */
+            padding-bottom: 40px; /* Thêm khoảng cách dưới đáy */
+        }
+
+        .introduction {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .profile-image {
+            width: 100px; /* Điều chỉnh kích thước ảnh theo ý muốn */
+            height: 100px;
+            border-radius: 50%; /* Tạo hình tròn cho ảnh */
+            object-fit: cover; /* Đảm bảo ảnh không bị méo */
+            margin-bottom: 10px;
+        }
+
+        .container {
+            text-align: center;
+            margin-bottom: 40px; /* Thêm khoảng cách giữa nút và info */
+        }
+
+        .button-link {
+            display: inline-block;
+            padding: 15px 30px;
+            font-size: 1.2em;
+            font-weight: bold;
+            text-align: center;
+            text-decoration: none;
+            color: #fff;
+            background-color: #007bff;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.3s ease;
+        }
+
+        .button-link:hover {
+            background-color: #0056b3;
+        }
+
+        .info {
+            text-align: center;
+            color: #777;
+            font-size: 0.9em;
+            line-height: 1.5;
+        }
+
+        .donate {
+            margin-top: 15px;
+            font-weight: bold;
+            color: #555;
+        }
     </style>
 </head>
 <body>
-    <h2>Chatbot Test</h2>
-    <div id="chatbox"></div>
-    <input type="text" id="input" placeholder="Type your message...">
-    <button onclick="sendMessage()">Send</button>
+    <div class="introduction">
+        <h1>Xin chào mình là AI mỏ hỗn</h1>
+        <img src="https://github.com/hieuhelo/hieuhelo.github.io/raw/main/hieu%20image.jpg" alt="Hiếu Đẹp Troai" class="profile-image">
+        <p>do Hiếu tạo ra. Mình có thể giúp gì cho bạn? 😊</p>
+    </div>
 
-    <script>
-        async function sendMessage() {
-            const input = document.getElementById('input');
-            const message = input.value;
-            const chatbox = document.getElementById('chatbox');
+    <div class="container">
+        <a href="https://8b3e7d5f-ef45-4a31-8838-0b531a026f78-00-a1aztvl3h4jj.pike.replit.dev/" class="button-link">
+            Bấm vào đây để Chat ngay! 😉
+        </a>
+    </div>
 
-            if (message) {
-                chatbox.innerHTML += `<p><strong>You:</strong> ${message}</p>`;
-                input.value = '';
-
-                try {
-                    const response = await fetch('https://dfe4650b-168b-4c00-876e-b4f3cd561529-00-2zfu5fmr5pneh.sisko.replit.dev/chat', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ message: message })
-                    });
-                    const data = await response.json();
-                    if (data.error) {
-                        chatbox.innerHTML += `<p><strong>Error:</strong> ${data.error}</p>`;
-                    } else if (data.choices && data.choices[0] && data.choices[0].message && data.choices[0].message.content) {
-                        chatbox.innerHTML += `<p><strong>Bot:</strong> ${data.choices[0].message.content}</p>`;
-                    } else {
-                        chatbox.innerHTML += `<p><strong>Bot:</strong> No response</p>`;
-                    }
-                } catch (error) {
-                    chatbox.innerHTML += `<p><strong>Error:</strong> ${error.message}</p>`;
-                }
-                chatbox.scrollTop = chatbox.scrollHeight;
-            }
-        }
-
-        document.getElementById('input').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') sendMessage();
-        });
-    </script>
+    <div class="info">
+        <p>Nếu thấy vui vui, hữu ích gì đó... 🧠</p>
+        <p class="donate">thì donate cho mình ly cà phê nha! ☕</p>
+        <p>🏦 Ngân hàng: VCB</p>
+        <p>🔢 Số tài khoản: 123456789</p>
+        <p>😎 Chủ tài khoản: Hiếu Đẹp Troai</p>
+    </div>
 </body>
 </html>
