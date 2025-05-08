@@ -1,94 +1,170 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chào mừng đến với AI Mỏ Hỗn!</title>
-    <style>
-        body {
-            font-family: sans-serif;
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-start; /* Bắt đầu nội dung từ trên xuống */
-            align-items: center;
-            min-height: 100vh;
-            background-color: #f4f4f4;
-            margin: 0;
-            padding-top: 20px; /* Thêm khoảng cách trên đầu */
-            padding-bottom: 40px; /* Thêm khoảng cách dưới đáy */
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AI Mỏ Hỗn - Bay vào tâm trí bạn!</title>
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Quicksand', sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background-color: #f0f0f8;
+      margin: 0;
+      padding: 20px;
+      overflow: hidden;
+      text-align: center;
+    }
 
-        .introduction {
-            text-align: center;
-            margin-bottom: 30px;
-        }
+    .floating-icons {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      overflow: hidden;
+      z-index: 0;
+    }
 
-        .profile-image {
-            width: 100px; /* Điều chỉnh kích thước ảnh theo ý muốn */
-            height: 100px;
-            border-radius: 50%; /* Tạo hình tròn cho ảnh */
-            object-fit: cover; /* Đảm bảo ảnh không bị méo */
-            margin-bottom: 10px;
-        }
+    .floating-icon {
+      position: absolute;
+      font-size: 2.2rem;
+      opacity: 0;
+      transition: opacity 1.5s ease;
+      animation: float 6s ease-in-out infinite;
+    }
 
-        .container {
-            text-align: center;
-            margin-bottom: 40px; /* Thêm khoảng cách giữa nút và info */
-        }
+    @keyframes float {
+      0%   { transform: translateY(0) rotate(0deg); }
+      50%  { transform: translateY(-30px) rotate(15deg); }
+      100% { transform: translateY(0) rotate(0deg); }
+    }
 
-        .button-link {
-            display: inline-block;
-            padding: 15px 30px;
-            font-size: 1.2em;
-            font-weight: bold;
-            text-align: center;
-            text-decoration: none;
-            color: #fff;
-            background-color: #007bff;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-            transition: background-color 0.3s ease;
-        }
+    .introduction {
+      z-index: 1;
+      margin-top: 40px;
+      max-width: 600px;
+    }
 
-        .button-link:hover {
-            background-color: #0056b3;
-        }
+    .profile-image {
+      width: 110px;
+      height: 110px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-bottom: 15px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    }
 
-        .info {
-            text-align: center;
-            color: #777;
-            font-size: 0.9em;
-            line-height: 1.5;
-        }
+    .introduction h1 {
+      color: #2c3e50;
+      font-size: 2em;
+      margin: 10px 0;
+    }
 
-        .donate {
-            margin-top: 15px;
-            font-weight: bold;
-            color: #555;
-        }
-    </style>
+    .introduction p {
+      font-size: 1.1em;
+      color: #444;
+    }
+
+    .container {
+      z-index: 1;
+      margin: 30px 0;
+    }
+
+    .button-link {
+      display: inline-block;
+      padding: 14px 30px;
+      font-size: 1.1em;
+      font-weight: 600;
+      color: #fff;
+      background-color: #007bff;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      text-decoration: none;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      transition: background-color 0.3s ease;
+    }
+
+    .button-link:hover {
+      background-color: #0056b3;
+    }
+
+    .info {
+      z-index: 1;
+      max-width: 500px;
+      color: #555;
+      font-size: 1em;
+      line-height: 1.6;
+    }
+
+    .donate {
+      font-weight: 600;
+      margin-top: 10px;
+      color: #333;
+    }
+  </style>
 </head>
 <body>
-    <div class="introduction">
-        <h1>Xin chào mình là AI mỏ hỗn</h1>
-        <img src="https://github.com/hieuhelo/hieuhelo.github.io/raw/main/hieu%20image.jpg" alt="Hiếu Đẹp Troai" class="profile-image">
-        <p>do Hieu tạo ra. Mình có thể giúp gì cho bạn? 😊</p>
-    </div>
 
-    <div class="container">
-        <a href="https://8b3e7d5f-ef45-4a31-8838-0b531a026f78-00-a1aztvl3h4jj.pike.replit.dev/" class="button-link">
-            Bấm vào đây để Chat ngay! 😉
-        </a>
-    </div>
+  <!-- Biểu tượng nền -->
+  <div class="floating-icons" id="iconContainer"></div>
 
-    <div class="info">
-        <p>Nếu thấy vui vui, hữu ích gì đó... 🧠</p>
-        <p class="donate">thì donate cho mình ly cà phê nha! ☕</p>
-        <p>🏦 Ngân hàng: VCB</p>
-        <p>🔢 Số tài khoản: 123456789</p>
-        <p>😎 Chủ tài khoản: Hiếu Đẹp Troai</p>
-    </div>
+  <div class="introduction">
+    <h1>Xin chào, mình là AI Mỏ Hỗn</h1>
+    <img src="https://github.com/hieuhelo/hieuhelo.github.io/raw/main/hieu%20image.jpg" alt="Hiếu Đẹp Troai" class="profile-image">
+    <p>Do Hiếu tạo ra. Mình có thể giúp gì cho bạn? 😊</p>
+  </div>
+
+  <div class="container">
+    <a href="https://8b3e7d5f-ef45-4a31-8838-0b531a026f78-00-a1aztvl3h4jj.pike.replit.dev/" class="button-link">
+      Bấm vào đây để Chat ngay! 😉
+    </a>
+  </div>
+
+  <div class="info">
+    <p>Nếu thấy vui vui, hữu ích gì đó... 🧠</p>
+    <p class="donate">Thì donate cho mình ly cà phê nha! ☕</p>
+    <p>🏦 Ngân hàng: <strong>VCB</strong></p>
+    <p>🔢 Số tài khoản: <strong>123456789</strong></p>
+    <p>😎 Chủ tài khoản: <strong>Hiếu Đẹp Troai</strong></p>
+  </div>
+
+  <script>
+    const icons = ['😄', '🥳', '😎', '🤯', '🥺', '😇', '🤩', '😱', '🤔', '😜', '😏', '🙌', '🦄', '💖', '🌈', '😈', '🤡', '😻', '😬', '🤓', '😛', '🧐', '😋', '😵', '😺', '😳', '👻', '🤖', '🧚', '😺', '🦋', '🌟', '🦁', '🐼', '🐉', '🐾', '🌸', '🍀', '🎉', '💫'];
+    const container = document.getElementById('iconContainer');
+
+    function createFloatingIcon() {
+      const icon = document.createElement('div');
+      icon.classList.add('floating-icon');
+      icon.style.left = Math.random() * 100 + 'vw';
+      icon.style.top = Math.random() * 100 + 'vh';
+      icon.textContent = icons[Math.floor(Math.random() * icons.length)];
+
+      container.appendChild(icon);
+
+      // Show icon
+      requestAnimationFrame(() => icon.style.opacity = 0.25);
+
+      // Change icon every 2s
+      const interval = setInterval(() => {
+        icon.textContent = icons[Math.floor(Math.random() * icons.length)];
+      }, 2000);
+
+      // Remove after 10s
+      setTimeout(() => {
+        icon.style.opacity = 0;
+        clearInterval(interval);
+        setTimeout(() => icon.remove(), 1500);
+      }, 10000);
+    }
+
+    // Tạo liên tục
+    setInterval(createFloatingIcon, 800);
+  </script>
+
 </body>
 </html>
