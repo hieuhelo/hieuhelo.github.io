@@ -107,21 +107,26 @@
       color: #333;
     }
 
-    #playButton {
+    /* Thêm style cho nút mới */
+    .nav-button {
+      display: inline-block;
       padding: 10px 20px;
       font-size: 1em;
-      background-color: #007bff;
-      color: white;
+      font-weight: 600;
+      color: #fff;
+      background-color: #4CAF50; /* Màu xanh lá cây */
       border: none;
       border-radius: 5px;
       cursor: pointer;
-      margin-top: 20px;
+      text-decoration: none;
+      margin: 5px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+      transition: background-color 0.3s ease;
     }
 
-    #playButton:hover {
-      background-color: #0056b3;
+    .nav-button:hover {
+      background-color: #45a049; /* Màu xanh lá cây đậm hơn khi hover */
     }
-
   </style>
 </head>
 <body>
@@ -140,6 +145,12 @@
     </a>
   </div>
 
+  <div class="container">
+    <button onclick="window.location.href='index cau noi hay.html'" class="nav-button">Câu nói hay</button>
+    <button onclick="window.location.href='game.html'" class="nav-button">Game</button>
+    <button onclick="window.location.href='sua anh.html'" class="nav-button">Sửa ảnh</button>
+  </div>
+
   <div class="info">
     <p>Nếu thấy vui vui, hữu ích gì đó... 🧠</p>
     <p class="donate">Thì donate cho mình ly cà phê nha! ☕</p>
@@ -148,19 +159,7 @@
     <p>😎 Chủ tài khoản: <strong>Hiếu Đẹp Troai</strong></p>
   </div>
 
-  <audio id="myAudio" src="https://raw.githubusercontent.com/hieuhelo/hieuhelo.github.io/main/hieu%2520audio.MP3" preload="auto"></audio>
-  <button id="playButton">Phát nhạc nền 🎵</button>
-
   <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      const audio = document.getElementById('myAudio');
-      const playButton = document.getElementById('playButton');
-
-      playButton.addEventListener('click', () => {
-        audio.play().catch(error => console.error("Lỗi phát âm thanh:", error));
-      });
-    });
-
     const icons = ['😄', '🥳', '😎', '🤯', '🥺', '😇', '🤩', '😱', '🤔', '😜', '😏', '🙌', '🦄', '💖', '🌈', '😈', '🤡', '😻', '😬', '🤓', '😛', '🧐', '😋', '😵', '😺', '😳', '👻', '🤖', '🧚', '😺', '🦋', '🌟', '🦁', '🐼', '🐉', '🐾', '🌸', '🍀', '🎉', '💫'];
     const container = document.getElementById('iconContainer');
 
