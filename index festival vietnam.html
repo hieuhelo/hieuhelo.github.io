@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sự kiện và Ngày lễ Việt Nam (Đến 01/01/2026)</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            margin: 20px;
+            background-color: #f8f9fa;
+            color: #212529;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: auto;
+            background-color: #fff;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #c00; /* Màu đỏ đậm */
+            margin-bottom: 25px;
+        }
+
+        .event-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .event-list li {
+            margin-bottom: 12px;
+        }
+
+        .event-button {
+            display: block;
+            width: 100%;
+            padding: 12px 18px;
+            background-color: #007bff; /* Màu xanh dương */
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 17px;
+            text-align: left;
+            transition: background-color 0.2s ease, transform 0.1s ease;
+            font-weight: 500;
+        }
+
+        .event-button:hover {
+            background-color: #0056b3;
+        }
+        .event-button:active {
+            transform: translateY(1px);
+        }
+
+        .event-details {
+            padding: 15px;
+            margin-top: 8px;
+            background-color: #f1f3f5;
+            border-radius: 6px;
+            border-left: 4px solid #007bff;
+            font-size: 0.95em;
+        }
+
+        .event-details p {
+            margin: 8px 0;
+        }
+
+        .event-date-type, .event-specific-date, .event-note-paragraph {
+            color: #343a40;
+        }
+        .event-date-type strong {
+            color: #17a2b8; /* Màu xanh ngọc */
+        }
+        .event-specific-date {
+            font-weight: 500;
+        }
+
+        .countdown-timer {
+            font-size: 1.15em;
+            font-weight: bold;
+            color: #28a745; /* Màu xanh lá cây cho countdown */
+            margin-top: 10px !important;
+        }
+
+        .event-note-paragraph {
+            font-style: italic;
+            font-size: 0.9em;
+            color: #6c757d;
+        }
+
+        .no-events {
+            text-align: center;
+            font-size: 1.1em;
+            color: #6c757d;
+            padding: 20px;
+        }
+
+        /* Ẩn chi tiết sự kiện ban đầu */
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Sự kiện và Ngày lễ Việt Nam (Đến 01/01/2026)</h1>
+        <ul class="event-list" id="eventList">
+            </ul>
+    </div>
+
+    <script>
+        // Danh sách sự kiện gốc với ngày ở định dạng UTC (YYYY-MM-DDTHH:mm:ssZ)
+        // Giờ địa phương Việt Nam (ICT = GMT+7) là giờ được hiển thị.
+        // Ví dụ: 00:00:00 ICT ngày DD/MM/YYYY là 17:00:00Z ngày (DD-1)/MM/YYYY.
+        const eventsRaw = [
+            // --- Sự kiện năm 2025 ---
+            // (Các sự kiện trước ngày hiện tại sẽ tự động được lọc ra)
+            { name: "Tết Nguyên Đán Giáp Thìn (Mùng 1)", date: "2025-01-28T17:00:00Z", type: "lunar", lunarDate: "Mùng 1 tháng Giêng, Giáp Thìn" }, // 29/01/2025 ICT
+            { name: "Ngày thành lập Đảng Cộng sản Việt Nam", date: "2025-02-02T17:00:00Z", type: "gregorian" }, // 03/02/2025 ICT
+            { name: "Giỗ Tổ Hùng Vương (Mùng 10 tháng 3 ÂL)", date: "2025-04-07T17:00:00Z", type: "lunar", lunarDate: "Mùng 10 tháng 3, Giáp Thìn" }, // 08/04/2025 ICT
+            { name: "Ngày Giải phóng miền Nam, thống nhất đất nước", date: "2025-04-29T17:00:00Z", type: "gregorian" }, // 30/04/2025 ICT
+            { name: "Ngày Quốc tế Lao động", date: "2025-04-30T17:00:00Z", type: "gregorian" }, // 01/05/2025 ICT
+
+            { name: "Ngày sinh Chủ tịch Hồ Chí Minh", date: "2025-05-18T17:00:00Z", type: "gregorian" }, // 19/05/2025 ICT
+            { name: "Tết Đoan Ngọ (Mùng 5 tháng 5 ÂL)", date: "2025-05-31T17:00:00Z", type: "lunar", lunarDate: "Mùng 5 tháng 5, Ất Tỵ" }, // 01/06/2025 ICT (Lưu ý: 2025 là năm Giáp Thìn, nhưng tháng 5 ÂL 2025 đã sang can chi của năm Ất Tỵ) - Thực ra là mùng 5 tháng 5 năm Giáp Thìn. Sửa lại: `lunarDate: "Mùng 5 tháng 5, Giáp Thìn"`
+            { name: "Ngày Thương binh Liệt sĩ", date: "2025-07-26T17:00:00Z", type: "gregorian" }, // 27/07/2025 ICT
+            { name: "Ngày Cách mạng tháng Tám thành công", date: "2025-08-18T17:00:00Z", type: "gregorian" }, // 19/08/2025 ICT
+            { name: "Ngày Quốc khánh", date: "2025-09-01T17:00:00Z", type: "gregorian" }, // 02/09/2025 ICT
+            { name: "Tết Trung Thu (Rằm tháng 8 ÂL)", date: "2025-09-06T17:00:00Z", type: "lunar", lunarDate: "Ngày 15 tháng 8, Giáp Thìn (Rằm tháng Tám)" }, // 07/09/2025 ICT
+            { name: "Ngày Phụ nữ Việt Nam", date: "2025-10-19T17:00:00Z", type: "gregorian" }, // 20/10/2025 ICT
+            { name: "Ngày Nhà giáo Việt Nam", date: "2025-11-19T17:00:00Z", type: "gregorian" }, // 20/11/2025 ICT
+            { name: "Ngày thành lập Quân đội Nhân dân Việt Nam", date: "2025-12-21T17:00:00Z", type: "gregorian" }, // 22/12/2025 ICT
+            { name: "Lễ Giáng Sinh (Noel)", date: "2025-12-24T17:00:00Z", type: "gregorian", note: "Không phải ngày nghỉ lễ chính thức toàn quốc." }, // 25/12/2025 ICT
+
+            // --- Sự kiện năm 2026 (chỉ đến 01/01/2026) ---
+            { name: "Tết Dương lịch 2026", date: "2025-12-31T17:00:00Z", type: "gregorian" } // 01/01/2026 ICT
+        ];
+        // Sửa lại lunarDate cho Tết Đoan Ngọ 2025:
+        const tdnEvent = eventsRaw.find(e => e.name === "Tết Đoan Ngọ (Mùng 5 tháng 5 ÂL)" && e.date.startsWith("2025-05-31"));
+        if (tdnEvent) tdnEvent.lunarDate = "Mùng 5 tháng 5, Giáp Thìn";
+
+
+        const eventListContainer = document.getElementById('eventList');
+
+        // Thời điểm hiện tại (UTC) để lọc
+        const nowForFiltering = new Date();
+        // Ngày cắt (kết thúc ngày 01/01/2026 giờ Việt Nam -> 2026-01-01T16:59:59.999Z UTC)
+        const cutoffDate = new Date("2026-01-01T16:59:59.999Z");
+
+
+        const upcomingEvents = eventsRaw.filter(event => {
+            const eventDateObj = new Date(event.date);
+            return eventDateObj > nowForFiltering && eventDateObj <= cutoffDate;
+        });
+
+        // Sắp xếp sự kiện theo ngày tăng dần
+        upcomingEvents.sort((a, b) => new Date(a.date) - new Date(b.date));
+
+
+        function formatVietnameseDate(utcDateString) {
+            const date = new Date(utcDateString);
+            const options = {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric',
+                timeZone: 'Asia/Ho_Chi_Minh' // Hiển thị theo giờ Việt Nam
+            };
+            return new Intl.DateTimeFormat('vi-VN', options).format(date);
+        }
+
+        function createCountdown(eventUTCDateString, countdownElementId) {
+            const eventTime = new Date(eventUTCDateString).getTime(); // Thời điểm sự kiện (ms UTC)
+
+            const updateTimer = () => {
+                const currentTime = new Date().getTime(); // Thời điểm hiện tại (ms UTC)
+                const timeLeft = eventTime - currentTime;
+
+                if (timeLeft < 0) {
+                    document.getElementById(countdownElementId).innerHTML = "Sự kiện đã hoặc đang diễn ra!";
+                    // Có thể clearInterval(intervalId) nếu muốn dừng hẳn khi đã qua
+                    return;
+                }
+
+                const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+
+                document.getElementById(countdownElementId).innerHTML =
+                    `Còn: ${days} ngày ${hours} giờ ${minutes} phút ${seconds} giây`;
+            };
+
+            const intervalId = setInterval(updateTimer, 1000);
+            updateTimer(); // Cập nhật lần đầu ngay lập tức
+            return intervalId; // Trả về ID để có thể xóa nếu cần
+        }
+
+
+        if (upcomingEvents.length === 0) {
+            const noEventsMessage = document.createElement('p');
+            noEventsMessage.classList.add('no-events');
+            noEventsMessage.textContent = 'Không có sự kiện nào sắp diễn ra trong khoảng thời gian đã chọn.';
+            eventListContainer.appendChild(noEventsMessage);
+        } else {
+            upcomingEvents.forEach((event, index) => {
+                const listItem = document.createElement('li');
+
+                const button = document.createElement('button');
+                button.classList.add('event-button');
+                button.textContent = event.name;
+                button.setAttribute('aria-expanded', 'false');
+                button.setAttribute('aria-controls', `event-details-${index}`);
+
+                const detailsDiv = document.createElement('div');
+                detailsDiv.classList.add('event-details', 'hidden');
+                detailsDiv.id = `event-details-${index}`;
+
+                const dateTypeParagraph = document.createElement('p');
+                dateTypeParagraph.classList.add('event-date-type');
+
+                const specificDateParagraph = document.createElement('p');
+                specificDateParagraph.classList.add('event-specific-date');
+
+                const vietnameseEventDate = formatVietnameseDate(event.date);
+
+                if (event.type === 'lunar') {
+                    dateTypeParagraph.innerHTML = `<strong>Ngày Âm lịch:</strong> ${event.lunarDate}`;
+                    specificDateParagraph.innerHTML = `<strong>Dương lịch:</strong> ${vietnameseEventDate}`;
+                } else { // gregorian
+                    dateTypeParagraph.innerHTML = `<strong>Ngày Dương lịch:</strong>`;
+                    specificDateParagraph.textContent = vietnameseEventDate;
+                }
+
+                detailsDiv.appendChild(dateTypeParagraph);
+                if (event.type === 'lunar') { // Chỉ thêm specificDateParagraph nếu nó có nội dung (cho lunar)
+                    detailsDiv.appendChild(specificDateParagraph);
+                } else { // Cho gregorian, specificDateParagraph đã được gán ở trên
+                     detailsDiv.appendChild(specificDateParagraph); // Vẫn cần append
+                }
+
+
+                if (event.note) {
+                    const noteParagraph = document.createElement('p');
+                    noteParagraph.classList.add('event-note-paragraph');
+                    noteParagraph.textContent = event.note;
+                    detailsDiv.appendChild(noteParagraph);
+                }
+
+                const countdownParagraph = document.createElement('p');
+                countdownParagraph.classList.add('countdown-timer');
+                countdownParagraph.id = `countdown-${index}`;
+                detailsDiv.appendChild(countdownParagraph);
+
+
+                listItem.appendChild(button);
+                listItem.appendChild(detailsDiv);
+                eventListContainer.appendChild(listItem);
+
+                let countdownIntervalId = null;
+
+                button.addEventListener('click', () => {
+                    const isExpanded = button.getAttribute('aria-expanded') === 'true';
+                    button.setAttribute('aria-expanded', String(!isExpanded));
+                    detailsDiv.classList.toggle('hidden');
+
+                    if (!isExpanded && !detailsDiv.dataset.countdownStarted) {
+                        countdownIntervalId = createCountdown(event.date, `countdown-${index}`);
+                        detailsDiv.dataset.countdownStarted = 'true';
+                    }
+                    // Nếu muốn dừng countdown khi ẩn đi (tùy chọn, có thể tốn hiệu năng hơn nếu bật/tắt liên tục)
+                    /* else if (isExpanded && countdownIntervalId) {
+                        clearInterval(countdownIntervalId);
+                        detailsDiv.dataset.countdownStarted = 'false'; // Reset để có thể khởi động lại
+                        document.getElementById(`countdown-${index}`).innerHTML = ""; // Xóa text cũ
+                    } */
+                });
+            });
+        }
+    </script>
+
+</body>
+</html>
