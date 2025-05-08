@@ -110,7 +110,6 @@
 </head>
 <body>
 
-  <!-- Biểu tượng nền -->
   <div class="floating-icons" id="iconContainer"></div>
 
   <div class="introduction">
@@ -133,7 +132,17 @@
     <p>😎 Chủ tài khoản: <strong>Hiếu Đẹp Troai</strong></p>
   </div>
 
+  <audio id="myAudio" src="https://raw.githubusercontent.com/hieuhelo/hieuhelo.github.io/main/hieu%2520audio.MP3" preload="auto"></audio>
   <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      var audio = document.getElementById('myAudio');
+      audio.play().catch(function(error) {
+        console.error("Lỗi tự động phát âm thanh:", error);
+        // Xử lý lỗi nếu trình duyệt chặn tự động phát
+        // Bạn có thể hiển thị một nút để người dùng chủ động phát âm thanh (tùy chọn)
+      });
+    });
+
     const icons = ['😄', '🥳', '😎', '🤯', '🥺', '😇', '🤩', '😱', '🤔', '😜', '😏', '🙌', '🦄', '💖', '🌈', '😈', '🤡', '😻', '😬', '🤓', '😛', '🧐', '😋', '😵', '😺', '😳', '👻', '🤖', '🧚', '😺', '🦋', '🌟', '🦁', '🐼', '🐉', '🐾', '🌸', '🍀', '🎉', '💫'];
     const container = document.getElementById('iconContainer');
 
