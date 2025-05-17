@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lịch Âm Dương Tự Động Cập Nhật</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif; /* Áp dụng font Roboto */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            /* Gradient background sẽ được thiết lập bởi JavaScript */
+            color: #fff;
+            text-align: center;
+            transition: background 1s ease-in-out; /* Chuyển động mượt mà khi đổi nền */
+        }
+
+        .container {
+            background-color: rgba(255, 255, 255, 0.1); /* Giảm độ trong suốt một chút, tối hơn */
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px 60px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4); /* Bóng đổ đậm hơn để tạo chiều sâu */
+            border: 1px solid rgba(255, 255, 255, 0.2); /* Viền mờ hơn */
+            animation: fadeIn 1s ease-out;
+            max-width: 600px;
+            width: 90%;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h1 {
+            font-size: 2.8em;
+            margin-bottom: 15px;
+            letter-spacing: 1px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3); /* Bóng đổ chữ đậm hơn */
+            font-weight: 700;
+        }
+
+        p {
+            font-size: 1.4em;
+            margin: 10px 0;
+            opacity: 0.9;
+            font-weight: 300;
+        }
+
+        /* Phần thông tin Dương lịch */
+        p:nth-of-type(1), p:nth-of-type(2), p:nth-of-type(3) {
+            font-size: 1.5em;
+            font-weight: 400;
+        }
+
+        .date-info {
+            font-size: 1.4em;
+            font-weight: bold;
+            color: #ffd700; /* Vàng đậm hơn một chút cho nổi bật trên nền tối */
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.4);
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255, 255, 255, 0.2); /* Viền mờ hơn */
+        }
+
+        /* Các chi tiết nhỏ hơn trong phần âm lịch */
+        .date-info p {
+            font-size: 0.9em;
+            margin: 5px 0;
+            opacity: 0.85;
+            font-weight: 300;
+        }
+        .date-info p:first-child {
+            font-size: 1.1em;
+            font-weight: 400;
+        }
+
+        .highlight {
+            color: #8cffb5; /* Màu xanh lá nhạt dịu hơn hoặc #8cffb5 để phù hợp với nền tối */
+            font-weight: 700;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Thời Gian Hiện Tại</h1>
+        <p>Hôm nay là: <span id="thu-hien-tai" class="highlight"></span></p>
+        <p>Ngày Dương lịch: <span id="ngay-duong-lich" class="highlight"></span></p>
+        <p>Giờ hiện tại: <span id="gio-hien-tai" class="highlight"></span></p>
+        
+        <div class="date-info">
+            <p>Ngày Âm lịch: <span id="ngay-am-lich" class="highlight"></span></p>
+            <p class="detail-info">Chi tiết: <span id="chi-tiet-am-lich" class="highlight"></span></p>
+            <p class="detail-info">Tiết khí: <span id="tiet-khi" class="highlight"></span></p>
+        </div>
+    </div>
+
+    <script>
+        // Danh sách các gradient tối và dịu mắt hơn
+        const gradients = [
+            'linear-gradient(to right top, #3a005c, #0d324d)',   // Tím than sang Xanh đậm
+            'linear-gradient(to right top, #4b0082, #2c3e50)',   // Tím indigo sang Xám xanh
+            'linear-gradient(to right top, #1a2980, #26d0ce)',   // Xanh đen sang Xanh ngọc
+            'linear-gradient(to right top, #1c2635, #293441)',   // Xám đen
+            'linear-gradient(to right top, #0f0c29, #302b63, #24243e)', // Xanh đen sang Tím than
+            'linear-gradient(to right top, #232526, #414345)',   // Xám đen trầm
+            'linear-gradient(to right top, #0f2027, #203a43, #2c5364)' // Xanh đen sang Xanh biển trầm
+        ];
+
+        // Hàm chọn gradient ngẫu nhiên và áp dụng
+        function setRandomBackground() {
+            const randomIndex = Math.floor(Math.random() * gradients.length);
+            document.body.style.background = gradients[randomIndex];
+        }
+
+        // Hàm này sẽ cập nhật thời gian
+        function updateTime() {
+            const now = new Date();
+            const days = ['Chủ Nhật', 'Thứ Hai', 'Thứ Ba', 'Thứ Tư', 'Thứ Năm', 'Thứ Sáu', 'Thứ Bảy'];
+            
+            // Thông tin Dương lịch
+            document.getElementById('thu-hien-tai').textContent = days[now.getDay()];
+            document.getElementById('ngay-duong-lich').textContent = now.toLocaleDateString('vi-VN', {
+                day: 'numeric',
+                month: 'long',
+                year: 'numeric'
+            });
+            document.getElementById('gio-hien-tai').textContent = now.toLocaleTimeString('vi-VN', {
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: false
+            }) + ` (${now.getHours() < 12 ? 'sáng' : 'tối'})`;
+
+            // Dữ liệu mẫu cho Lịch Âm (Vẫn là dữ liệu tĩnh, cần thư viện nếu muốn tự động)
+            const lunarInfo = {
+                ngayAm: "20 tháng 4", // Giả định
+                chiTiet: "Ngày Bính Tuất, tháng Tân Tỵ, năm Ất Tỵ", // Giả định
+                tietKhi: "Lập hạ" // Giả định
+            };
+
+            document.getElementById('ngay-am-lich').textContent = lunarInfo.ngayAm;
+            document.getElementById('chi-tiet-am-lich').textContent = lunarInfo.chiTiet;
+            document.getElementById('tiet-khi').textContent = lunarInfo.tietKhi;
+        }
+
+        // Gọi hàm setRandomBackground lần đầu khi tải trang
+        setRandomBackground();
+
+        // Gọi hàm updateTime lần đầu khi tải trang
+        updateTime();
+
+        // Cập nhật lại thời gian mỗi giây
+        setInterval(updateTime, 1000); 
+    </script>
+</body>
+</html>
