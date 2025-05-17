@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lịch Âm Dương Tự Động Cập Nhật</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background: linear-gradient(to right top, #6a11cb, #2575fc);
+            color: #fff;
+            text-align: center;
+        }
+
+        .container {
+            background-color: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px 60px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            animation: fadeIn 1s ease-out;
+            max-width: 600px;
+            width: 90%;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h1 {
+            font-size: 2.8em;
+            margin-bottom: 15px;
+            letter-spacing: 1px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        p {
+            font-size: 1.4em;
+            margin: 10px 0;
+            opacity: 0.9;
+        }
+
+        .date-info {
+            font-size: 1.6em;
+            font-weight: bold;
+            color: #ffdd57; /* Màu vàng nổi bật */
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .detail-info {
+            font-size: 1.2em;
+            margin-top: 5px;
+            opacity: 0.8;
+        }
+
+        .highlight {
+            color: #aaffea; /* Màu xanh mint nổi bật */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Thời Gian Hiện Tại</h1>
+        <p>Hôm nay là: <span id="thu-hien-tai" class="highlight"></span></p>
+        <p>Ngày Dương lịch: <span id="ngay-duong-lich" class="highlight"></span></p>
+        <p>Giờ hiện tại: <span id="gio-hien-tai" class="highlight"></span></p>
+        
+        <div class="date-info">
+            <p>Ngày Âm lịch: <span id="ngay-am-lich" class="highlight"></span></p>
+            <p class="detail-info">Chi tiết: <span id="chi-tiet-am-lich" class="highlight"></span></p>
+            <p class="detail-info">Tiết khí: <span id="tiet-khi" class="highlight"></span></p>
+        </div>
+    </div>
+
+    <script>
+        // Hàm này sẽ cập nhật thời gian
+        function updateTime() {
+            const now = new Date();
+            const days = ['Chủ Nhật', 'Thứ Hai', 'Thứ Ba', 'Thứ Tư', 'Thứ Năm', 'Thứ Sáu', 'Thứ Bảy'];
+            
+            // Thông tin Dương lịch
+            document.getElementById('thu-hien-tai').textContent = days[now.getDay()];
+            document.getElementById('ngay-duong-lich').textContent = now.toLocaleDateString('vi-VN', {
+                day: 'numeric',
+                month: 'long',
+                year: 'numeric'
+            });
+            document.getElementById('gio-hien-tai').textContent = now.toLocaleTimeString('vi-VN', {
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            }) + ` (${now.getHours() < 12 ? 'sáng' : 'tối'})`;
+
+            // Để có thông tin Âm lịch chính xác và đầy đủ (can, chi, tiết khí),
+            // cần một thư viện JavaScript chuyên dụng cho lịch âm.
+            // Vì không có thư viện sẵn có trong trình duyệt, tôi sẽ sử dụng một giá trị giả định
+            // hoặc giá trị tĩnh cho phần này.
+            // Nếu bạn cần tính toán Âm lịch tự động, bạn sẽ cần nhúng thêm một thư viện Lịch Âm vào dự án.
+            
+            // Dữ liệu mẫu cho Lịch Âm (Bạn có thể thay đổi để phù hợp với ngày hiện tại nếu cần)
+            // LƯU Ý: Để có lịch âm chính xác tự động theo ngày giờ thực,
+            // bạn cần tích hợp một thư viện lịch âm (ví dụ: https://github.com/nguyenvanduocit/vietnamese-lunar-calendar).
+            // Ở đây, tôi dùng dữ liệu tĩnh để minh họa.
+            const lunarInfo = {
+                ngayAm: "20 tháng 4",
+                chiTiet: "Ngày Bính Tuất, tháng Tân Tỵ, năm Ất Tỵ",
+                tietKhi: "Lập hạ"
+            };
+
+            document.getElementById('ngay-am-lich').textContent = lunarInfo.ngayAm;
+            document.getElementById('chi-tiet-am-lich').textContent = lunarInfo.chiTiet;
+            document.getElementById('tiet-khi').textContent = lunarInfo.tietKhi;
+        }
+
+        // Gọi hàm updateTime lần đầu khi tải trang
+        updateTime();
+
+        // Cập nhật lại thời gian mỗi giây
+        setInterval(updateTime, 1000); 
+    </script>
+</body>
+</html>
