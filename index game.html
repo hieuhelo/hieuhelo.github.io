@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game 4 Nút Cổ Điển</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .game-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 10px;
+            margin-bottom: 20px;
+            width: 80%;
+            max-width: 600px;
+        }
+
+        .game-button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 15px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .game-button:hover {
+            background-color: #45a049;
+        }
+
+        .game-container {
+            background-color: #fff;
+            border: 1px solid #ccc;
+            padding: 20px;
+            border-radius: 5px;
+            text-align: center;
+            display: none; /* Ẩn ban đầu */
+            width: 80%;
+            max-width: 800px;
+        }
+
+        .game-container h2 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .back-button {
+            background-color: #f44336;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 14px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+            margin-top: 15px;
+        }
+
+        .back-button:hover {
+            background-color: #d32f2f;
+        }
+
+        #game-duaxe, #game-xephinh, #game-cuume, #game-banong, #game-vodai {
+            /* Thêm CSS đặc biệt cho từng game nếu cần */
+        }
+    </style>
+</head>
+<body>
+    <h1>Tuyển Tập Game 4 Nút Cổ Điển</h1>
+
+    <div class="game-list">
+        <button class="game-button" onclick="showGame('duaxe')">Đua Xe</button>
+        <button class="game-button" onclick="showGame('xephinh')">Xếp Hình</button>
+        <button class="game-button" onclick="showGame('cuume')">Cứu Mẹ</button>
+        <button class="game-button" onclick="showGame('banong')">Bắn Ong</button>
+        <button class="game-button" onclick="showGame('vodai')">Võ Đài</button>
+        </div>
+
+    <div id="game-duaxe" class="game-container">
+        <h2>Game Đua Xe</h2>
+        <p>Nội dung hoặc khung hiển thị của game đua xe sẽ được thêm vào đây bằng JavaScript.</p>
+        <button class="back-button" onclick="showGameList()">Trở lại</button>
+    </div>
+
+    <div id="game-xephinh" class="game-container">
+        <h2>Game Xếp Hình</h2>
+        <p>Nội dung hoặc khung hiển thị của game xếp hình sẽ được thêm vào đây bằng JavaScript.</p>
+        <button class="back-button" onclick="showGameList()">Trở lại</button>
+    </div>
+
+    <div id="game-cuume" class="game-container">
+        <h2>Game Cứu Mẹ</h2>
+        <p>Nội dung hoặc khung hiển thị của game cứu mẹ sẽ được thêm vào đây bằng JavaScript.</p>
+        <button class="back-button" onclick="showGameList()">Trở lại</button>
+    </div>
+
+    <div id="game-banong" class="game-container">
+        <h2>Game Bắn Ong</h2>
+        <p>Nội dung hoặc khung hiển thị của game bắn ong sẽ được thêm vào đây bằng JavaScript.</p>
+        <button class="back-button" onclick="showGameList()">Trở lại</button>
+    </div>
+
+    <div id="game-vodai" class="game-container">
+        <h2>Game Võ Đài</h2>
+        <p>Nội dung hoặc khung hiển thị của game võ đài sẽ được thêm vào đây bằng JavaScript.</p>
+        <button class="back-button" onclick="showGameList()">Trở lại</button>
+    </div>
+
+    <script>
+        function showGame(gameId) {
+            // Ẩn danh sách game
+            document.querySelector('.game-list').style.display = 'none';
+
+            // Ẩn tất cả các container game
+            const gameContainers = document.querySelectorAll('.game-container');
+            gameContainers.forEach(container => {
+                container.style.display = 'none';
+            });
+
+            // Hiển thị container game được chọn
+            document.getElementById('game-' + gameId).style.display = 'block';
+        }
+
+        function showGameList() {
+            // Hiển thị lại danh sách game
+            document.querySelector('.game-list').style.display = 'grid';
+
+            // Ẩn tất cả các container game
+            const gameContainers = document.querySelectorAll('.game-container');
+            gameContainers.forEach(container => {
+                container.style.display = 'none';
+            });
+        }
+    </script>
+</body>
+</html>
