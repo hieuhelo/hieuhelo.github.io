@@ -3,57 +3,275 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trang Web Của Tôi - Lịch Âm</title>
+    <title>Lịch Âm Dương Tự Động Cập Nhật</title>
     <style>
-        /* CSS cơ bản để lịch âm trông đẹp hơn một chút */
+        :root {
+            --primary-color: #ffd700;
+            --secondary-color: #8cffb5;
+            --text-color: #fff;
+            --bg-transparent: rgba(255, 255, 255, 0.1);
+            --border-color: rgba(255, 255, 255, 0.2);
+        }
+        
         body {
             font-family: Arial, sans-serif;
-            margin: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            color: var(--text-color);
             text-align: center;
+            background-attachment: fixed;
+            transition: background 1s ease-in-out;
         }
-        #lunar-date {
-            margin-top: 30px;
+
+        .container {
+            background-color: var(--bg-transparent);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+            border: 1px solid var(--border-color);
+            animation: fadeIn 1s ease-out;
+            max-width: 600px;
+            width: 90%;
+            margin: 20px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h1 {
+            font-size: 2.2em;
+            margin-bottom: 20px;
+            letter-spacing: 1px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            font-weight: 700;
+        }
+
+        .info-row {
+            margin: 15px 0;
             font-size: 1.2em;
-            font-weight: bold;
-            color: #0056b3;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .info-label {
+            font-weight: 400;
+            opacity: 0.9;
+            text-align: left;
+            flex: 1;
+        }
+
+        .info-value {
+            font-weight: 500;
+            color: var(--primary-color);
+            text-align: right;
+            flex: 1;
+            margin-left: 10px;
+        }
+
+        .date-info {
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .detail-info {
+            font-weight: 500;
+            margin: 8px 0;
+        }
+
+        .highlight {
+            color: var(--secondary-color);
+            font-weight: 700;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 30px 20px;
+            }
+            
+            h1 {
+                font-size: 1.8em;
+            }
+            
+            .info-row {
+                font-size: 1em;
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .info-value {
+                text-align: left;
+                margin-left: 0;
+                margin-top: 5px;
+            }
         }
     </style>
 </head>
 <body>
+    <div class="container">
+        <h1>Thời Gian Hiện Tại</h1>
+        
+        <div class="info-row">
+            <span class="info-label">Hôm nay là:</span>
+            <span id="thu-hien-tai" class="info-value"></span>
+        </div>
+        
+        <div class="info-row">
+            <span class="info-label">Ngày Dương lịch:</span>
+            <span id="ngay-duong-lich" class="info-value"></span>
+        </div>
+        
+        <div class="info-row">
+            <span class="info-label">Giờ hiện tại:</span>
+            <span id="gio-hien-tai" class="info-value"></span>
+        </div>
 
-    <h1>Chào mừng bạn đến với trang của tôi!</h1>
-    <p>Đây là nội dung khác trên trang web của bạn. Mọi thứ bạn có trước đây sẽ được giữ nguyên.</p>
-
-    <hr>
-
-    <h2>Thông tin Lịch Âm</h2>
-    <div id="lunar-date">
-        Đang tải lịch âm...
+        <div class="date-info">
+            <div class="info-row">
+                <span class="info-label">Ngày Âm lịch:</span>
+                <span id="ngay-am-lich" class="info-value"></span>
+            </div>
+            
+            <div class="detail-info">
+                <span>Chi tiết:</span>
+                <span id="chi-tiet-am-lich" class="highlight"></span>
+            </div>
+            
+            <div class="detail-info">
+                <span>Tiết khí:</span>
+                <span id="tiet-khi" class="highlight"></span>
+            </div>
+        </div>
     </div>
 
-    <hr>
-
-    <p>Nếu bạn có thêm nội dung khác, hãy đặt chúng ở đây.</p>
-
-    <script src="lich am.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            try {
-                var today = new Date();
-                // LunarCalendar và solarToLunar() được định nghĩa trong lich am.js
-                var lunar = LunarCalendar.solarToLunar(today.getFullYear(), today.getMonth() + 1, today.getDate());
-                
-                // Chuỗi hiển thị lịch âm
-                var lunarInfo = `Hôm nay (Âm lịch): Ngày ${lunar.day} tháng ${lunar.month} năm ${lunar.year}`;
-                
-                // Cập nhật nội dung cho phần tử có id là 'lunar-date'
-                document.getElementById('lunar-date').textContent = lunarInfo;
-            } catch (error) {
-                console.error("Lỗi khi tải hoặc sử dụng lịch âm:", error);
-                document.getElementById('lunar-date').textContent = "Không thể tải lịch âm. Vui lòng kiểm tra console để biết chi tiết lỗi.";
-            }
-        });
-    </script>
+        // ========== PHẦN ĐỔI MÀU NỀN ==========
+        const gradients = [
+            'linear-gradient(135deg, #3a005c, #0d324d)',
+            'linear-gradient(135deg, #4b0082, #2c3e50)',
+            'linear-gradient(135deg, #1a2980, #26d0ce)',
+            'linear-gradient(135deg, #1c2635, #293441)',
+            'linear-gradient(135deg, #0f0c29, #302b63, #24243e)',
+            'linear-gradient(135deg, #232526, #414345)',
+            'linear-gradient(135deg, #0f2027, #203a43, #2c5364)'
+        ];
 
+        function setRandomBackground() {
+            const randomIndex = Math.floor(Math.random() * gradients.length);
+            document.body.style.background = gradients[randomIndex];
+        }
+
+        // ========== PHẦN TÍNH ÂM LỊCH ==========
+        const CAN = ['Giáp', 'Ất', 'Bính', 'Đinh', 'Mậu', 'Kỷ', 'Canh', 'Tân', 'Nhâm', 'Quý'];
+        const CHI = ['Tý', 'Sửu', 'Dần', 'Mão', 'Thìn', 'Tỵ', 'Ngọ', 'Mùi', 'Thân', 'Dậu', 'Tuất', 'Hợi'];
+        const TIETKHI = [
+            'Xuân phân', 'Thanh minh', 'Cốc vũ', 'Lập hạ', 'Tiểu mãn', 'Mang chủng',
+            'Hạ chí', 'Tiểu thử', 'Đại thử', 'Lập thu', 'Xử thử', 'Bạch lộ',
+            'Thu phân', 'Hàn lộ', 'Sương giáng', 'Lập đông', 'Tiểu tuyết', 'Đại tuyết',
+            'Đông chí', 'Tiểu hàn', 'Đại hàn', 'Lập xuân', 'Vũ thủy', 'Kinh trập'
+        ];
+
+        function getCanChiYear(year) {
+            year = year < 0 ? year + 60 : year;
+            return CAN[(year + 6) % 10] + ' ' + CHI[(year + 8) % 12];
+        }
+
+        function getCanChiMonth(year, month) {
+            const canIndex = (year * 12 + month + 3) % 10;
+            return CAN[canIndex] + ' ' + CHI[(month + 1) % 12];
+        }
+
+        function getCanChiDay(jd) {
+            const canIndex = (jd + 9) % 10;
+            const chiIndex = (jd + 1) % 12;
+            return CAN[canIndex] + ' ' + CHI[chiIndex];
+        }
+
+        function toJulianDay(date) {
+            const y = date.getFullYear();
+            const m = date.getMonth() + 1;
+            const d = date.getDate();
+            const a = Math.floor((14 - m) / 12);
+            const y2 = y + 4800 - a;
+            const m2 = m + 12 * a - 3;
+            return d + Math.floor((153 * m2 + 2) / 5) + 365 * y2 + Math.floor(y2 / 4) - Math.floor(y2 / 100) + Math.floor(y2 / 400) - 32045;
+        }
+
+        function getLunarDate(solarDate) {
+            const jd = toJulianDay(solarDate);
+            const deltaDays = jd - toJulianDay(new Date(2000, 0, 1));
+            const lunarCycle = 29.53058867;
+            const newMoon = 2451550.1;
+            
+            const lunations = Math.floor((jd - newMoon) / lunarCycle);
+            const lunarDay = Math.floor((jd - newMoon - lunations * lunarCycle) + 1);
+            const lunarMonth = (solarDate.getMonth() + (solarDate.getDate() > 15 ? 1 : 0)) % 12 + 1;
+            
+            return {
+                day: lunarDay > 0 ? lunarDay : 1,
+                month: lunarMonth,
+                year: solarDate.getFullYear() - 2000 + 36,
+                canChiDay: getCanChiDay(jd),
+                canChiMonth: getCanChiMonth(solarDate.getFullYear(), solarDate.getMonth() + 1),
+                canChiYear: getCanChiYear(solarDate.getFullYear())
+            };
+        }
+
+        function getSolarTerm(date) {
+            const year = date.getFullYear();
+            const month = date.getMonth();
+            const day = date.getDate();
+            const solarLongitude = (month * 30 + day - 5) % 360;
+            const termIndex = Math.floor(solarLongitude / 15);
+            return termIndex < TIETKHI.length ? TIETKHI[termIndex] : null;
+        }
+
+        // ========== PHẦN HIỂN THỊ ==========
+        function updateTime() {
+            const now = new Date();
+            const days = ['Chủ Nhật', 'Thứ Hai', 'Thứ Ba', 'Thứ Tư', 'Thứ Năm', 'Thứ Sáu', 'Thứ Bảy'];
+            const hours = now.getHours();
+            const timeOfDay = hours < 12 ? 'sáng' : hours < 18 ? 'chiều' : 'tối';
+
+            document.getElementById('thu-hien-tai').textContent = days[now.getDay()];
+            document.getElementById('ngay-duong-lich').textContent = now.toLocaleDateString('vi-VN', {
+                day: 'numeric',
+                month: 'long',
+                year: 'numeric'
+            });
+            document.getElementById('gio-hien-tai').textContent = now.toLocaleTimeString('vi-VN', {
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: false
+            }) + ` (${timeOfDay})`;
+
+            const lunarDate = getLunarDate(now);
+            const solarTerm = getSolarTerm(now);
+
+            document.getElementById('ngay-am-lich').textContent = 
+                `${lunarDate.day} tháng ${lunarDate.month} (Âm lịch)`;
+            
+            document.getElementById('chi-tiet-am-lich').textContent = 
+                `Ngày ${lunarDate.canChiDay}, tháng ${lunarDate.canChiMonth}, năm ${lunarDate.canChiYear}`;
+            
+            document.getElementById('tiet-khi').textContent = solarTerm || "Đang cập nhật";
+        }
+
+        // ========== KHỞI CHẠY ==========
+        setRandomBackground(); // Đổi màu nền khi tải trang
+        updateTime(); // Cập nhật thời gian lần đầu
+        setInterval(updateTime, 1000); // Cập nhật mỗi giây
+
+        // Đổi màu nền mỗi khi refresh trang
+        window.addEventListener('load', setRandomBackground);
+    </script>
 </body>
 </html>
