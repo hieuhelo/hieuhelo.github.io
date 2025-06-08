@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chuyển Đổi Font Chữ</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Indie+Flower&family=Lobster&family=Pacifico&family=Press+Start+2P&family=Shadows+Into+Light&family=Oswald:wght@400;700&family=Permanent+Marker&family=Great+Vibes&family=Metal+Mania&family=Nosifier&family=Caveat:wght@400;700&family=Anton&family=Bebas+Neue&family=Rubik+Mono+One&family=Faster+One&display=swap" rel="stylesheet">
+
+    <style>
+        /* Base styles (Mobile-first approach) */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 10px; /* Padding mặc định cho di động */
+            background-color: #eef2f5;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+            max-width: 100%; /* Mặc định full width trên mobile */
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .input-frame, .output-frame {
+            border: 1px solid #cce0eb;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 10px;
+            background-color: #ffffff;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+            flex-shrink: 0;
+        }
+
+        .input-frame {
+            min-height: 100px;
+        }
+
+        textarea {
+            width: 100%;
+            height: 100px;
+            border: 1px solid #b3cddb;
+            border-radius: 8px;
+            padding: 10px;
+            font-size: 16px;
+            box-sizing: border-box;
+            resize: vertical;
+            font-family: inherit;
+            transition: border-color 0.2s ease;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #007bff;
+        }
+
+        .output-frame {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .output-display {
+            border: 1px dashed #a8cce4;
+            background-color: #f7fcff;
+            min-height: 100px;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            overflow-y: auto;
+            flex-grow: 1;
+            word-wrap: break-word;
+            line-height: 1.5;
+            font-size: 17px;
+            transition: font-size 0.2s ease;
+        }
+
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            justify-content: center;
+            margin-top: 10px;
+        }
+
+        button {
+            padding: 10px 18px;
+            border: none;
+            border-radius: 30px;
+            background-color: #007bff;
+            color: white;
+            font-size: 15px;
+            cursor: pointer;
+            transition: background-color 0.2s ease, transform 0.1s ease, box-shadow 0.2s ease;
+            white-space: nowrap;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        button:hover {
+            background-color: #0056b3;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+
+        button:active {
+            background-color: #004085;
+            transform: translateY(0);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+        }
+
+        .info {
+            background-color: #f0f8ff;
+            border: 1px solid #d9edf7;
+            border-radius: 8px;
+            padding: 10px 15px;
+            margin-bottom: 15px;
+            text-align: center;
+            font-size: 14px;
+            color: #31708f;
+        }
+
+        .info p {
+            margin: 5px 0;
+        }
+
+        .donate {
+            font-weight: bold;
+            color: #d9534f;
+        }
+
+        /* --- Responsive Styles for PC/Larger Screens --- */
+        @media (min-width: 769px) {
+            body {
+                padding: 15px; /* Tăng padding trên PC */
+            }
+
+            .container {
+                max-width: 800px; /* Giới hạn chiều rộng trên PC */
+            }
+
+            .input-frame {
+                min-height: 120px; /* Chiều cao thoải mái hơn trên PC */
+            }
+
+            textarea {
+                height: 120px; /* Chiều cao thoải mái hơn trên PC */
+                font-size: 17px;
+            }
+
+            .output-display {
+                min-height: 120px; /* Chiều cao thoải mái hơn trên PC */
+                font-size: 18px;
+            }
+
+            button {
+                padding: 12px 22px; /* Nút lớn hơn trên PC */
+                font-size: 16px;
+            }
+        }
+
+        /* Styles cho các font chữ khác nhau */
+        .normal-font { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        .bold-font { font-weight: bold; }
+        .italic-font { font-style: italic; }
+        .underline-font { text-decoration: underline; }
+        .cursive-font { font-family: 'Dancing Script', cursive; }
+        .indie-flower-font { font-family: 'Indie Flower', cursive; }
+        .lobster-font { font-family: 'Lobster', cursive; }
+        .pacifico-font { font-family: 'Pacifico', cursive; }
+        .pixel-font { font-family: 'Press Start 2P', cursive; font-size: 0.8em; }
+        .shadows-font { font-family: 'Shadows Into Light', cursive; }
+        .oswald-font { font-family: 'Oswald', sans-serif; }
+        .permanent-marker-font { font-family: 'Permanent Marker', cursive; }
+        .great-vibes-font { font-family: 'Great Vibes', cursive; }
+        .metal-mania-font { font-family: 'Metal Mania', cursive; }
+        .nosifier-font { font-family: 'Nosifier', cursive; }
+        .caveat-font { font-family: 'Caveat', cursive; } /* New Font */
+        .anton-font { font-family: 'Anton', sans-serif; } /* New Font */
+        .bebas-neue-font { font-family: 'Bebas Neue', sans-serif; } /* New Font */
+        .rubik-mono-one-font { font-family: 'Rubik Mono One', monospace; } /* New Font */
+        .faster-one-font { font-family: 'Faster One', cursive; } /* New Font */
+
+        .reverse-text {
+            display: inline-block;
+            transform: scaleX(-1);
+            direction: rtl;
+            unicode-bidi: bidi-override;
+        }
+        .upside-down-text {
+            display: inline-block;
+            transform: rotateX(180deg);
+            filter: FlipV;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="input-frame">
+            <textarea id="inputText" placeholder="Nhập văn bản của bạn vào đây..."></textarea>
+        </div>
+        <div class="info">
+            <p>Nếu thấy vui vui, hữu ích gì đó... 🧠</p>
+            <p class="donate">Thì donate cho mình ly cà phê nha! ☕</p>
+            <p>🏦 Ngân hàng: <strong>VCB</strong></p>
+            <p>🔢 Số tài khoản: <strong>123456789</strong></p>
+            <p>😎 Chủ tài khoản: <strong>Hiếu Đẹp Troai</strong></p>
+        </div>
+        <div class="output-frame">
+            <div id="outputDisplay" class="output-display">
+                Văn bản đã chuyển đổi sẽ hiển thị ở đây.
+            </div>
+            <div class="controls">
+                <button onclick="applyStyle('normal')">Font Gốc</button>
+                <button onclick="applyStyle('bold')">In Đậm</button>
+                <button onclick="applyStyle('italic')">In Nghiêng</button>
+                <button onclick="applyStyle('underline')">Gạch Chân</button>
+                <button onclick="applyStyle('cursive')">Nét Mềm 1</button>
+                <button onclick="applyStyle('indieFlower')">Nét Mềm 2</button>
+                <button onclick="applyStyle('lobster')">Nét Dày Đẹp</button>
+                <button onclick="applyStyle('pacifico')">Thư Pháp 1</button>
+                <button onclick="applyStyle('shadows')">Thư Pháp 2</button>
+                <button onclick="applyStyle('pixel')">Font Game</button>
+                <button onclick="applyStyle('oswald')">Font Mạnh Mẽ</button>
+                <button onclick="applyStyle('permanentMarker')">Viết Tay Bút Lông</button>
+                <button onclick="applyStyle('greatVibes')">Thư Pháp Sang Trọng</button>
+                <button onclick="applyStyle('metalMania')">Metal Mạnh Mẽ</button>
+                <button onclick="applyStyle('nosifier')">Kiểu Phá Cách</button>
+                <button onclick="applyStyle('caveat')">Viết Tay Mềm</button> <button onclick="applyStyle('anton')">Chữ Lớn Ấn Tượng</button> <button onclick="applyStyle('bebasNeue')">Chữ Thon Dài</button> <button onclick="applyStyle('rubikMonoOne')">Font Khối</button> <button onclick="applyStyle('fasterOne')">Font Tốc Độ</button> <button onclick="applyStyle('reverse')">Chữ Ngược</button>
+                <button onclick="applyStyle('upsideDown')">Chữ Lộn Ngược</button>
+                <button onclick="changeFontSize(2)">Phóng To (+)</button>
+                <button onclick="changeFontSize(-2)">Thu Nhỏ (-)</button>
+                <button onclick="copyToClipboard()">Sao Chép</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const inputTextarea = document.getElementById('inputText');
+        const outputDisplay = document.getElementById('outputDisplay');
+        let currentStyle = 'normal';
+        let currentFontSize = 17; // Initial font size for mobile, will be adjusted by media query for PC
+
+        const styleClasses = {
+            'normal': 'normal-font',
+            'bold': 'bold-font',
+            'italic': 'italic-font',
+            'underline': 'underline-font',
+            'cursive': 'cursive-font',
+            'indieFlower': 'indie-flower-font',
+            'lobster': 'lobster-font',
+            'pacifico': 'pacifico-font',
+            'pixel': 'pixel-font',
+            'shadows': 'shadows-font',
+            'oswald': 'oswald-font',
+            'permanentMarker': 'permanent-marker-font',
+            'greatVibes': 'great-vibes-font',
+            'metalMania': 'metal-mania-font',
+            'nosifier': 'nosifier-font',
+            'caveat': 'caveat-font', /* Added to JS */
+            'anton': 'anton-font', /* Added to JS */
+            'bebasNeue': 'bebas-neue-font', /* Added to JS */
+            'rubikMonoOne': 'rubik-mono-one-font', /* Added to JS */
+            'fasterOne': 'faster-one-font', /* Added to JS */
+            'reverse': 'reverse-text',
+            'upsideDown': 'upside-down-text'
+        };
+
+        inputTextarea.addEventListener('input', updateOutput);
+
+        function updateOutput() {
+            let text = inputTextarea.value;
+            let formattedText = text;
+
+            outputDisplay.className = 'output-display';
+            outputDisplay.style.fontSize = `${currentFontSize}px`;
+
+            if (currentStyle === 'reverse') {
+                formattedText = text.split('').reverse().join('');
+                outputDisplay.classList.add(styleClasses[currentStyle]);
+            } else if (currentStyle === 'upsideDown') {
+                formattedText = transformToUpsideDown(text);
+            } else {
+                if (styleClasses[currentStyle]) {
+                    outputDisplay.classList.add(styleClasses[currentStyle]);
+                }
+            }
+
+            outputDisplay.innerHTML = formattedText || 'Văn bản đã chuyển đổi sẽ hiển thị ở đây.';
+        }
+
+        function applyStyle(styleName) {
+            currentStyle = styleName;
+            updateOutput();
+        }
+
+        function changeFontSize(delta) {
+            currentFontSize += delta;
+            if (currentFontSize < 10) currentFontSize = 10;
+            if (currentFontSize > 72) currentFontSize = 72;
+            outputDisplay.style.fontSize = `${currentFontSize}px`;
+        }
+
+        function copyToClipboard() {
+            const textToCopy = outputDisplay.innerText;
+            navigator.clipboard.writeText(textToCopy)
+                .then(() => {
+                    alert('Đã sao chép văn bản vào clipboard!');
+                })
+                .catch(err => {
+                    console.error('Không thể sao chép văn bản: ', err);
+                    alert('Không thể sao chép văn bản. Vui lòng thử lại.');
+                });
+        }
+
+        function transformToUpsideDown(text) {
+            const upsideDownMap = {
+                'a': 'ɐ', 'b': 'q', 'c': 'ɔ', 'd': 'p', 'e': 'ǝ', 'f': 'ɟ', 'g': 'ƃ', 'h': 'ɥ', 'i': 'ᴉ', 'j': 'ɾ',
+                'k': 'ʞ', 'l': 'l', 'm': 'ɯ', 'n': 'u', 'o': 'o', 'p': 'd', 'q': 'b', 'r': 'ɹ', 's': 's', 't': 'ʇ',
+                'u': 'n', 'v': 'ʌ', 'w': 'ʍ', 'x': 'x', 'y': 'ʎ', 'z': 'z',
+                'A': '∀', 'B': 'ᗡ', 'C': 'Ɔ', 'D': 'p', 'E': 'Ǝ', 'F': 'Ⅎ', 'G': 'פ', 'H': 'H', 'I': 'I', 'J': 'ſ',
+                'K': 'ʞ', 'L': '˥', 'M': 'W', 'N': 'N', 'O': 'O', 'P': 'Ԁ', 'Q': 'Q', 'R': 'ɹ', 'S': 'S', 'T': '⊥',
+                'U': '∩', 'V': 'Ʌ', 'W': 'M', 'X': 'X', 'Y': '⅄', 'Z': 'Z',
+                '.': '˙', ',': "'", '?': '¿', '!': '¡', "'": ',', '"': '„',
+                '(': ')', ')': '(', '[': ']', ']': '[', '{': '}', '}': '{',
+                '&': '⅋', '_': '‾',
+                '0': '0', '1': 'Ɩ', '2': 'ᄅ', '3': 'Ɛ', '4': 'ㄣ', '5': 'ϛ', '6': '9', '7': 'ㄥ', '8': '8', '9': '6'
+            };
+
+            let transformed = '';
+            for (let i = text.length - 1; i >= 0; i--) {
+                const char = text[i];
+                transformed += upsideDownMap[char] || char;
+            }
+            return transformed;
+        }
+
+        // Initialize font size based on current screen width on load
+        function setInitialFontSize() {
+            if (window.innerWidth >= 769) {
+                currentFontSize = 18; // PC default font size
+            } else {
+                currentFontSize = 17; // Mobile default font size
+            }
+            outputDisplay.style.fontSize = `${currentFontSize}px`;
+        }
+
+        setInitialFontSize();
+        window.addEventListener('resize', setInitialFontSize); // Adjust font size on resize
+        updateOutput(); // Initial update
+    </script>
+</body>
+</html>
