@@ -3,17 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chuyển Đổi Font Chữ</title>
+    <title>Chuyển Đổi Font Chữ - Kiểu Tattoo (Tối ưu)</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Indie+Flower&family=Lobster&family=Pacifico&family=Press+Start+2P&family=Shadows+Into+Light&family=Oswald:wght@400;700&family=Permanent+Marker&family=Great+Vibes&family=Metal+Mania&family=Nosifier&family=Caveat:wght@400;700&family=Anton&family=Bebas+Neue&family=Rubik+Mono+One&family=Faster+One&display=swap" rel="stylesheet">
+    <!-- Google Fonts Link (from previous version) -->
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Pacifico&family=Dancing+Script:wght@400;700&family=Lobster&family=Press+Start+2P&family=Shadows+Into+Light&family=Permanent+Marker&family=Caveat:wght@400;700&family=Anton&family=Bebas+Neue&family=Sacramento&family=Alex+Brush&family=Allura&family=Cookie&family=Kaushan+Script&family=Marck+Script&family=Parisienne&family=Yellowtail&family=Homemade+Apple&family=Satisfy&family=Architects+Daughter&family=Indie+Flower&family=Kalam:wght@300;400;700&family=Nothing+You+Could+Do&family=Reenie+Beanie&family=La+Belle+Aurore&family=Oswald:wght@200..700&family=Rock+Salt&family=Walter+Turncoat&family=Berkshire+Swash&family=Monoton&family=Special+Elite&family=Six+Caps&family=Abril+Fatface&family=Alfa+Slab+One&family=Baloo+2:wght@400;700&family=Barlow+Condensed:wght@400;700&family=Bungee&family=Bungee+Inline&family=Bungee+Shade&family=Cabin+Sketch:wght@400;700&family=Changa:wght@200..800&family=Cherry+Bomb+One&family=Comfortaa:wght@300..700&family=Coiny&family=Crete+Round&family=Damion&family=Emilys+Candy&family=Erica+One&family=Fascinate+Inline&family=Finger+Paint&family=Fjalla+One&family=Fredoka:wght@300..700&family=Fugaz+One&family=Gloria+Hallelujah&family=Gochi+Hand&family=Graduate&family=Henny+Penny&family=Irish+Grover&family=Jolly+Lodger&family=Joti+One&family=Just+Another+Hand&family=Kelly+Slab&family=Knewave&family=Lemon&family=Luckiest+Guy&family=Maven+Pro:wght@400;700&family=Merienda:wght@300..900&family=Montserrat:wght@100..900&family=Moul&family=Moulpali&family=Norican&family=Noto+Sans:wght@100..900&family=Patrick+Hand&family=Pattaya&family=Playball&family=Poppins:wght@100..900&family=Prompt:wght@100..900&family=Raleway:wght@100..900&family=Ranga:wght@400;700&family=Roboto:wght@100..900&family=Rowdies:wght@300;400;700&family=Rubik+Bubbles&family=Rubik+Doodle+Shadow&family=Rubik+Glitch&family=Rubik+Mono+One&family=Rubik+Puddles&family=Rubik+Wet+Paint&family=Rye&family=Sansita+Swashed:wght@300..900&family=Schoolbell&family=Sedgwick+Ave+Display&family=Sigmar+One&family=Sriracha&family=Stick+No+Bills:wght@200..800&family=Suez+One&family=Tangerine:wght@400;700&family=Titan+One&family=Tourney:wght@100..900&family=Train+One&family=Ultra&family=Uncial+Antiqua&family=Yatra+One&family=ZCOOL+KuaiLe&family=Zeyada&display=swap" rel="stylesheet">
 
     <style>
-        /* Base styles (Mobile-first approach) */
+        /* Base styles */
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
-            padding: 10px; /* Padding mặc định cho di động */
+            padding: 10px;
             background-color: #eef2f5;
             color: #333;
             display: flex;
@@ -21,191 +22,175 @@
             min-height: 100vh;
             box-sizing: border-box;
         }
-
-        .container {
-            display: flex;
-            flex-direction: column;
-            flex-grow: 1;
-            max-width: 100%; /* Mặc định full width trên mobile */
-            margin: 0 auto;
-            width: 100%;
-        }
-
-        .input-frame, .output-frame {
-            border: 1px solid #cce0eb;
-            border-radius: 12px;
-            padding: 15px;
-            margin-bottom: 10px;
-            background-color: #ffffff;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.08);
-            flex-shrink: 0;
-        }
-
+        .container { display: flex; flex-direction: column; flex-grow: 1; max-width: 100%; margin: 0 auto; width: 100%; }
+        .input-frame, .output-frame { border: 1px solid #cce0eb; border-radius: 12px; padding: 15px; margin-bottom: 10px; background-color: #ffffff; box-shadow: 0 4px 10px rgba(0,0,0,0.08); flex-shrink: 0; }
+        
+        /* Input Frame specific */
         .input-frame {
             min-height: 100px;
+            position: relative; /* For positioning character counter */
         }
-
         textarea {
             width: 100%;
             height: 100px;
             border: 1px solid #b3cddb;
             border-radius: 8px;
             padding: 10px;
+            padding-bottom: 25px; /* Space for counter */
             font-size: 16px;
             box-sizing: border-box;
             resize: vertical;
             font-family: inherit;
             transition: border-color 0.2s ease;
         }
-
-        textarea:focus {
-            outline: none;
-            border-color: #007bff;
+        textarea:focus { outline: none; border-color: #007bff; }
+        .char-counter {
+            position: absolute;
+            bottom: 22px; 
+            right: 25px;  
+            font-size: 12px;
+            color: #777;
         }
 
+        /* Output Frame specific */
         .output-frame {
             flex-grow: 1;
             display: flex;
             flex-direction: column;
         }
-
+        .output-display-wrapper { /* New wrapper for output and its controls */
+            position: relative;
+            flex-grow: 1;
+            display: flex; /* Allow output-display to grow */
+            flex-direction: column; /* Ensure output-display takes height */
+            margin-bottom: 10px; /* Space before main controls */
+        }
         .output-display {
             border: 1px dashed #a8cce4;
             background-color: #f7fcff;
             min-height: 100px;
             padding: 12px;
+            /* padding-bottom will be handled by the content height or min-height */
             border-radius: 8px;
-            margin-bottom: 10px;
             overflow-y: auto;
-            flex-grow: 1;
+            flex-grow: 1; /* Make it take available space */
             word-wrap: break-word;
             line-height: 1.5;
             font-size: 17px;
-            transition: font-size 0.2s ease;
+            transition: font-size 0.2s ease, font-family 0.1s ease;
         }
-
-        .controls {
+        .font-size-controls-inline { /* Renamed for clarity */
+            position: absolute;
+            bottom: 8px; /* Inside output-display-wrapper, near bottom of output-display */
+            right: 8px;
             display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            justify-content: center;
-            margin-top: 10px;
+            gap: 5px;
+            z-index: 10; 
+            background-color: rgba(247, 252, 255, 0.8); /* Slight background to see on text */
+            padding: 3px;
+            border-radius: 15px;
         }
-
-        button {
-            padding: 10px 18px;
-            border: none;
-            border-radius: 30px;
+        .font-size-controls-inline button {
+            padding: 4px 8px;
+            font-size: 12px;
+            min-width: 25px;
+            border-radius: 15px;
             background-color: #007bff;
             color: white;
-            font-size: 15px;
+            border: none;
+            cursor: pointer;
+        }
+         .font-size-controls-inline button:hover {
+            background-color: #0056b3;
+        }
+
+
+        .controls { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; margin-top: 0; } /* Removed margin-top */
+        /* Smaller buttons */
+        .controls button {
+            padding: 7px 12px; 
+            font-size: 13px;  
+            border-radius: 25px;
+            background-color: #007bff;
+            color: white;
             cursor: pointer;
             transition: background-color 0.2s ease, transform 0.1s ease, box-shadow 0.2s ease;
             white-space: nowrap;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
         }
+        .controls button:hover { background-color: #0056b3; transform: translateY(-1px); box-shadow: 0 2px 5px rgba(0,0,0,0.15); }
+        .controls button:active { background-color: #004085; transform: translateY(0); box-shadow: 0 1px 2px rgba(0,0,0,0.2); }
+        
+        .info { background-color: #f0f8ff; border: 1px solid #d9edf7; border-radius: 8px; padding: 10px 15px; margin-bottom: 15px; text-align: center; font-size: 14px; color: #31708f; }
+        .info p { margin: 5px 0; }
+        .donate { font-weight: bold; color: #d9534f; }
 
-        button:hover {
-            background-color: #0056b3;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
-        }
-
-        button:active {
-            background-color: #004085;
-            transform: translateY(0);
-            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
-        }
-
-        .info {
-            background-color: #f0f8ff;
-            border: 1px solid #d9edf7;
-            border-radius: 8px;
-            padding: 10px 15px;
-            margin-bottom: 15px;
-            text-align: center;
-            font-size: 14px;
-            color: #31708f;
-        }
-
-        .info p {
-            margin: 5px 0;
-        }
-
-        .donate {
-            font-weight: bold;
-            color: #d9534f;
-        }
-
-        /* --- Responsive Styles for PC/Larger Screens --- */
         @media (min-width: 769px) {
-            body {
-                padding: 15px; /* Tăng padding trên PC */
-            }
-
-            .container {
-                max-width: 800px; /* Giới hạn chiều rộng trên PC */
-            }
-
-            .input-frame {
-                min-height: 120px; /* Chiều cao thoải mái hơn trên PC */
-            }
-
-            textarea {
-                height: 120px; /* Chiều cao thoải mái hơn trên PC */
-                font-size: 17px;
-            }
-
-            .output-display {
-                min-height: 120px; /* Chiều cao thoải mái hơn trên PC */
-                font-size: 18px;
-            }
-
-            button {
-                padding: 12px 22px; /* Nút lớn hơn trên PC */
-                font-size: 16px;
-            }
+            body { padding: 15px; }
+            .container { max-width: 1000px; }
+            .input-frame { min-height: 120px; }
+            textarea { height: 120px; font-size: 17px; padding-bottom: 25px; }
+            .char-counter { bottom: 25px; right: 28px; }
+            .output-display { min-height: 120px; font-size: 18px; }
+            .font-size-controls-inline { bottom: 10px; right: 10px; }
+            .font-size-controls-inline button { padding: 5px 10px; font-size: 13px; }
+            .controls button { padding: 8px 15px; font-size: 14px; }
         }
 
-        /* Styles cho các font chữ khác nhau */
+        /* --- Base Text Styles --- */
         .normal-font { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         .bold-font { font-weight: bold; }
         .italic-font { font-style: italic; }
         .underline-font { text-decoration: underline; }
-        .cursive-font { font-family: 'Dancing Script', cursive; }
-        .indie-flower-font { font-family: 'Indie Flower', cursive; }
-        .lobster-font { font-family: 'Lobster', cursive; }
-        .pacifico-font { font-family: 'Pacifico', cursive; }
-        .pixel-font { font-family: 'Press Start 2P', cursive; font-size: 0.8em; }
-        .shadows-font { font-family: 'Shadows Into Light', cursive; }
-        .oswald-font { font-family: 'Oswald', sans-serif; }
-        .permanent-marker-font { font-family: 'Permanent Marker', cursive; }
-        .great-vibes-font { font-family: 'Great Vibes', cursive; }
-        .metal-mania-font { font-family: 'Metal Mania', cursive; }
-        .nosifier-font { font-family: 'Nosifier', cursive; }
-        .caveat-font { font-family: 'Caveat', cursive; } /* New Font */
-        .anton-font { font-family: 'Anton', sans-serif; } /* New Font */
-        .bebas-neue-font { font-family: 'Bebas Neue', sans-serif; } /* New Font */
-        .rubik-mono-one-font { font-family: 'Rubik Mono One', monospace; } /* New Font */
-        .faster-one-font { font-family: 'Faster One', cursive; } /* New Font */
 
-        .reverse-text {
-            display: inline-block;
-            transform: scaleX(-1);
-            direction: rtl;
-            unicode-bidi: bidi-override;
-        }
-        .upside-down-text {
-            display: inline-block;
-            transform: rotateX(180deg);
-            filter: FlipV;
-        }
+        /* --- TATTOO STYLE FONTS (from previous) --- */
+        .great-vibes-font { font-family: 'Great Vibes', cursive; } .pacifico-font { font-family: 'Pacifico', cursive; } .dancing-script-font { font-family: 'Dancing Script', cursive; }
+        .shadows-into-light-font { font-family: 'Shadows Into Light', cursive; } .caveat-font { font-family: 'Caveat', cursive; } .sacramento-font { font-family: 'Sacramento', cursive; }
+        .alex-brush-font { font-family: 'Alex Brush', cursive; } .allura-font { font-family: 'Allura', cursive; } .cookie-font { font-family: 'Cookie', cursive; }
+        .kaushan-script-font { font-family: 'Kaushan Script', cursive; } .marck-script-font { font-family: 'Marck Script', cursive; } .parisienne-font { font-family: 'Parisienne', cursive; }
+        .yellowtail-font { font-family: 'Yellowtail', cursive; } .homemade-apple-font { font-family: 'Homemade Apple', cursive; } .satisfy-font { font-family: 'Satisfy', cursive; }
+        .architects-daughter-font { font-family: 'Architects Daughter', cursive; } .indie-flower-font { font-family: 'Indie Flower', cursive; } .kalam-font { font-family: 'Kalam', cursive; }
+        .nothing-you-could-do-font { font-family: 'Nothing You Could Do', cursive; } .reenie-beanie-font { font-family: 'Reenie Beanie', cursive; }
+        .la-belle-aurore-font { font-family: 'La Belle Aurore', cursive; } .damion-font { font-family: 'Damion', cursive; } .merienda-font { font-family: 'Merienda', cursive; }
+        .norican-font { font-family: 'Norican', cursive; } .pattaya-font { font-family: 'Pattaya', cursive; } .playball-font { font-family: 'Playball', cursive; }
+        .sriracha-font { font-family: 'Sriracha', cursive; } .tangerine-font { font-family: 'Tangerine', cursive; } .zeyada-font { font-family: 'Zeyada', cursive; }
+        .sansita-swashed-font { font-family: 'Sansita Swashed', cursive; } .sedgwick-ave-display-font { font-family: 'Sedgwick Ave Display', cursive; }
+        .lobster-font { font-family: 'Lobster', cursive; } .permanent-marker-font { font-family: 'Permanent Marker', cursive; } .anton-font { font-family: 'Anton', sans-serif; }
+        .bebas-neue-font { font-family: 'Bebas Neue', sans-serif; } .oswald-font { font-family: 'Oswald', sans-serif; } .rock-salt-font { font-family: 'Rock Salt', cursive; }
+        .walter-turncoat-font { font-family: 'Walter Turncoat', cursive; } .berkshire-swash-font { font-family: 'Berkshire Swash', cursive; }
+        .monoton-font { font-family: 'Monoton', cursive; } .six-caps-font { font-family: 'Six Caps', sans-serif; } .abril-fatface-font { font-family: 'Abril Fatface', cursive; }
+        .alfa-slab-one-font { font-family: 'Alfa Slab One', cursive; } .baloo-2-font { font-family: 'Baloo 2', cursive; } .barlow-condensed-font { font-family: 'Barlow Condensed', sans-serif; }
+        .bungee-font { font-family: 'Bungee', cursive; } .bungee-inline-font { font-family: 'Bungee Inline', cursive; } .bungee-shade-font { font-family: 'Bungee Shade', cursive; }
+        .cabin-sketch-font { font-family: 'Cabin Sketch', cursive; } .changa-font { font-family: 'Changa', sans-serif; } .cherry-bomb-one-font { font-family: 'Cherry Bomb One', cursive; }
+        .comfortaa-font { font-family: 'Comfortaa', cursive; } .coiny-font { font-family: 'Coiny', cursive; } .crete-round-font { font-family: 'Crete Round', serif; }
+        .emilys-candy-font { font-family: 'Emilys Candy', cursive; } .erica-one-font { font-family: 'Erica One', cursive; } .fascinate-inline-font { font-family: 'Fascinate Inline', cursive; }
+        .finger-paint-font { font-family: 'Finger Paint', cursive; } .fjalla-one-font { font-family: 'Fjalla One', sans-serif; } .fredoka-font { font-family: 'Fredoka', sans-serif; }
+        .fugaz-one-font { font-family: 'Fugaz One', cursive; } .gloria-hallelujah-font { font-family: 'Gloria Hallelujah', cursive; } .gochi-hand-font { font-family: 'Gochi Hand', cursive; }
+        .graduate-font { font-family: 'Graduate', cursive; } .henny-penny-font { font-family: 'Henny Penny', cursive; } .irish-grover-font { font-family: 'Irish Grover', cursive; }
+        .jolly-lodger-font { font-family: 'Jolly Lodger', cursive; } .joti-one-font { font-family: 'Joti One', cursive; } .just-another-hand-font { font-family: 'Just Another Hand', cursive; }
+        .kelly-slab-font { font-family: 'Kelly Slab', cursive; } .knewave-font { font-family: 'Knewave', cursive; } .lemon-font { font-family: 'Lemon', cursive; }
+        .luckiest-guy-font { font-family: 'Luckiest Guy', cursive; } .maven-pro-font { font-family: 'Maven Pro', sans-serif; } .moul-font { font-family: 'Moul', display; }
+        .moulpali-font { font-family: 'Moulpali', display; } .noto-sans-font { font-family: 'Noto Sans', sans-serif; } .patrick-hand-font { font-family: 'Patrick Hand', cursive; }
+        .poppins-font { font-family: 'Poppins', sans-serif; } .prompt-font { font-family: 'Prompt', sans-serif; } .raleway-font { font-family: 'Raleway', sans-serif; } .ranga-font { font-family: 'Ranga', cursive; }
+        .roboto-font { font-family: 'Roboto', sans-serif; } .rowdies-font { font-family: 'Rowdies', cursive; } .rubik-bubbles-font { font-family: 'Rubik Bubbles', cursive; }
+        .rubik-doodle-shadow-font { font-family: 'Rubik Doodle Shadow', cursive; } .rubik-glitch-font { font-family: 'Rubik Glitch', cursive; }
+        .rubik-mono-one-font { font-family: 'Rubik Mono One', monospace; } .rubik-puddles-font { font-family: 'Rubik Puddles', cursive; }
+        .rubik-wet-paint-font { font-family: 'Rubik Wet Paint', cursive; } .rye-font { font-family: 'Rye', cursive; } .schoolbell-font { font-family: 'Schoolbell', cursive; }
+        .sigmar-one-font { font-family: 'Sigmar One', cursive; } .stick-no-bills-font { font-family: 'Stick No Bills', sans-serif; } .suez-one-font { font-family: 'Suez One', serif; }
+        .titan-one-font { font-family: 'Titan One', cursive; } .tourney-font { font-family: 'Tourney', cursive; } .train-one-font { font-family: 'Train One', cursive; }
+        .ultra-font { font-family: 'Ultra', serif; } .uncial-antiqua-font { font-family: 'Uncial Antiqua', cursive; } .yatra-one-font { font-family: 'Yatra One', cursive; }
+        .zcool-kuaile-font { font-family: 'ZCOOL KuaiLe', cursive; } .press-start-2p-font { font-family: 'Press Start 2P', cursive; font-size: 0.8em; }
+        .special-elite-font { font-family: 'Special Elite', monospace; }
+
+        /* Text Effects */
+        .reverse-text { display: inline-block; transform: scaleX(-1); direction: rtl; unicode-bidi: bidi-override; }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="input-frame">
-            <textarea id="inputText" placeholder="Nhập văn bản của bạn vào đây..."></textarea>
+            <textarea id="inputText" placeholder="Nhập văn bản của bạn vào đây..." maxlength="1000"></textarea>
+            <div id="charCounter" class="char-counter">0/1000</div>
         </div>
         <div class="info">
             <p>Nếu thấy vui vui, hữu ích gì đó... 🧠</p>
@@ -215,76 +200,214 @@
             <p>😎 Chủ tài khoản: <strong>Hiếu Đẹp Troai</strong></p>
         </div>
         <div class="output-frame">
-            <div id="outputDisplay" class="output-display">
-                Văn bản đã chuyển đổi sẽ hiển thị ở đây.
+            <div class="output-display-wrapper">
+                <div id="outputDisplay" class="output-display">
+                    Văn bản đã chuyển đổi sẽ hiển thị ở đây.
+                </div>
+                <div class="font-size-controls-inline">
+                    <button onclick="changeFontSize(-2)" title="Thu nhỏ">-</button>
+                    <button onclick="changeFontSize(2)" title="Phóng to">+</button>
+                </div>
             </div>
             <div class="controls">
-                <button onclick="applyStyle('normal')">Font Gốc</button>
-                <button onclick="applyStyle('bold')">In Đậm</button>
-                <button onclick="applyStyle('italic')">In Nghiêng</button>
-                <button onclick="applyStyle('underline')">Gạch Chân</button>
-                <button onclick="applyStyle('cursive')">Nét Mềm 1</button>
-                <button onclick="applyStyle('indieFlower')">Nét Mềm 2</button>
-                <button onclick="applyStyle('lobster')">Nét Dày Đẹp</button>
-                <button onclick="applyStyle('pacifico')">Thư Pháp 1</button>
-                <button onclick="applyStyle('shadows')">Thư Pháp 2</button>
-                <button onclick="applyStyle('pixel')">Font Game</button>
-                <button onclick="applyStyle('oswald')">Font Mạnh Mẽ</button>
-                <button onclick="applyStyle('permanentMarker')">Viết Tay Bút Lông</button>
-                <button onclick="applyStyle('greatVibes')">Thư Pháp Sang Trọng</button>
-                <button onclick="applyStyle('metalMania')">Metal Mạnh Mẽ</button>
-                <button onclick="applyStyle('nosifier')">Kiểu Phá Cách</button>
-                <button onclick="applyStyle('caveat')">Viết Tay Mềm</button> <button onclick="applyStyle('anton')">Chữ Lớn Ấn Tượng</button> <button onclick="applyStyle('bebasNeue')">Chữ Thon Dài</button> <button onclick="applyStyle('rubikMonoOne')">Font Khối</button> <button onclick="applyStyle('fasterOne')">Font Tốc Độ</button> <button onclick="applyStyle('reverse')">Chữ Ngược</button>
-                <button onclick="applyStyle('upsideDown')">Chữ Lộn Ngược</button>
-                <button onclick="changeFontSize(2)">Phóng To (+)</button>
-                <button onclick="changeFontSize(-2)">Thu Nhỏ (-)</button>
+                <button onclick="applyStyle('normal')">Gốc</button>
+                <button onclick="applyStyle('bold')">Đậm</button>
+                <button onclick="applyStyle('italic')">Nghiêng</button>
+                <button onclick="applyStyle('underline')">Gạch</button>
+                
+                <button onclick="applyStyle('greatVibes')">Great Vibes</button>
+                <button onclick="applyStyle('pacifico')">Pacifico</button>
+                <button onclick="applyStyle('dancingScript')">Dancing Script</button>
+                <button onclick="applyStyle('shadowsIntoLight')">Shadows Light</button>
+                <button onclick="applyStyle('caveat')">Caveat</button>
+                <button onclick="applyStyle('sacramento')">Sacramento</button>
+                <button onclick="applyStyle('alexBrush')">Alex Brush</button>
+                <button onclick="applyStyle('allura')">Allura</button>
+                <button onclick="applyStyle('cookie')">Cookie</button>
+                <button onclick="applyStyle('kaushanScript')">Kaushan Script</button>
+                <button onclick="applyStyle('marckScript')">Marck Script</button>
+                <button onclick="applyStyle('parisienne')">Parisienne</button>
+                <button onclick="applyStyle('yellowtail')">Yellowtail</button>
+                <button onclick="applyStyle('homemadeApple')">Homemade</button>
+                <button onclick="applyStyle('satisfy')">Satisfy</button>
+                <button onclick="applyStyle('architectsDaughter')">ArchitectsD</button>
+                <button onclick="applyStyle('indieFlower')">Indie Flower</button>
+                <button onclick="applyStyle('kalam')">Kalam</button>
+                <button onclick="applyStyle('nothingYouCouldDo')">NothingUDo</button>
+                <button onclick="applyStyle('reenieBeanie')">Reenie Beanie</button>
+                <button onclick="applyStyle('laBelleAurore')">La Belle</button>
+                <button onclick="applyStyle('damion')">Damion</button>
+                <button onclick="applyStyle('merienda')">Merienda</button>
+                <button onclick="applyStyle('norican')">Norican</button>
+                <button onclick="applyStyle('pattaya')">Pattaya</button>
+                <button onclick="applyStyle('playball')">Playball</button>
+                <button onclick="applyStyle('sriracha')">Sriracha</button>
+                <button onclick="applyStyle('tangerine')">Tangerine</button>
+                <button onclick="applyStyle('zeyada')">Zeyada</button>
+                <button onclick="applyStyle('sansitaSwashed')">Sansita Swash</button>
+                <button onclick="applyStyle('sedgwickAveDisplay')">Sedgwick Ave</button>
+                <button onclick="applyStyle('lobster')">Lobster</button>
+                <button onclick="applyStyle('permanentMarker')">Perm.Marker</button>
+                <button onclick="applyStyle('anton')">Anton</button>
+                <button onclick="applyStyle('bebasNeue')">Bebas Neue</button>
+                <button onclick="applyStyle('oswald')">Oswald</button>
+                <button onclick="applyStyle('rockSalt')">Rock Salt</button>
+                <button onclick="applyStyle('walterTurncoat')">Walter T.</button>
+                <button onclick="applyStyle('berkshireSwash')">Berkshire</button>
+                <button onclick="applyStyle('monoton')">Monoton</button>
+                <button onclick="applyStyle('sixCaps')">Six Caps</button>
+                <button onclick="applyStyle('abrilFatface')">Abril Fatface</button>
+                <button onclick="applyStyle('alfaSlabOne')">Alfa Slab</button>
+                <button onclick="applyStyle('baloo2')">Baloo 2</button>
+                <button onclick="applyStyle('barlowCondensed')">Barlow Cond</button>
+                <button onclick="applyStyle('bungee')">Bungee</button>
+                <button onclick="applyStyle('bungeeInline')">Bungee Inline</button>
+                <button onclick="applyStyle('bungeeShade')">Bungee Shade</button>
+                <button onclick="applyStyle('cabinSketch')">Cabin Sketch</button>
+                <button onclick="applyStyle('changa')">Changa</button>
+                <button onclick="applyStyle('cherryBombOne')">Cherry Bomb</button>
+                <button onclick="applyStyle('comfortaa')">Comfortaa</button>
+                <button onclick="applyStyle('coiny')">Coiny</button>
+                <button onclick="applyStyle('creteRound')">Crete Round</button>
+                <button onclick="applyStyle('emilysCandy')">Emilys Candy</button>
+                <button onclick="applyStyle('ericaOne')">Erica One</button>
+                <button onclick="applyStyle('fascinateInline')">Fascinate</button>
+                <button onclick="applyStyle('fingerPaint')">Finger Paint</button>
+                <button onclick="applyStyle('fjallaOne')">Fjalla One</button>
+                <button onclick="applyStyle('fredoka')">Fredoka</button>
+                <button onclick="applyStyle('fugazOne')">Fugaz One</button>
+                <button onclick="applyStyle('gloriaHallelujah')">Gloria Hall.</button>
+                <button onclick="applyStyle('gochiHand')">Gochi Hand</button>
+                <button onclick="applyStyle('graduate')">Graduate</button>
+                <button onclick="applyStyle('hennyPenny')">Henny Penny</button>
+                <button onclick="applyStyle('irishGrover')">Irish Grover</button>
+                <button onclick="applyStyle('jollyLodger')">Jolly Lodger</button>
+                <button onclick="applyStyle('jotiOne')">Joti One</button>
+                <button onclick="applyStyle('justAnotherHand')">JustAnother</button>
+                <button onclick="applyStyle('kellySlab')">Kelly Slab</button>
+                <button onclick="applyStyle('knewave')">Knewave</button>
+                <button onclick="applyStyle('lemon')">Lemon</button>
+                <button onclick="applyStyle('luckiestGuy')">Luckiest Guy</button>
+                <button onclick="applyStyle('mavenPro')">Maven Pro</button>
+                <button onclick="applyStyle('moul')">Moul</button>
+                <button onclick="applyStyle('moulpali')">Moulpali</button>
+                <button onclick="applyStyle('notoSans')">Noto Sans</button>
+                <button onclick="applyStyle('patrickHand')">Patrick Hand</button>
+                <button onclick="applyStyle('poppins')">Poppins</button>
+                <button onclick="applyStyle('prompt')">Prompt</button>
+                <button onclick="applyStyle('raleway')">Raleway</button>
+                <button onclick="applyStyle('ranga')">Ranga</button>
+                <button onclick="applyStyle('roboto')">Roboto</button>
+                <button onclick="applyStyle('rowdies')">Rowdies</button>
+                <button onclick="applyStyle('rubikBubbles')">Rubik Bubbles</button>
+                <button onclick="applyStyle('rubikDoodleShadow')">Rubik Doodle</button>
+                <button onclick="applyStyle('rubikGlitch')">Rubik Glitch</button>
+                <button onclick="applyStyle('rubikMonoOne')">Rubik Mono</button>
+                <button onclick="applyStyle('rubikPuddles')">Rubik Puddles</button>
+                <button onclick="applyStyle('rubikWetPaint')">Rubik Wet</button>
+                <button onclick="applyStyle('rye')">Rye</button>
+                <button onclick="applyStyle('schoolbell')">Schoolbell</button>
+                <button onclick="applyStyle('sigmarOne')">Sigmar One</button>
+                <button onclick="applyStyle('stickNoBills')">StickNoBills</button>
+                <button onclick="applyStyle('suezOne')">Suez One</button>
+                <button onclick="applyStyle('titanOne')">Titan One</button>
+                <button onclick="applyStyle('tourney')">Tourney</button>
+                <button onclick="applyStyle('trainOne')">Train One</button>
+                <button onclick="applyStyle('ultra')">Ultra</button>
+                <button onclick="applyStyle('uncialAntiqua')">Uncial Antiq.</button>
+                <button onclick="applyStyle('yatraOne')">Yatra One</button>
+                <button onclick="applyStyle('zcoolKuaile')">ZCOOL</button>
+                <button onclick="applyStyle('pressStart2P')">PressStart</button>
+                <button onclick="applyStyle('specialElite')">SpecialElite</button>
+                <button onclick="applyStyle('reverse')">Chữ Ngược</button>
+                <button onclick="applyStyle('upsideDown')">Lộn Ngược</button>
                 <button onclick="copyToClipboard()">Sao Chép</button>
             </div>
         </div>
     </div>
 
     <script>
+        // JavaScript remains the same as the previous version
         const inputTextarea = document.getElementById('inputText');
         const outputDisplay = document.getElementById('outputDisplay');
+        const charCounter = document.getElementById('charCounter');
+        const MAX_CHARS = 1000; 
+
         let currentStyle = 'normal';
-        let currentFontSize = 17; // Initial font size for mobile, will be adjusted by media query for PC
+        let currentFontSize = 17;
 
-        const styleClasses = {
-            'normal': 'normal-font',
-            'bold': 'bold-font',
-            'italic': 'italic-font',
-            'underline': 'underline-font',
-            'cursive': 'cursive-font',
-            'indieFlower': 'indie-flower-font',
-            'lobster': 'lobster-font',
-            'pacifico': 'pacifico-font',
-            'pixel': 'pixel-font',
-            'shadows': 'shadows-font',
-            'oswald': 'oswald-font',
-            'permanentMarker': 'permanent-marker-font',
-            'greatVibes': 'great-vibes-font',
-            'metalMania': 'metal-mania-font',
-            'nosifier': 'nosifier-font',
-            'caveat': 'caveat-font', /* Added to JS */
-            'anton': 'anton-font', /* Added to JS */
-            'bebasNeue': 'bebas-neue-font', /* Added to JS */
-            'rubikMonoOne': 'rubik-mono-one-font', /* Added to JS */
-            'fasterOne': 'faster-one-font', /* Added to JS */
-            'reverse': 'reverse-text',
-            'upsideDown': 'upside-down-text'
+        const styleClasses = { 
+            'normal': 'normal-font', 'bold': 'bold-font', 'italic': 'italic-font', 'underline': 'underline-font',
+            'greatVibes': 'great-vibes-font', 'pacifico': 'pacifico-font', 'dancingScript': 'dancing-script-font',
+            'shadowsIntoLight': 'shadows-into-light-font', 'caveat': 'caveat-font', 'sacramento': 'sacramento-font',
+            'alexBrush': 'alex-brush-font', 'allura': 'allura-font', 'cookie': 'cookie-font',
+            'kaushanScript': 'kaushan-script-font', 'marckScript': 'marck-script-font', 'parisienne': 'parisienne-font',
+            'yellowtail': 'yellowtail-font', 'homemadeApple': 'homemade-apple-font', 'satisfy': 'satisfy-font',
+            'architectsDaughter': 'architects-daughter-font', 'indieFlower': 'indie-flower-font', 'kalam': 'kalam-font',
+            'nothingYouCouldDo': 'nothing-you-could-do-font', 'reenieBeanie': 'reenie-beanie-font',
+            'laBelleAurore': 'la-belle-aurore-font', 'damion': 'damion-font', 'merienda': 'merienda-font',
+            'norican': 'norican-font', 'pattaya': 'pattaya-font', 'playball': 'playball-font',
+            'sriracha': 'sriracha-font', 'tangerine': 'tangerine-font', 'zeyada': 'zeyada-font',
+            'sansitaSwashed': 'sansita-swashed-font', 'sedgwickAveDisplay': 'sedgwick-ave-display-font',
+            'lobster': 'lobster-font', 'permanentMarker': 'permanent-marker-font', 'anton': 'anton-font',
+            'bebasNeue': 'bebas-neue-font', 'oswald': 'oswald-font', 'rockSalt': 'rock-salt-font',
+            'walterTurncoat': 'walter-turncoat-font', 'berkshireSwash': 'berkshire-swash-font',
+            'monoton': 'monoton-font', 'sixCaps': 'six-caps-font', 'abrilFatface': 'abril-fatface-font',
+            'alfaSlabOne': 'alfa-slab-one-font', 'baloo2': 'baloo-2-font', 'barlowCondensed': 'barlow-condensed-font',
+            'bungee': 'bungee-font', 'bungeeInline': 'bungee-inline-font', 'bungeeShade': 'bungee-shade-font',
+            'cabinSketch': 'cabin-sketch-font', 'changa': 'changa-font', 'cherryBombOne': 'cherry-bomb-one-font',
+            'comfortaa': 'comfortaa-font', 'coiny': 'coiny-font', 'creteRound': 'crete-round-font',
+            'emilysCandy': 'emilys-candy-font', 'ericaOne': 'erica-one-font', 'fascinateInline': 'fascinate-inline-font',
+            'fingerPaint': 'finger-paint-font', 'fjallaOne': 'fjalla-one-font', 'fredoka': 'fredoka-font',
+            'fugazOne': 'fugaz-one-font', 'gloriaHallelujah': 'gloria-hallelujah-font', 'gochiHand': 'gochi-hand-font',
+            'graduate': 'graduate-font', 'hennyPenny': 'henny-penny-font', 'irishGrover': 'irish-grover-font',
+            'jollyLodger': 'jolly-lodger-font', 'jotiOne': 'joti-one-font', 'justAnotherHand': 'just-another-hand-font',
+            'kellySlab': 'kelly-slab-font', 'knewave': 'knewave-font', 'lemon': 'lemon-font',
+            'luckiestGuy': 'luckiest-guy-font', 'mavenPro': 'maven-pro-font', 'moul': 'moul-font',
+            'moulpali': 'moulpali-font', 'notoSans': 'noto-sans-font', 'patrickHand': 'patrick-hand-font',
+            'poppins': 'poppins-font', 'prompt': 'prompt-font', 'raleway': 'raleway-font', 'ranga': 'ranga-font',
+            'roboto': 'roboto-font', 'rowdies': 'rowdies-font', 'rubikBubbles': 'rubik-bubbles-font',
+            'rubikDoodleShadow': 'rubik-doodle-shadow-font', 'rubikGlitch': 'rubik-glitch-font',
+            'rubikMonoOne': 'rubik-mono-one-font', 'rubikPuddles': 'rubik-puddles-font',
+            'rubikWetPaint': 'rubik-wet-paint-font', 'rye': 'rye-font', 'schoolbell': 'schoolbell-font',
+            'sigmarOne': 'sigmar-one-font', 'stickNoBills': 'stick-no-bills-font', 'suezOne': 'suez-one-font',
+            'titanOne': 'titan-one-font', 'tourney': 'tourney-font', 'trainOne': 'train-one-font',
+            'ultra': 'ultra-font', 'uncialAntiqua': 'uncial-antiqua-font', 'yatraOne': 'yatra-one-font',
+            'zcoolKuaile': 'zcool-kuaile-font', 'pressStart2P': 'press-start-2p-font',
+            'specialElite': 'special-elite-font', 'reverse': 'reverse-text', 'upsideDown': 'upside-down-text'
         };
+        
+        inputTextarea.addEventListener('input', () => {
+            updateOutput();
+            updateCharCounter();
+        });
 
-        inputTextarea.addEventListener('input', updateOutput);
+        function updateCharCounter() {
+            const currentLength = inputTextarea.value.length;
+            charCounter.textContent = `${currentLength}/${MAX_CHARS}`;
+        }
 
         function updateOutput() {
             let text = inputTextarea.value;
             let formattedText = text;
 
             outputDisplay.className = 'output-display';
+            outputDisplay.style.fontStyle = 'normal';
+            outputDisplay.style.fontWeight = 'normal';
+            outputDisplay.style.textDecoration = 'none';
+            outputDisplay.style.transform = 'none';
+            outputDisplay.style.filter = 'none';
+            outputDisplay.style.direction = 'ltr';
+            outputDisplay.style.unicodeBidi = 'normal';
             outputDisplay.style.fontSize = `${currentFontSize}px`;
 
-            if (currentStyle === 'reverse') {
-                formattedText = text.split('').reverse().join('');
+            if (currentStyle === 'bold') {
+                outputDisplay.style.fontWeight = 'bold';
+            } else if (currentStyle === 'italic') {
+                outputDisplay.style.fontStyle = 'italic';
+            } else if (currentStyle === 'underline') {
+                outputDisplay.style.textDecoration = 'underline';
+            } else if (currentStyle === 'reverse') {
                 outputDisplay.classList.add(styleClasses[currentStyle]);
             } else if (currentStyle === 'upsideDown') {
                 formattedText = transformToUpsideDown(text);
@@ -293,7 +416,6 @@
                     outputDisplay.classList.add(styleClasses[currentStyle]);
                 }
             }
-
             outputDisplay.innerHTML = formattedText || 'Văn bản đã chuyển đổi sẽ hiển thị ở đây.';
         }
 
@@ -306,56 +428,39 @@
             currentFontSize += delta;
             if (currentFontSize < 10) currentFontSize = 10;
             if (currentFontSize > 72) currentFontSize = 72;
-            outputDisplay.style.fontSize = `${currentFontSize}px`;
+            outputDisplay.style.fontSize = `${currentFontSize}px`; 
         }
 
         function copyToClipboard() {
-            const textToCopy = outputDisplay.innerText;
+            let textToCopy;
+            if (currentStyle === 'reverse') {
+                 textToCopy = inputTextarea.value.split('').reverse().join('');
+            } else if (currentStyle === 'upsideDown') {
+                 textToCopy = transformToUpsideDown(inputTextarea.value);
+            } else {
+                 textToCopy = outputDisplay.innerText;
+            }
             navigator.clipboard.writeText(textToCopy)
-                .then(() => {
-                    alert('Đã sao chép văn bản vào clipboard!');
-                })
-                .catch(err => {
-                    console.error('Không thể sao chép văn bản: ', err);
-                    alert('Không thể sao chép văn bản. Vui lòng thử lại.');
-                });
+                .then(() => { alert('Đã sao chép văn bản vào clipboard!'); })
+                .catch(err => { console.error('Không thể sao chép: ', err); alert('Lỗi sao chép!'); });
         }
 
-        function transformToUpsideDown(text) {
-            const upsideDownMap = {
-                'a': 'ɐ', 'b': 'q', 'c': 'ɔ', 'd': 'p', 'e': 'ǝ', 'f': 'ɟ', 'g': 'ƃ', 'h': 'ɥ', 'i': 'ᴉ', 'j': 'ɾ',
-                'k': 'ʞ', 'l': 'l', 'm': 'ɯ', 'n': 'u', 'o': 'o', 'p': 'd', 'q': 'b', 'r': 'ɹ', 's': 's', 't': 'ʇ',
-                'u': 'n', 'v': 'ʌ', 'w': 'ʍ', 'x': 'x', 'y': 'ʎ', 'z': 'z',
-                'A': '∀', 'B': 'ᗡ', 'C': 'Ɔ', 'D': 'p', 'E': 'Ǝ', 'F': 'Ⅎ', 'G': 'פ', 'H': 'H', 'I': 'I', 'J': 'ſ',
-                'K': 'ʞ', 'L': '˥', 'M': 'W', 'N': 'N', 'O': 'O', 'P': 'Ԁ', 'Q': 'Q', 'R': 'ɹ', 'S': 'S', 'T': '⊥',
-                'U': '∩', 'V': 'Ʌ', 'W': 'M', 'X': 'X', 'Y': '⅄', 'Z': 'Z',
-                '.': '˙', ',': "'", '?': '¿', '!': '¡', "'": ',', '"': '„',
-                '(': ')', ')': '(', '[': ']', ']': '[', '{': '}', '}': '{',
-                '&': '⅋', '_': '‾',
-                '0': '0', '1': 'Ɩ', '2': 'ᄅ', '3': 'Ɛ', '4': 'ㄣ', '5': 'ϛ', '6': '9', '7': 'ㄥ', '8': '8', '9': '6'
-            };
-
+        function transformToUpsideDown(text) { 
+            const map = {'a':'ɐ','b':'q','c':'ɔ','d':'p','e':'ǝ','f':'ɟ','g':'ƃ','h':'ɥ','i':'ᴉ','j':'ɾ','k':'ʞ','l':'l','m':'ɯ','n':'u','o':'o','p':'d','q':'b','r':'ɹ','s':'s','t':'ʇ','u':'n','v':'ʌ','w':'ʍ','x':'x','y':'ʎ','z':'z','A':'∀','B':'ᗡ','C':'Ɔ','D':'p','E':'Ǝ','F':'Ⅎ','G':'פ','H':'H','I':'I','J':'ſ','K':'ʞ','L':'˥','M':'W','N':'N','O':'O','P':'Ԁ','Q':'Q','R':'ɹ','S':'S','T':'⊥','U':'∩','V':'Ʌ','W':'M','X':'X','Y':'⅄','Z':'Z','.':'˙',',':"'",'?':'¿','!':'¡',"'":',','"':'„','(':')',')':'(','[':']',']':'[','{':'}','}':'{','&':'⅋','_':'‾','0':'0','1':'Ɩ','2':'ᄅ','3':'Ɛ','4':'ㄣ','5':'ϛ','6':'9','7':'ㄥ','8':'8','9':'6'};
             let transformed = '';
-            for (let i = text.length - 1; i >= 0; i--) {
-                const char = text[i];
-                transformed += upsideDownMap[char] || char;
-            }
+            for (let i = text.length - 1; i >= 0; i--) { transformed += map[text[i]] || text[i]; }
             return transformed;
         }
 
-        // Initialize font size based on current screen width on load
         function setInitialFontSize() {
-            if (window.innerWidth >= 769) {
-                currentFontSize = 18; // PC default font size
-            } else {
-                currentFontSize = 17; // Mobile default font size
-            }
-            outputDisplay.style.fontSize = `${currentFontSize}px`;
+            if (window.innerWidth >= 769) { currentFontSize = 18; } else { currentFontSize = 17; }
+            outputDisplay.style.fontSize = `${currentFontSize}px`; 
+            updateOutput(); 
         }
-
+        
         setInitialFontSize();
-        window.addEventListener('resize', setInitialFontSize); // Adjust font size on resize
-        updateOutput(); // Initial update
+        updateCharCounter(); 
+        window.addEventListener('resize', setInitialFontSize);
     </script>
 </body>
 </html>
