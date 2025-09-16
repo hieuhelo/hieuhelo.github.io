@@ -1,43 +1,4 @@
-<script type="text/javascript">
-        var gk_isXlsx = false;
-        var gk_xlsxFileLookup = {};
-        var gk_fileData = {};
-        function filledCell(cell) {
-          return cell !== '' && cell != null;
-        }
-        function loadFileData(filename) {
-        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
-            try {
-                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
-                var firstSheetName = workbook.SheetNames[0];
-                var worksheet = workbook.Sheets[firstSheetName];
-
-                // Convert sheet to JSON to filter blank rows
-                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
-                // Filter out blank rows (rows where all cells are empty, null, or undefined)
-                var filteredData = jsonData.filter(row => row.some(filledCell));
-
-                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
-                var headerRowIndex = filteredData.findIndex((row, index) =>
-                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
-                );
-                // Fallback
-                if (headerRowIndex === -1 || headerRowIndex > 25) {
-                  headerRowIndex = 0;
-                }
-
-                // Convert filtered JSON back to CSV
-                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
-                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
-                return csv;
-            } catch (e) {
-                console.error(e);
-                return "";
-            }
-        }
-        return gk_fileData[filename] || "";
-        }
-        </script><!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
@@ -65,25 +26,37 @@
             max-width: 500px;
             width: 100%;
             text-align: center;
+            position: relative; 
         }
+        /* THAY ĐỔI 1: Tinh chỉnh tiêu đề */
         .container h1 {
             text-align: center;
             color: #79c0ff;
             margin-bottom: 25px;
-            font-size: 2em;
+            font-size: 1.7em; /* Giảm kích thước */
             margin-top: 0;
             font-weight: 600;
+            text-shadow: 0 0 5px rgba(121, 192, 255, 0.5); /* Thêm hiệu ứng */
         }
+        /* THAY ĐỔI 2: Điều chỉnh bố cục các dòng thông tin */
         .info-item {
-            font-size: 1.25em;
-            margin: 12px 0;
-            padding: 8px 0;
+            margin: 10px 0;
             font-weight: 500;
             border-radius: 8px;
         }
-        #current-time-item { color: #ffab91; }
-        #current-day-of-week-item { color: #81d4fa; }
-        #current-day-of-week-item.friday { color: #ffd700; } /* Gold for Friday */
+        /* Cỡ chữ nhỏ hơn cho dòng thời gian - thứ */
+        #current-time-day-item {
+            font-size: 1.1em;
+            margin-bottom: 15px; /* Tăng khoảng cách với ngày tháng bên dưới */
+        }
+        /* Cỡ chữ to, rõ ràng cho 2 dòng ngày tháng */
+        #current-gregorian-date-item, #current-lunar-date-item {
+             font-size: 1.25em;
+        }
+        /* THAY ĐỔI 3: Gán màu trực tiếp cho các span */
+        #current-time { color: #ffab91; }
+        #current-day-of-week { color: #81d4fa; }
+        #current-time-day-item.friday #current-day-of-week { color: #ffd700; } /* Màu vàng cho Thứ Sáu */
         #current-gregorian-date-item { color: #a5d6a7; }
         #current-lunar-date-item { color: #ce93d8; }
         .info-item strong {
@@ -98,6 +71,7 @@
             align-items: center;
             margin-bottom: 25px;
             gap: 10px;
+            position: relative;
         }
         .date-navigation-controls button {
             padding: 10px 15px;
@@ -117,43 +91,123 @@
             color: #aaa;
             cursor: not-allowed;
         }
-        .date-navigation-controls input[type="date"] {
+        .date-navigation-controls input[type="text"] {
             padding: 9px;
             border: 1px solid #777;
             border-radius: 8px;
             font-size: 0.95em;
+            font-weight: bold;
             background-color: #333;
             color: #eee;
             text-align: center;
             min-width: 150px;
             flex-grow: 1;
+            cursor: pointer;
         }
-        input[type="date"]::-webkit-calendar-picker-indicator {
-            filter: invert(0.8);
+        .custom-calendar-popup {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 320px;
+            background: #2c2c2c;
+            border: 1px solid #555;
+            border-radius: 10px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.5);
+            z-index: 1000;
+            padding: 15px;
+            color: #fff;
+        }
+        .custom-calendar-popup .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        .custom-calendar-popup .calendar-header button {
+            background: none;
+            border: none;
+            color: #a5d6a7;
+            font-size: 20px;
+            cursor: pointer;
+            padding: 5px 10px;
+        }
+        .custom-calendar-popup .calendar-header button:hover {
+            background: #444;
+            border-radius: 5px;
+        }
+        .custom-calendar-popup .calendar-header #month-year-display {
+            font-size: 1.1em;
+            font-weight: bold;
+            line-height: 1.2;
+        }
+        .custom-calendar-popup .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
+        }
+        .custom-calendar-popup .calendar-grid .day-cell,
+        .custom-calendar-popup .calendar-grid .weekday-header {
+            text-align: center;
+            padding: 5px;
+            border-radius: 5px;
+        }
+        .custom-calendar-popup .calendar-grid .weekday-header {
+            font-weight: bold;
+            color: #81d4fa;
+        }
+        .custom-calendar-popup .calendar-grid .day-cell {
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 40px;
+            transition: background-color 0.2s;
+        }
+        .custom-calendar-popup .calendar-grid .day-cell:hover {
+            background-color: #0056b3;
+        }
+         .custom-calendar-popup .calendar-grid .day-cell.other-month {
+            opacity: 0.4;
+            cursor: default;
+        }
+        .custom-calendar-popup .calendar-grid .day-cell.today {
+            border: 1px solid #79c0ff;
+        }
+        .custom-calendar-popup .calendar-grid .day-cell.selected {
+            background-color: #007bff;
+            color: white;
+        }
+        .custom-calendar-popup .solar-day {
+            font-size: 1em;
+            font-weight: 500;
+        }
+        .custom-calendar-popup .lunar-day {
+            font-size: 0.6em;
+            color: #ce93d8;
+        }
+        .custom-calendar-popup .calendar-footer {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+        }
+        .custom-calendar-popup .calendar-footer button {
+             padding: 8px 12px;
+            background-color: #555;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+         .custom-calendar-popup .calendar-footer button:hover {
+            background-color: #666;
         }
         @media (max-width: 520px) {
-            .container {
-                padding: 20px;
-            }
-            .container h1 {
-                font-size: 1.8em;
-            }
-            .info-item {
-                font-size: 1.1em;
-            }
-            .date-navigation-controls {
-                flex-direction: column;
-            }
-            .date-navigation-controls input[type="date"] {
-                width: 100%;
-                margin-bottom: 10px;
-                box-sizing: border-box;
-            }
-            .date-navigation-controls .buttons-row {
-                display: flex;
-                justify-content: space-between;
-                width: 100%;
-            }
+            .container { padding: 20px; }
+            .container h1 { font-size: 1.8em; }
+            .info-item { font-size: 1.1em; }
         }
     </style>
 </head>
@@ -161,20 +215,29 @@
 <div class="container">
     <div class="date-navigation-controls">
         <button id="prev-day-btn">< Ngày Trước</button>
-        <input type="date" id="date-picker">
+        <input type="text" id="date-picker" readonly>
         <button id="next-day-btn">Ngày Sau ></button>
-    </div>
-    <div class="date-navigation-controls-mobile" style="display: none;">
-        <input type="date" id="date-picker-mobile">
-        <div class="buttons-row">
-            <button id="prev-day-btn-mobile">< Ngày Trước</button>
-            <button id="next-day-btn-mobile">Ngày Sau ></button>
+        
+        <div id="custom-calendar" class="custom-calendar-popup">
+            <div class="calendar-header">
+                <button id="prev-month-btn">&lt;</button>
+                <span id="month-year-display"></span>
+                <button id="next-month-btn">&gt;</button>
+            </div>
+            <div class="calendar-grid" id="weekday-headers"></div>
+            <div class="calendar-grid" id="calendar-days"></div>
+            <div class="calendar-footer">
+                <button id="goto-today-btn">Hôm Nay</button>
+                <button id="close-calendar-btn">Đóng</button>
+            </div>
         </div>
     </div>
+    
     <h1 id="main-title">Lịch Hôm Nay</h1>
     <div id="current-info">
-        <p class="info-item" id="current-time-item"><span id="current-time"></span></p>
-        <p class="info-item" id="current-day-of-week-item"><span id="current-day-of-week"></span></p>
+        <p class="info-item" id="current-time-day-item">
+            <span id="current-time"></span> &bull; <span id="current-day-of-week"></span>
+        </p>
         <p class="info-item" id="current-gregorian-date-item"><span id="current-gregorian-date"></span></p>
         <p class="info-item" id="current-lunar-date-item"><span id="current-lunar-date"></span></p>
     </div>
@@ -188,97 +251,38 @@
     }
     
     const ALL_LUNAR_DATE_ANCHORS = {
-        "2024-01-01": [20, 11, 2023, false, "Quý Mão"], "2024-01-11": [1, 12, 2023, false, "Quý Mão"],
-        "2024-02-01": [22, 12, 2023, false, "Quý Mão"], "2024-02-10": [1, 1, 2024, false, "Giáp Thìn"],
-        "2024-03-01": [21, 1, 2024, false, "Giáp Thìn"], "2024-03-10": [1, 2, 2024, false, "Giáp Thìn"],
-        "2024-04-01": [23, 2, 2024, false, "Giáp Thìn"], "2024-04-09": [1, 3, 2024, false, "Giáp Thìn"],
-        "2024-05-01": [23, 3, 2024, false, "Giáp Thìn"], "2024-05-08": [1, 4, 2024, false, "Giáp Thìn"],
-        "2024-06-01": [25, 4, 2024, false, "Giáp Thìn"], "2024-06-06": [1, 5, 2024, false, "Giáp Thìn"],
-        "2024-07-01": [26, 5, 2024, false, "Giáp Thìn"], "2024-07-06": [1, 6, 2024, false, "Giáp Thìn"],
-        "2024-08-01": [27, 6, 2024, false, "Giáp Thìn"], "2024-08-04": [1, 7, 2024, false, "Giáp Thìn"],
-        "2024-09-01": [29, 7, 2024, false, "Giáp Thìn"], "2024-09-03": [1, 8, 2024, false, "Giáp Thìn"],
-        "2024-10-01": [29, 8, 2024, false, "Giáp Thìn"], "2024-10-03": [1, 9, 2024, false, "Giáp Thìn"],
-        "2024-11-01": [1, 10, 2024, false, "Giáp Thìn"], "2024-12-01": [1, 11, 2024, false, "Giáp Thìn"],
-        "2024-12-31": [1, 12, 2024, false, "Giáp Thìn"],
-        "2025-01-01": [2, 12, 2024, false, "Giáp Thìn"], "2025-01-29": [1, 1, 2025, false, "Ất Tỵ"],
-        "2025-02-01": [4, 1, 2025, false, "Ất Tỵ"], "2025-02-28": [1, 2, 2025, false, "Ất Tỵ"],
-        "2025-03-01": [2, 2, 2025, false, "Ất Tỵ"], "2025-03-29": [1, 3, 2025, false, "Ất Tỵ"],
-        "2025-04-01": [4, 3, 2025, false, "Ất Tỵ"], "2025-04-28": [1, 4, 2025, false, "Ất Tỵ"],
-        "2025-05-01": [4, 4, 2025, false, "Ất Tỵ"], "2025-05-27": [1, 5, 2025, false, "Ất Tỵ"],
-        "2025-06-01": [6, 5, 2025, false, "Ất Tỵ"], "2025-06-25": [1, 6, 2025, false, "Ất Tỵ"], 
-        "2025-07-01": [7, 6, 2025, false, "Ất Tỵ"], "2025-07-25": [1, 6, 2025, true, "Ất Tỵ"],
-        "2025-08-01": [8, 6, 2025, true, "Ất Tỵ"], "2025-08-23": [1, 7, 2025, false, "Ất Tỵ"],
-        "2025-09-01": [10, 7, 2025, false, "Ất Tỵ"],"2025-09-22": [1, 8, 2025, false, "Ất Tỵ"],
-        "2025-10-01": [10, 8, 2025, false, "Ất Tỵ"],"2025-10-21": [1, 9, 2025, false, "Ất Tỵ"],
-        "2025-11-01": [11, 9, 2025, false, "Ất Tỵ"],"2025-11-20": [1, 10, 2025, false, "Ất Tỵ"],
-        "2025-12-01": [11, 10, 2025, false, "Ất Tỵ"],"2025-12-20": [1, 11, 2025, false, "Ất Tỵ"],
-        "2026-01-01": [12, 11, 2025, false, "Ất Tỵ"], "2026-01-19": [1, 12, 2025, false, "Ất Tỵ"],
-        "2026-02-01": [14, 12, 2025, false, "Ất Tỵ"],"2026-02-17": [1, 1, 2026, false, "Bính Ngọ"],
-        "2026-03-01": [13, 1, 2026, false, "Bính Ngọ"],"2026-03-19": [1, 2, 2026, false, "Bính Ngọ"],
-        "2026-04-01": [14, 2, 2026, false, "Bính Ngọ"],"2026-04-17": [1, 3, 2026, false, "Bính Ngọ"],
-        "2026-05-01": [14, 3, 2026, false, "Bính Ngọ"],"2026-05-17": [1, 4, 2026, false, "Bính Ngọ"],
-        "2026-06-01": [15, 4, 2026, false, "Bính Ngọ"],"2026-06-15": [1, 5, 2026, false, "Bính Ngọ"],
-        "2026-07-01": [17, 5, 2026, false, "Bính Ngọ"],"2026-07-15": [1, 6, 2026, false, "Bính Ngọ"],
-        "2026-08-01": [18, 6, 2026, false, "Bính Ngọ"],"2026-08-13": [1, 7, 2026, false, "Bính Ngọ"],
-        "2026-09-01": [20, 7, 2026, false, "Bính Ngọ"],"2026-09-12": [1, 8, 2026, false, "Bính Ngọ"],
-        "2026-10-01": [20, 8, 2026, false, "Bính Ngọ"],"2026-10-11": [1, 9, 2026, false, "Bính Ngọ"],
-        "2026-11-01": [21, 9, 2026, false, "Bính Ngọ"],"2026-11-10": [1, 10, 2026, false, "Bính Ngọ"],
-        "2026-12-01": [21, 10, 2026, false, "Bính Ngọ"],"2026-12-10": [1, 11, 2026, false, "Bính Ngọ"],
-        "2026-12-31": [22, 11, 2026, false, "Bính Ngọ"],
-        "2027-01-01": [23, 11, 2026, false, "Bính Ngọ"], 
-        "2027-01-08": [1, 12, 2026, false, "Bính Ngọ"],
-        "2027-02-01": [25, 12, 2026, false, "Bính Ngọ"], 
-        "2027-02-07": [1, 1, 2027, false, "Đinh Mùi"],
+        "2024-01-01": [20, 11, 2023, false, "Quý Mão"], "2024-01-11": [1, 12, 2023, false, "Quý Mão"],"2024-02-01": [22, 12, 2023, false, "Quý Mão"], "2024-02-10": [1, 1, 2024, false, "Giáp Thìn"],"2024-03-01": [21, 1, 2024, false, "Giáp Thìn"], "2024-03-10": [1, 2, 2024, false, "Giáp Thìn"],"2024-04-01": [23, 2, 2024, false, "Giáp Thìn"], "2024-04-09": [1, 3, 2024, false, "Giáp Thìn"],"2024-05-01": [23, 3, 2024, false, "Giáp Thìn"], "2024-05-08": [1, 4, 2024, false, "Giáp Thìn"],"2024-06-01": [25, 4, 2024, false, "Giáp Thìn"], "2024-06-06": [1, 5, 2024, false, "Giáp Thìn"],"2024-07-01": [26, 5, 2024, false, "Giáp Thìn"], "2024-07-06": [1, 6, 2024, false, "Giáp Thìn"],"2024-08-01": [27, 6, 2024, false, "Giáp Thìn"], "2024-08-04": [1, 7, 2024, false, "Giáp Thìn"],"2024-09-01": [29, 7, 2024, false, "Giáp Thìn"], "2024-09-03": [1, 8, 2024, false, "Giáp Thìn"],"2024-10-01": [29, 8, 2024, false, "Giáp Thìn"], "2024-10-03": [1, 9, 2024, false, "Giáp Thìn"],"2024-11-01": [1, 10, 2024, false, "Giáp Thìn"], "2024-12-01": [1, 11, 2024, false, "Giáp Thìn"],"2024-12-31": [1, 12, 2024, false, "Giáp Thìn"],
+        "2025-01-01": [2, 12, 2024, false, "Giáp Thìn"], "2025-01-29": [1, 1, 2025, false, "Ất Tỵ"],"2025-02-01": [4, 1, 2025, false, "Ất Tỵ"], "2025-02-28": [1, 2, 2025, false, "Ất Tỵ"],"2025-03-01": [2, 2, 2025, false, "Ất Tỵ"], "2025-03-29": [1, 3, 2025, false, "Ất Tỵ"],"2025-04-01": [4, 3, 2025, false, "Ất Tỵ"], "2025-04-28": [1, 4, 2025, false, "Ất Tỵ"],"2025-05-01": [4, 4, 2025, false, "Ất Tỵ"], "2025-05-27": [1, 5, 2025, false, "Ất Tỵ"],"2025-06-01": [6, 5, 2025, false, "Ất Tỵ"], "2025-06-25": [1, 6, 2025, false, "Ất Tỵ"], "2025-07-01": [7, 6, 2025, false, "Ất Tỵ"], "2025-07-25": [1, 6, 2025, true, "Ất Tỵ"],"2025-08-01": [8, 6, 2025, true, "Ất Tỵ"], "2025-08-23": [1, 7, 2025, false, "Ất Tỵ"],"2025-09-01": [10, 7, 2025, false, "Ất Tỵ"],"2025-09-22": [1, 8, 2025, false, "Ất Tỵ"],"2025-10-01": [10, 8, 2025, false, "Ất Tỵ"],"2025-10-21": [1, 9, 2025, false, "Ất Tỵ"],"2025-11-01": [11, 9, 2025, false, "Ất Tỵ"],"2025-11-20": [1, 10, 2025, false, "Ất Tỵ"],"2025-12-01": [11, 10, 2025, false, "Ất Tỵ"],"2025-12-20": [1, 11, 2025, false, "Ất Tỵ"],
+        "2026-01-01": [12, 11, 2025, false, "Ất Tỵ"], "2026-01-19": [1, 12, 2025, false, "Ất Tỵ"],"2026-02-01": [14, 12, 2025, false, "Ất Tỵ"],"2026-02-17": [1, 1, 2026, false, "Bính Ngọ"],"2026-03-01": [13, 1, 2026, false, "Bính Ngọ"],"2026-03-19": [1, 2, 2026, false, "Bính Ngọ"],"2026-04-01": [14, 2, 2026, false, "Bính Ngọ"],"2026-04-17": [1, 3, 2026, false, "Bính Ngọ"],"2026-05-01": [14, 3, 2026, false, "Bính Ngọ"],"2026-05-17": [1, 4, 2026, false, "Bính Ngọ"],"2026-06-01": [15, 4, 2026, false, "Bính Ngọ"],"2026-06-15": [1, 5, 2026, false, "Bính Ngọ"],"2026-07-01": [17, 5, 2026, false, "Bính Ngọ"],"2026-07-15": [1, 6, 2026, false, "Bính Ngọ"],"2026-08-01": [18, 6, 2026, false, "Bính Ngọ"],"2026-08-13": [1, 7, 2026, false, "Bính Ngọ"],"2026-09-01": [20, 7, 2026, false, "Bính Ngọ"],"2026-09-12": [1, 8, 2026, false, "Bính Ngọ"],"2026-10-01": [20, 8, 2026, false, "Bính Ngọ"],"2026-10-11": [1, 9, 2026, false, "Bính Ngọ"],"2026-11-01": [21, 9, 2026, false, "Bính Ngọ"],"2026-11-10": [1, 10, 2026, false, "Bính Ngọ"],"2026-12-01": [21, 10, 2026, false, "Bính Ngọ"],"2026-12-10": [1, 11, 2026, false, "Bính Ngọ"],"2026-12-31": [22, 11, 2026, false, "Bính Ngọ"],
+        "2027-01-01": [23, 11, 2026, false, "Bính Ngọ"], "2027-01-08": [1, 12, 2026, false, "Bính Ngọ"],"2027-02-01": [25, 12, 2026, false, "Bính Ngọ"], "2027-02-07": [1, 1, 2027, false, "Đinh Mùi"],
     };
     const MIN_CALENDAR_DATE_STR = "2024-01-01";
     const MAX_CALENDAR_DATE_STR = "2027-01-01";
     const LUNAR_DATE_ANCHORS = {};
     for (const key in ALL_LUNAR_DATE_ANCHORS) {
-        if (key <= MAX_CALENDAR_DATE_STR || 
-            (parseInt(key.substring(0,4)) === parseInt(MAX_CALENDAR_DATE_STR.substring(0,4)) && 
-             parseInt(key.substring(5,7)) === parseInt(MAX_CALENDAR_DATE_STR.substring(5,7)) +1 ) 
-           ) {
-             if (key >= "2023-12-01") { 
-                LUNAR_DATE_ANCHORS[key] = ALL_LUNAR_DATE_ANCHORS[key];
-             }
+        if (key <= MAX_CALENDAR_DATE_STR || (parseInt(key.substring(0,4)) === parseInt(MAX_CALENDAR_DATE_STR.substring(0,4)) && parseInt(key.substring(5,7)) === parseInt(MAX_CALENDAR_DATE_STR.substring(5,7)) +1 ) ) {
+             if (key >= "2023-12-01") { LUNAR_DATE_ANCHORS[key] = ALL_LUNAR_DATE_ANCHORS[key]; }
         }
     }
     const solarAnchorDatesSorted = Object.keys(LUNAR_DATE_ANCHORS).sort();
-    const firstDataDateNav = new Date(MIN_CALENDAR_DATE_STR.substring(0,4), MIN_CALENDAR_DATE_STR.substring(5,7)-1, MIN_CALENDAR_DATE_STR.substring(8,10));
-    const lastDataDateNav = new Date(MAX_CALENDAR_DATE_STR.substring(0,4), MAX_CALENDAR_DATE_STR.substring(5,7)-1, MAX_CALENDAR_DATE_STR.substring(8,10));
+    const firstDataDateNav = new Date(MIN_CALENDAR_DATE_STR);
+    const lastDataDateNav = new Date(MAX_CALENDAR_DATE_STR);
     function convertSolarToLunar(dd, mm, yy) {
         let currentSolarDateStr = `${yy}-${String(mm).padStart(2,'0')}-${String(dd).padStart(2,'0')}`;
         let bestAnchorSolarDateStr = "";
-        if (solarAnchorDatesSorted.length === 0 || currentSolarDateStr < solarAnchorDatesSorted[0]) {
-             return { lunarDay: -1, lunarMonth: -1, lunarYearDL: yy, isLeap: false };
-        }
+        if (solarAnchorDatesSorted.length === 0 || currentSolarDateStr < solarAnchorDatesSorted[0]) { return { lunarDay: -1, lunarMonth: -1, lunarYearDL: yy, isLeap: false }; }
         for (let sDateStr of solarAnchorDatesSorted) {
-            if (sDateStr <= currentSolarDateStr) {
-                bestAnchorSolarDateStr = sDateStr;
-            } else {
-                break;
-            }
+            if (sDateStr <= currentSolarDateStr) { bestAnchorSolarDateStr = sDateStr; } else { break; }
         }
-        if (!bestAnchorSolarDateStr) {
-            return { lunarDay: -1, lunarMonth: -1, lunarYearDL: yy, isLeap: false };
-        }
+        if (!bestAnchorSolarDateStr) { return { lunarDay: -1, lunarMonth: -1, lunarYearDL: yy, isLeap: false }; }
         let anchorData = LUNAR_DATE_ANCHORS[bestAnchorSolarDateStr];
-        let anchorSolarY = parseInt(bestAnchorSolarDateStr.substring(0,4));
-        let anchorSolarM = parseInt(bestAnchorSolarDateStr.substring(5,7));
-        let anchorSolarD = parseInt(bestAnchorSolarDateStr.substring(8,10));
-        let currentJDN = gregorianToJD(yy, mm, dd);
-        let anchorJDN = gregorianToJD(anchorSolarY, anchorSolarM, anchorSolarD);
+        let anchorSolarY = parseInt(bestAnchorSolarDateStr.substring(0,4)), anchorSolarM = parseInt(bestAnchorSolarDateStr.substring(5,7)), anchorSolarD = parseInt(bestAnchorSolarDateStr.substring(8,10));
+        let currentJDN = gregorianToJD(yy, mm, dd), anchorJDN = gregorianToJD(anchorSolarY, anchorSolarM, anchorSolarD);
         let dayDiff = currentJDN - anchorJDN;
-        return { 
-            lunarDay: anchorData[0] + dayDiff, 
-            lunarMonth: anchorData[1], 
-            lunarYearDL: anchorData[2], 
-            isLeap: anchorData[3]
-        };
+        return { lunarDay: anchorData[0] + dayDiff, lunarMonth: anchorData[1], lunarYearDL: anchorData[2], isLeap: anchorData[3] };
     }
     function formatTimeWithPeriod(hours, minutes, seconds) {
-        let period = "";
-        let displayHours = hours;
+        let period = "", displayHours = hours;
         if (hours >= 0 && hours <= 4) { period = "Đêm"; if (hours === 0) displayHours = 12; } 
         else if (hours >= 5 && hours <= 10) { period = "Sáng"; } 
         else if (hours >= 11 && hours <= 13) { period = "Trưa"; if (hours > 12 && hours !== 0) displayHours -=12; else if (hours === 0) displayHours=12;}
@@ -287,131 +291,65 @@
         return `${displayHours}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')} ${period}`;
     }
     let currentDisplayDate;
-    const prevDayBtn = document.getElementById('prev-day-btn');
-    const nextDayBtn = document.getElementById('next-day-btn');
-    const datePicker = document.getElementById('date-picker');
-    const prevDayBtnMobile = document.getElementById('prev-day-btn-mobile');
-    const nextDayBtnMobile = document.getElementById('next-day-btn-mobile');
-    const datePickerMobile = document.getElementById('date-picker-mobile');
-    const desktopControls = document.querySelector('.date-navigation-controls');
-    const mobileControls = document.querySelector('.date-navigation-controls-mobile');
-    const mainTitleEl = document.getElementById('main-title');
-    function updateLiveClock() {
-        const now = new Date();
-        const hours = now.getHours();
-        const minutes = now.getMinutes();
-        const seconds = now.getSeconds();
-        const currentTimeStr = formatTimeWithPeriod(hours, minutes, seconds);
-        document.getElementById('current-time').textContent = currentTimeStr;
-    }
-    function formatDateToYYYYMMDD(date) {
-        const y = date.getFullYear();
-        const m = String(date.getMonth() + 1).padStart(2, '0');
-        const d = String(date.getDate()).padStart(2, '0');
-        return `${y}-${m}-${d}`;
-    }
-    function isSameDay(date1, date2) {
-        return date1.getFullYear() === date2.getFullYear() &&
-               date1.getMonth() === date2.getMonth() &&
-               date1.getDate() === date2.getDate();
-    }
+    const prevDayBtn = document.getElementById('prev-day-btn'), nextDayBtn = document.getElementById('next-day-btn'), datePicker = document.getElementById('date-picker'), mainTitleEl = document.getElementById('main-title');
+    function updateLiveClock() { document.getElementById('current-time').textContent = formatTimeWithPeriod(new Date().getHours(), new Date().getMinutes(), new Date().getSeconds()); }
+    function formatDateToDDMMYYYY(date) { return `${String(date.getDate()).padStart(2, '0')}/${String(date.getMonth() + 1).padStart(2, '0')}/${date.getFullYear()}`; }
+    function isSameDay(date1, date2) { if (!date1 || !date2) return false; return date1.getFullYear() === date2.getFullYear() && date1.getMonth() === date2.getMonth() && date1.getDate() === date2.getDate(); }
     function updateCalendarDisplay(dateObject) {
-        const dd = dateObject.getDate();
-        const mm = dateObject.getMonth() + 1;
-        const yyyy = dateObject.getFullYear();
-        const dayOfWeekIdx = dateObject.getDay();
-        const daysOfWeek_VI = ["Chủ Nhật", "Thứ Hai", "Thứ Ba", "Thứ Tư", "Thứ Năm", "Thứ Sáu", "Thứ Bảy"];
-        const currentDayOfWeekStr = daysOfWeek_VI[dayOfWeekIdx];
-        const currentDateGregorianStrVerbose = `Ngày ${String(dd).padStart(2, '0')} tháng ${String(mm).padStart(2, '0')} năm ${yyyy} Dương`;
-        const currentDateGregorianStrShort = `${String(dd).padStart(2, '0')}/${String(mm).padStart(2, '0')}/${yyyy}`;
+        const dd = dateObject.getDate(), mm = dateObject.getMonth() + 1, yyyy = dateObject.getFullYear();
+        const daysOfWeek_VI = ["Chủ Nhật", "Thứ Hai", "Thứ Ba", "Thứ Tư", "Thứ Năm", "Thứ Sáu", "Thứ Bảy"], currentDayOfWeekStr = daysOfWeek_VI[dateObject.getDay()];
+        document.getElementById('current-day-of-week').textContent = currentDayOfWeekStr;
+        document.getElementById('current-gregorian-date').textContent = `Ngày ${String(dd).padStart(2, '0')} tháng ${String(mm).padStart(2, '0')} năm ${yyyy}`;
         const lunarInfo = convertSolarToLunar(dd, mm, yyyy);
         let lunarDateDisplayStr = "Không tính được";
-        if (lunarInfo.lunarDay !== -1) {
-            lunarDateDisplayStr = `Ngày ${String(lunarInfo.lunarDay).padStart(2, '0')} tháng ${String(lunarInfo.lunarMonth).padStart(2, '0')}`;
-            if (lunarInfo.isLeap) {
-                lunarDateDisplayStr += " Nhuận";
-            }
-            lunarDateDisplayStr += ` năm ${lunarInfo.lunarYearDL} Âm`;
-        }
-        document.getElementById('current-day-of-week').textContent = currentDayOfWeekStr;
-        document.getElementById('current-gregorian-date').textContent = currentDateGregorianStrVerbose;
+        if (lunarInfo.lunarDay !== -1) { lunarDateDisplayStr = `Ngày ${lunarInfo.lunarDay} tháng ${lunarInfo.lunarMonth}${lunarInfo.isLeap ? " Nhuận" : ""} năm ${lunarInfo.lunarYearDL} Âm`; }
         document.getElementById('current-lunar-date').textContent = lunarDateDisplayStr;
-        const dayOfWeekElement = document.getElementById('current-day-of-week-item');
-        if (currentDayOfWeekStr === "Thứ Sáu") {
-            dayOfWeekElement.classList.add('friday');
-        } else {
-            dayOfWeekElement.classList.remove('friday');
-        }
-        const formattedDateForPicker = formatDateToYYYYMMDD(dateObject);
-        if (datePicker.value !== formattedDateForPicker) {
-            datePicker.value = formattedDateForPicker;
-        }
-        if (datePickerMobile.value !== formattedDateForPicker) {
-            datePickerMobile.value = formattedDateForPicker;
-        }
-        const beginningOfDisplayDay = new Date(dateObject.getFullYear(), dateObject.getMonth(), dateObject.getDate());
-        const isPrevDisabled = beginningOfDisplayDay <= firstDataDateNav;
-        const isNextDisabled = beginningOfDisplayDay >= lastDataDateNav;
-        prevDayBtn.disabled = isPrevDisabled;
-        nextDayBtn.disabled = isNextDisabled;
-        prevDayBtnMobile.disabled = isPrevDisabled;
-        nextDayBtnMobile.disabled = isNextDisabled;
-        const todayForTitle = new Date();
-        if (isSameDay(dateObject, todayForTitle)) {
-            mainTitleEl.textContent = "Lịch Hôm Nay";
-        } else {
-            mainTitleEl.textContent = `Lịch Ngày ${currentDateGregorianStrShort}`;
-        }
+        // THAY ĐỔI 5: Cập nhật selector cho mục tiêu của class 'friday'
+        const dayOfWeekElement = document.getElementById('current-time-day-item');
+        dayOfWeekElement.classList.toggle('friday', currentDayOfWeekStr === "Thứ Sáu");
+        datePicker.value = "Đổi ngày";
+        const beginningOfDisplayDay = new Date(yyyy, dateObject.getMonth(), dd);
+        prevDayBtn.disabled = beginningOfDisplayDay <= firstDataDateNav;
+        nextDayBtn.disabled = beginningOfDisplayDay >= lastDataDateNav;
+        if (isSameDay(dateObject, new Date())) { mainTitleEl.textContent = "Lịch Hôm Nay"; } else { mainTitleEl.textContent = `Lịch Ngày ${formatDateToDDMMYYYY(dateObject)}`; }
     }
     function setRandomBackgroundColor() {
-        const darkBackgrounds = [
-            "linear-gradient(to right, #232526, #414345)",
-            "linear-gradient(to right, #0f2027, #203a43, #2c5364)",
-            "linear-gradient(to right, #283048, #859398)",
-            "linear-gradient(to right, #360033, #0b8793)",
-            "linear-gradient(to right, #141e30, #243b55)",
-            "#2c3e50", "#34495e", "#212121", "#263238", "#37474F",
-            "linear-gradient(135deg, #1f2023 0%, #2c2d31 100%)",
-            "linear-gradient(to top, #30cfd0 0%, #330867 100%)",
-            "linear-gradient(to right, #000428, #004e92)",
-            "linear-gradient(to right, #434343, #000000)"
-        ];
-        const randomBg = darkBackgrounds[Math.floor(Math.random() * darkBackgrounds.length)];
-        document.body.style.background = randomBg;
+        const darkBackgrounds = ["linear-gradient(to right, #232526, #414345)","linear-gradient(to right, #0f2027, #203a43, #2c5364)","linear-gradient(to right, #283048, #859398)","linear-gradient(to right, #360033, #0b8793)","linear-gradient(to right, #141e30, #243b55)","#2c3e50","#34495e","#212121","linear-gradient(to top, #30cfd0 0%, #330867 100%)", "linear-gradient(to right, #000428, #004e92)"];
+        document.body.style.background = darkBackgrounds[Math.floor(Math.random() * darkBackgrounds.length)];
     }
-    function handleScreenResize() {
-        if (window.innerWidth <= 520) {
-            desktopControls.style.display = 'none';
-            mobileControls.style.display = 'flex';
-            mobileControls.style.flexDirection = 'column';
-            mobileControls.querySelector('.buttons-row').style.display = 'flex';
-        } else {
-            desktopControls.style.display = 'flex';
-            mobileControls.style.display = 'none';
+    const customCalendar = document.getElementById('custom-calendar'), monthYearDisplay = document.getElementById('month-year-display'), calendarDays = document.getElementById('calendar-days'), prevMonthBtn = document.getElementById('prev-month-btn'), nextMonthBtn = document.getElementById('next-month-btn'), gotoTodayBtn = document.getElementById('goto-today-btn'), closeCalendarBtn = document.getElementById('close-calendar-btn'), weekdayHeaders = document.getElementById('weekday-headers');
+    let calendarDate = new Date();
+    function renderCustomCalendar(year, month) {
+        calendarDate.setFullYear(year, month, 1);
+        const lunarInfoForMonth = convertSolarToLunar(1, month + 1, year);
+        let lunarMonthText = "";
+        if(lunarInfoForMonth.lunarDay !== -1) { lunarMonthText = `(Tháng ${lunarInfoForMonth.lunarMonth}${lunarInfoForMonth.isLeap ? " Nhuận" : ""} Âm)`;}
+        monthYearDisplay.innerHTML = `Tháng ${month + 1}, ${year}<br><span style="font-size: 0.8em; color: #ce93d8;">${lunarMonthText}</span>`;
+        calendarDays.innerHTML = '';
+        const firstDayOfMonth = new Date(year, month, 1).getDay(), daysInMonth = new Date(year, month + 1, 0).getDate();
+        for (let i = 0; i < firstDayOfMonth; i++) { calendarDays.innerHTML += `<div class="day-cell other-month"></div>`; }
+        const today = new Date();
+        for (let day = 1; day <= daysInMonth; day++) {
+            const date = new Date(year, month, day), lunarInfo = convertSolarToLunar(day, month + 1, year);
+            const cell = document.createElement('div');
+            cell.classList.add('day-cell');
+            if (isSameDay(date, today)) cell.classList.add('today');
+            if (isSameDay(date, currentDisplayDate)) cell.classList.add('selected');
+            cell.dataset.date = date.toISOString();
+            cell.innerHTML = `<span class="solar-day">${day}</span><span class="lunar-day">${lunarInfo.lunarDay}/${lunarInfo.lunarMonth}</span>`;
+            calendarDays.appendChild(cell);
         }
     }
+    const daysOfWeek_Short = ["CN", "T2", "T3", "T4", "T5", "T6", "T7"];
+    daysOfWeek_Short.forEach(day => { weekdayHeaders.innerHTML += `<div class="weekday-header">${day}</div>`; });
     function initializeCalendar() {
         setRandomBackgroundColor();
-        handleScreenResize();
-        window.addEventListener('resize', handleScreenResize);
         const today = new Date();
-        datePicker.min = MIN_CALENDAR_DATE_STR;
-        datePicker.max = MAX_CALENDAR_DATE_STR;
-        datePickerMobile.min = MIN_CALENDAR_DATE_STR;
-        datePickerMobile.max = MAX_CALENDAR_DATE_STR;
         let initialDate = new Date(today.getFullYear(), today.getMonth(), today.getDate());
-        if (initialDate < firstDataDateNav) {
-            initialDate = new Date(firstDataDateNav);
-        } else if (initialDate > lastDataDateNav) {
-            initialDate = new Date(lastDataDateNav);
-        }
+        if (initialDate < firstDataDateNav) initialDate = new Date(firstDataDateNav);
+        if (initialDate > lastDataDateNav) initialDate = new Date(lastDataDateNav);
         currentDisplayDate = initialDate;
-        const formattedInitialDate = formatDateToYYYYMMDD(currentDisplayDate);
-        datePicker.value = formattedInitialDate;
-        datePickerMobile.value = formattedInitialDate;
-        updateLiveClock();
-        setInterval(updateLiveClock, 1000);
-        updateCalendarDisplay(currentDisplayDate);
+        updateLiveClock(); setInterval(updateLiveClock, 1000); updateCalendarDisplay(currentDisplayDate);
         function navigateDays(offset) {
             currentDisplayDate.setDate(currentDisplayDate.getDate() + offset);
             if (currentDisplayDate < firstDataDateNav) currentDisplayDate.setTime(firstDataDateNav.getTime());
@@ -420,17 +358,22 @@
         }
         prevDayBtn.addEventListener('click', () => navigateDays(-1));
         nextDayBtn.addEventListener('click', () => navigateDays(1));
-        prevDayBtnMobile.addEventListener('click', () => navigateDays(-1));
-        nextDayBtnMobile.addEventListener('click', () => navigateDays(1));
-        function handleDateChange(event) {
-            const [year, month, day] = event.target.value.split('-').map(Number);
-            currentDisplayDate = new Date(year, month - 1, day);
-            if (currentDisplayDate < firstDataDateNav) currentDisplayDate.setTime(firstDataDateNav.getTime());
-            if (currentDisplayDate > lastDataDateNav) currentDisplayDate.setTime(lastDataDateNav.getTime());
-            updateCalendarDisplay(currentDisplayDate);
-        }
-        datePicker.addEventListener('change', handleDateChange);
-        datePickerMobile.addEventListener('change', handleDateChange);
+        datePicker.addEventListener('click', () => { calendarDate = new Date(currentDisplayDate); renderCustomCalendar(calendarDate.getFullYear(), calendarDate.getMonth()); customCalendar.style.display = 'block'; });
+        prevMonthBtn.addEventListener('click', () => { calendarDate.setMonth(calendarDate.getMonth() - 1); renderCustomCalendar(calendarDate.getFullYear(), calendarDate.getMonth()); });
+        nextMonthBtn.addEventListener('click', () => { calendarDate.setMonth(calendarDate.getMonth() + 1); renderCustomCalendar(calendarDate.getFullYear(), calendarDate.getMonth()); });
+        gotoTodayBtn.addEventListener('click', () => { const todayDate = new Date(); currentDisplayDate = new Date(todayDate.getFullYear(), todayDate.getMonth(), todayDate.getDate()); updateCalendarDisplay(currentDisplayDate); customCalendar.style.display = 'none'; });
+        closeCalendarBtn.addEventListener('click', () => { customCalendar.style.display = 'none'; });
+        calendarDays.addEventListener('click', (e) => {
+            const target = e.target.closest('.day-cell');
+            if (target && target.dataset.date) {
+                currentDisplayDate = new Date(target.dataset.date);
+                if (currentDisplayDate < firstDataDateNav) currentDisplayDate.setTime(firstDataDateNav.getTime());
+                if (currentDisplayDate > lastDataDateNav) currentDisplayDate.setTime(lastDataDateNav.getTime());
+                updateCalendarDisplay(currentDisplayDate);
+                customCalendar.style.display = 'none';
+            }
+        });
+        document.addEventListener('click', function(event) { if (!customCalendar.contains(event.target) && event.target !== datePicker) { customCalendar.style.display = 'none'; } });
     }
     window.onload = initializeCalendar;
 </script>
